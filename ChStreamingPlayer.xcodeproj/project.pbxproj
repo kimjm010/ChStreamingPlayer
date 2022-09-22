@@ -9,15 +9,48 @@
 /* Begin PBXBuildFile section */
 		F536F66628DBE0B900751D9F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F66528DBE0B900751D9F /* MainViewController.swift */; };
 		F536F66C28DBE4EF00751D9F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F536F66B28DBE4EF00751D9F /* Main.storyboard */; };
+		F536F67628DC360C00751D9F /* StreamingKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = F536F67528DC360C00751D9F /* StreamingKit.docc */; };
+		F536F67728DC360C00751D9F /* StreamingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = F536F67428DC360C00751D9F /* StreamingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F536F67A28DC360C00751D9F /* StreamingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F536F67228DC360C00751D9F /* StreamingKit.framework */; };
+		F536F67B28DC360C00751D9F /* StreamingKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F536F67228DC360C00751D9F /* StreamingKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F536F68328DC365700751D9F /* StreamingVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */; };
 		F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */; };
 		F5EF3D3628D43A0A00A66655 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */; };
 		F5EF3D3D28D43A0B00A66655 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */; };
 		F5EF3D4028D43A0B00A66655 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F5EF3D3E28D43A0B00A66655 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F536F67828DC360C00751D9F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F5EF3D2828D43A0A00A66655 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F536F67128DC360C00751D9F;
+			remoteInfo = StreamingKit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F536F67F28DC360C00751D9F /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F536F67B28DC360C00751D9F /* StreamingKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		F536F66528DBE0B900751D9F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		F536F66B28DBE4EF00751D9F /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		F536F67228DC360C00751D9F /* StreamingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StreamingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F536F67428DC360C00751D9F /* StreamingKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StreamingKit.h; sourceTree = "<group>"; };
+		F536F67528DC360C00751D9F /* StreamingKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = StreamingKit.docc; sourceTree = "<group>"; };
+		F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingVideoPlayer.swift; sourceTree = "<group>"; };
 		F5EF3D3028D43A0A00A66655 /* ChStreamingPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChStreamingPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -27,20 +60,39 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		F5EF3D2D28D43A0A00A66655 /* Frameworks */ = {
+		F536F66F28DC360C00751D9F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F5EF3D2D28D43A0A00A66655 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F536F67A28DC360C00751D9F /* StreamingKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		F536F67328DC360C00751D9F /* StreamingKit */ = {
+			isa = PBXGroup;
+			children = (
+				F536F67428DC360C00751D9F /* StreamingKit.h */,
+				F536F67528DC360C00751D9F /* StreamingKit.docc */,
+				F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */,
+			);
+			path = StreamingKit;
+			sourceTree = "<group>";
+		};
 		F5EF3D2728D43A0A00A66655 = {
 			isa = PBXGroup;
 			children = (
 				F5EF3D3228D43A0A00A66655 /* ChStreamingPlayer */,
+				F536F67328DC360C00751D9F /* StreamingKit */,
 				F5EF3D3128D43A0A00A66655 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -49,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				F5EF3D3028D43A0A00A66655 /* ChStreamingPlayer.app */,
+				F536F67228DC360C00751D9F /* StreamingKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -59,9 +112,9 @@
 				F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */,
 				F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */,
 				F536F66528DBE0B900751D9F /* MainViewController.swift */,
-				F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */,
 				F536F66B28DBE4EF00751D9F /* Main.storyboard */,
 				F5EF3D3E28D43A0B00A66655 /* LaunchScreen.storyboard */,
+				F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */,
 				F5EF3D4128D43A0B00A66655 /* Info.plist */,
 			);
 			path = ChStreamingPlayer;
@@ -69,7 +122,36 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		F536F66D28DC360C00751D9F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F536F67728DC360C00751D9F /* StreamingKit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		F536F67128DC360C00751D9F /* StreamingKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F536F67C28DC360C00751D9F /* Build configuration list for PBXNativeTarget "StreamingKit" */;
+			buildPhases = (
+				F536F66D28DC360C00751D9F /* Headers */,
+				F536F66E28DC360C00751D9F /* Sources */,
+				F536F66F28DC360C00751D9F /* Frameworks */,
+				F536F67028DC360C00751D9F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = StreamingKit;
+			productName = StreamingKit;
+			productReference = F536F67228DC360C00751D9F /* StreamingKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		F5EF3D2F28D43A0A00A66655 /* ChStreamingPlayer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F5EF3D4428D43A0B00A66655 /* Build configuration list for PBXNativeTarget "ChStreamingPlayer" */;
@@ -77,10 +159,12 @@
 				F5EF3D2C28D43A0A00A66655 /* Sources */,
 				F5EF3D2D28D43A0A00A66655 /* Frameworks */,
 				F5EF3D2E28D43A0A00A66655 /* Resources */,
+				F536F67F28DC360C00751D9F /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				F536F67928DC360C00751D9F /* PBXTargetDependency */,
 			);
 			name = ChStreamingPlayer;
 			productName = ChStreamingPlayer;
@@ -97,6 +181,9 @@
 				LastSwiftUpdateCheck = 1340;
 				LastUpgradeCheck = 1340;
 				TargetAttributes = {
+					F536F67128DC360C00751D9F = {
+						CreatedOnToolsVersion = 14.0;
+					};
 					F5EF3D2F28D43A0A00A66655 = {
 						CreatedOnToolsVersion = 13.4.1;
 					};
@@ -116,11 +203,19 @@
 			projectRoot = "";
 			targets = (
 				F5EF3D2F28D43A0A00A66655 /* ChStreamingPlayer */,
+				F536F67128DC360C00751D9F /* StreamingKit */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F536F67028DC360C00751D9F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F5EF3D2E28D43A0A00A66655 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -134,6 +229,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F536F66E28DC360C00751D9F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F536F67628DC360C00751D9F /* StreamingKit.docc in Sources */,
+				F536F68328DC365700751D9F /* StreamingVideoPlayer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F5EF3D2C28D43A0A00A66655 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -145,6 +249,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F536F67928DC360C00751D9F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F536F67128DC360C00751D9F /* StreamingKit */;
+			targetProxy = F536F67828DC360C00751D9F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F5EF3D3E28D43A0B00A66655 /* LaunchScreen.storyboard */ = {
@@ -158,6 +270,70 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		F536F67D28DC360C00751D9F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 8D25AB624P;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chris.StreamingKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		F536F67E28DC360C00751D9F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 8D25AB624P;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chris.StreamingKit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		F5EF3D4228D43A0B00A66655 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -275,6 +451,7 @@
 		F5EF3D4528D43A0B00A66655 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -287,6 +464,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -303,6 +481,7 @@
 		F5EF3D4628D43A0B00A66655 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -315,6 +494,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -331,6 +511,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F536F67C28DC360C00751D9F /* Build configuration list for PBXNativeTarget "StreamingKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F536F67D28DC360C00751D9F /* Debug */,
+				F536F67E28DC360C00751D9F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F5EF3D2B28D43A0A00A66655 /* Build configuration list for PBXProject "ChStreamingPlayer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
