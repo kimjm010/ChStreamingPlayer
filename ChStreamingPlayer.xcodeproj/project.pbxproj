@@ -7,13 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F536F66628DBE0B900751D9F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F66528DBE0B900751D9F /* MainViewController.swift */; };
+		F536F66628DBE0B900751D9F /* StreamingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F66528DBE0B900751D9F /* StreamingViewController.swift */; };
 		F536F66C28DBE4EF00751D9F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F536F66B28DBE4EF00751D9F /* Main.storyboard */; };
 		F536F67628DC360C00751D9F /* StreamingKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = F536F67528DC360C00751D9F /* StreamingKit.docc */; };
 		F536F67728DC360C00751D9F /* StreamingKit.h in Headers */ = {isa = PBXBuildFile; fileRef = F536F67428DC360C00751D9F /* StreamingKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F536F67A28DC360C00751D9F /* StreamingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F536F67228DC360C00751D9F /* StreamingKit.framework */; };
 		F536F67B28DC360C00751D9F /* StreamingKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F536F67228DC360C00751D9F /* StreamingKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F536F68328DC365700751D9F /* StreamingVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */; };
+		F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68428DC661A00751D9F /* MPPlayerViewController.swift */; };
 		F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */; };
 		F5EF3D3628D43A0A00A66655 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */; };
 		F5EF3D3D28D43A0B00A66655 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */; };
@@ -45,12 +46,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F536F66528DBE0B900751D9F /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		F536F66528DBE0B900751D9F /* StreamingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingViewController.swift; sourceTree = "<group>"; };
 		F536F66B28DBE4EF00751D9F /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		F536F67228DC360C00751D9F /* StreamingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StreamingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F536F67428DC360C00751D9F /* StreamingKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StreamingKit.h; sourceTree = "<group>"; };
 		F536F67528DC360C00751D9F /* StreamingKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = StreamingKit.docc; sourceTree = "<group>"; };
 		F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingVideoPlayer.swift; sourceTree = "<group>"; };
+		F536F68428DC661A00751D9F /* MPPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPlayerViewController.swift; sourceTree = "<group>"; };
 		F5EF3D3028D43A0A00A66655 /* ChStreamingPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChStreamingPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -111,7 +113,8 @@
 			children = (
 				F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */,
 				F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */,
-				F536F66528DBE0B900751D9F /* MainViewController.swift */,
+				F536F66528DBE0B900751D9F /* StreamingViewController.swift */,
+				F536F68428DC661A00751D9F /* MPPlayerViewController.swift */,
 				F536F66B28DBE4EF00751D9F /* Main.storyboard */,
 				F5EF3D3E28D43A0B00A66655 /* LaunchScreen.storyboard */,
 				F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */,
@@ -242,9 +245,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */,
 				F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */,
 				F5EF3D3628D43A0A00A66655 /* SceneDelegate.swift in Sources */,
-				F536F66628DBE0B900751D9F /* MainViewController.swift in Sources */,
+				F536F66628DBE0B900751D9F /* StreamingViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

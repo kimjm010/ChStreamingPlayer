@@ -24,6 +24,10 @@ public class StreamingVideoPlayer {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    var isPlaying: Bool {
+        return avPlayer.rate == 1.0 ? true : false
+    }
 
     
     // MARK: - Public Interface
@@ -82,5 +86,16 @@ public class StreamingVideoPlayer {
     
     public func muteVolume() {
         avPlayer.volume = 0.0
+    }
+    
+    
+    // MARK: - Update UI
+    
+    public func updateUI(completion: (Bool) -> Void) {
+        if isPlaying {
+            completion(true)
+        } else {
+            completion(false)
+        }
     }
 }
