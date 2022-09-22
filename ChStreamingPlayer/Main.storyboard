@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="DNV-q0-lu3">
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -189,7 +188,7 @@
                     <tabBarItem key="tabBarItem" title="mp4" image="play.square" catalog="system" id="Izj-Wk-CG8"/>
                     <connections>
                         <outlet property="backgroundImageView" destination="Uhh-jO-QN9" id="hDG-wB-8SA"/>
-                        <outlet property="videoView" destination="RfZ-8J-afy" id="V6i-rV-HVS"/>
+                        <outlet property="playerView" destination="RfZ-8J-afy" id="vHF-CH-QFc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="g66-S5-ozY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

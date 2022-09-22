@@ -15,6 +15,11 @@
 		F536F67B28DC360C00751D9F /* StreamingKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F536F67228DC360C00751D9F /* StreamingKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F536F68328DC365700751D9F /* StreamingVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */; };
 		F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68428DC661A00751D9F /* MPPlayerViewController.swift */; };
+		F536F68B28DCB45E00751D9F /* 1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F536F68628DCB45D00751D9F /* 1.mp4 */; };
+		F536F68C28DCB45E00751D9F /* 3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F536F68728DCB45D00751D9F /* 3.mp4 */; };
+		F536F68D28DCB45E00751D9F /* 2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F536F68828DCB45D00751D9F /* 2.mp4 */; };
+		F536F68E28DCB45E00751D9F /* 4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F536F68928DCB45E00751D9F /* 4.mp4 */; };
+		F536F68F28DCB45E00751D9F /* 5.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F536F68A28DCB45E00751D9F /* 5.mp4 */; };
 		F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */; };
 		F5EF3D3628D43A0A00A66655 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */; };
 		F5EF3D3D28D43A0B00A66655 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */; };
@@ -53,6 +58,11 @@
 		F536F67528DC360C00751D9F /* StreamingKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = StreamingKit.docc; sourceTree = "<group>"; };
 		F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingVideoPlayer.swift; sourceTree = "<group>"; };
 		F536F68428DC661A00751D9F /* MPPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPlayerViewController.swift; sourceTree = "<group>"; };
+		F536F68628DCB45D00751D9F /* 1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 1.mp4; sourceTree = "<group>"; };
+		F536F68728DCB45D00751D9F /* 3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3.mp4; sourceTree = "<group>"; };
+		F536F68828DCB45D00751D9F /* 2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2.mp4; sourceTree = "<group>"; };
+		F536F68928DCB45E00751D9F /* 4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 4.mp4; sourceTree = "<group>"; };
+		F536F68A28DCB45E00751D9F /* 5.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 5.mp4; sourceTree = "<group>"; };
 		F5EF3D3028D43A0A00A66655 /* ChStreamingPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChStreamingPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -90,6 +100,18 @@
 			path = StreamingKit;
 			sourceTree = "<group>";
 		};
+		F536F69028DCB48500751D9F /* Video */ = {
+			isa = PBXGroup;
+			children = (
+				F536F68A28DCB45E00751D9F /* 5.mp4 */,
+				F536F68628DCB45D00751D9F /* 1.mp4 */,
+				F536F68928DCB45E00751D9F /* 4.mp4 */,
+				F536F68828DCB45D00751D9F /* 2.mp4 */,
+				F536F68728DCB45D00751D9F /* 3.mp4 */,
+			);
+			path = Video;
+			sourceTree = "<group>";
+		};
 		F5EF3D2728D43A0A00A66655 = {
 			isa = PBXGroup;
 			children = (
@@ -119,6 +141,7 @@
 				F5EF3D3E28D43A0B00A66655 /* LaunchScreen.storyboard */,
 				F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */,
 				F5EF3D4128D43A0B00A66655 /* Info.plist */,
+				F536F69028DCB48500751D9F /* Video */,
 			);
 			path = ChStreamingPlayer;
 			sourceTree = "<group>";
@@ -223,9 +246,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F536F68B28DCB45E00751D9F /* 1.mp4 in Resources */,
+				F536F68F28DCB45E00751D9F /* 5.mp4 in Resources */,
 				F5EF3D4028D43A0B00A66655 /* LaunchScreen.storyboard in Resources */,
+				F536F68E28DCB45E00751D9F /* 4.mp4 in Resources */,
 				F5EF3D3D28D43A0B00A66655 /* Assets.xcassets in Resources */,
 				F536F66C28DBE4EF00751D9F /* Main.storyboard in Resources */,
+				F536F68C28DCB45E00751D9F /* 3.mp4 in Resources */,
+				F536F68D28DCB45E00751D9F /* 2.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

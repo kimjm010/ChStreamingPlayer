@@ -89,12 +89,14 @@ public class StreamingVideoPlayer {
     }
     
     
-    // MARK: - Update UI
+    // MARK: - Update Status
     
-    public func updateUI(completion: (Bool) -> Void) {
+    public func updateStatus(completion: (Bool) -> Void) {
         if isPlaying {
+            avPlayer.pause()
             completion(true)
         } else {
+            avPlayer.play()
             completion(false)
         }
     }
