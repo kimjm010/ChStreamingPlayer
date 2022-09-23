@@ -13,6 +13,7 @@ class StreamingViewController: UIViewController {
     
     // MARK: - IBOutlets
     
+    @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var videoView: UIView!
     
     
@@ -41,11 +42,6 @@ class StreamingViewController: UIViewController {
     }
     
     
-    @IBAction func clearButtonTapped() {
-        videoPlayer.pause()
-    }
-    
-    
     @IBAction func muteButtonTapped() {
         videoPlayer.muteVolume()
     }
@@ -54,19 +50,10 @@ class StreamingViewController: UIViewController {
     @IBAction func volUpButtonTapped() {
         videoPlayer.turnOnVolume()
     }
-    
-    
-    @IBAction func rewindButtonTapped() {
-        videoPlayer.moveToBackward()
-    }
-    
-    
-    @IBAction func forwardButtonTapped() {
-        videoPlayer.moveToForward()
-    }
 
     
     // MARK: - View Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -74,7 +61,15 @@ class StreamingViewController: UIViewController {
     }
     
     
-    /// videoView에 Streaming Video Player View를 추가
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        videoPlayer.pause()
+    }
+    
+    
+    // MARK: - Add Streaming Video Player View to Video View
+    
     private func setupVideoPlayer() {
         videoPlayer.add(to: videoView)
     }
