@@ -72,12 +72,12 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="4TX-Mh-UhN" firstAttribute="centerY" secondItem="5EZ-qb-Rvc" secondAttribute="centerY" id="4sL-HH-ecz"/>
+                            <constraint firstItem="4TX-Mh-UhN" firstAttribute="top" secondItem="Wu2-jE-2Oo" secondAttribute="bottom" constant="20" id="5oE-Rd-6pg"/>
                             <constraint firstItem="4TX-Mh-UhN" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="7yC-lE-ofs"/>
-                            <constraint firstItem="4TX-Mh-UhN" firstAttribute="top" secondItem="Wu2-jE-2Oo" secondAttribute="bottom" constant="20" id="9fa-G6-NJh"/>
-                            <constraint firstItem="Wu2-jE-2Oo" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="Pur-ou-dvb"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Wu2-jE-2Oo" secondAttribute="trailing" constant="20" id="MJu-GZ-Yd0"/>
+                            <constraint firstItem="Wu2-jE-2Oo" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="OaG-du-8AR"/>
                             <constraint firstItem="4TX-Mh-UhN" firstAttribute="centerX" secondItem="5EZ-qb-Rvc" secondAttribute="centerX" id="WvP-Go-7it"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="4TX-Mh-UhN" secondAttribute="trailing" constant="20" id="jlR-oZ-eay"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Wu2-jE-2Oo" secondAttribute="trailing" constant="20" id="l0n-i3-BRI"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="m3u8" image="play.circle" catalog="system" id="S22-hK-89B"/>
@@ -88,7 +88,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-632" y="-198"/>
+            <point key="canvasLocation" x="-632.30769230769226" y="-198.34123222748815"/>
         </scene>
         <!--mp4-->
         <scene sceneID="Kfm-ro-0Ve">
@@ -205,8 +205,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="3qe-GV-xjU" kind="relationship" relationship="viewControllers" id="TDY-lZ-pRP"/>
                         <segue destination="Y6W-OH-hqX" kind="relationship" relationship="viewControllers" id="Qli-Da-4K6"/>
+                        <segue destination="3qe-GV-xjU" kind="relationship" relationship="viewControllers" id="TDY-lZ-pRP"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y1L-gN-HTz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

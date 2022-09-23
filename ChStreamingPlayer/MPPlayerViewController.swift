@@ -26,44 +26,43 @@ class MPPlayerViewController: UIViewController {
     
     /// Control Play
     @IBAction func playButtonTapped() {
-        guard let urlStr = Bundle.main.path(forResource: "1", ofType: "mp4"),
-              let url = URL(string: urlStr) else {
-            print(#function, #file, #line, "Error occurred when parsing Url")
+        guard let path = Bundle.main.path(forResource: "v1", ofType: "mp4"),
+        let url = URL(string: path) else {
+         print(#function, #file, #line, "Error Occurred when Parsing Url")
             return
         }
         
-        print(#function, #file, #line, "\(url)")
         videoPlayer.play(url: url)
     }
     
     
     /// Control Pause
     @IBAction func pauseButtonTapped() {
-        
+        videoPlayer.pause()
     }
     
     
     /// Control backward event
     @IBAction func backwardButtonTapped() {
-        
+        videoPlayer.moveToBackward()
     }
     
     
     /// Control forward event
     @IBAction func forwardButtonTapped() {
-        
+        videoPlayer.moveToForward()
     }
     
     
     /// Turon on volume
     @IBAction func muteButtonTapped() {
-        
+        videoPlayer.muteVolume()
     }
     
     
     /// Turon off(mute) volume
     @IBAction func turnVolumeButtonTapped() {
-        
+        videoPlayer.turnOnVolume()
     }
     
     

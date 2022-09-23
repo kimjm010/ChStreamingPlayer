@@ -26,7 +26,7 @@ public class StreamingVideoPlayer {
     }()
     
     var isPlaying: Bool {
-        return avPlayer.rate == 1.0 ? true : false
+        return avPlayer.rate != 0 && avPlayer.error != nil
     }
 
     
