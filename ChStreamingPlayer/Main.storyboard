@@ -106,12 +106,15 @@
                                 <rect key="frame" x="5" y="682.33333333333337" width="380" height="44.333333333333371"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DjO-0e-Glz">
-                                        <rect key="frame" x="0.0" y="0.0" width="48" height="44.333333333333336"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="48.666666666666664" height="44.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="gobackward.10" catalog="system"/>
+                                        <connections>
+                                            <action selector="moveBackward:" destination="3qe-GV-xjU" eventType="touchUpInside" id="fPR-CQ-c5I"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgg-jI-8rA">
-                                        <rect key="frame" x="48" y="0.0" width="42" height="44.333333333333336"/>
+                                        <rect key="frame" x="48.666666666666657" y="0.0" width="42.333333333333343" height="44.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="play.fill" catalog="system"/>
                                         <connections>
@@ -119,15 +122,18 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xsn-Xn-auf">
-                                        <rect key="frame" x="90" y="0.0" width="48" height="44.333333333333336"/>
+                                        <rect key="frame" x="91" y="0.0" width="48.333333333333343" height="44.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="goforward.10" catalog="system"/>
+                                        <connections>
+                                            <action selector="moveForward:" destination="3qe-GV-xjU" eventType="touchUpInside" id="ZdY-n2-4n8"/>
+                                        </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EP2-c3-ciL">
-                                        <rect key="frame" x="138" y="0.0" width="242" height="44.333333333333336"/>
+                                        <rect key="frame" x="139.33333333333337" y="0.0" width="240.66666666666663" height="44.333333333333336"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="EtH-00-c8f">
-                                                <rect key="frame" x="0.0" y="0.0" width="242" height="14.333333333333334"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="240.66666666666666" height="14.333333333333334"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4qa-CW-XGr">
                                                         <rect key="frame" x="0.0" y="0.0" width="26.333333333333332" height="14.333333333333334"/>
@@ -136,7 +142,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-:--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="43r-N0-jJr">
-                                                        <rect key="frame" x="221.33333333333331" y="0.0" width="20.666666666666657" height="14.333333333333334"/>
+                                                        <rect key="frame" x="219.99999999999997" y="0.0" width="20.666666666666657" height="14.333333333333334"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -144,7 +150,7 @@
                                                 </subviews>
                                             </stackView>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Q88-yQ-keM">
-                                                <rect key="frame" x="-2" y="14.333333333333258" width="246" height="31"/>
+                                                <rect key="frame" x="-2" y="14.333333333333258" width="244.66666666666666" height="31"/>
                                                 <connections>
                                                     <action selector="timseSliderDidChange:" destination="3qe-GV-xjU" eventType="valueChanged" id="Ar7-9R-a0g"/>
                                                 </connections>
@@ -165,6 +171,9 @@
                                         <rect key="frame" x="97.666666666666686" y="0.0" width="97.333333333333314" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="backward.fill" catalog="system"/>
+                                        <connections>
+                                            <action selector="moveFastBackward:" destination="3qe-GV-xjU" eventType="touchUpInside" id="ovA-Wy-3hQ"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Z0-uF-Rm7">
                                         <rect key="frame" x="195" y="0.0" width="97.666666666666686" height="34.333333333333336"/>
@@ -203,6 +212,7 @@
                         <outlet property="durationLabel" destination="43r-N0-jJr" id="rJi-rU-l0L"/>
                         <outlet property="forwardButton" destination="3Z0-uF-Rm7" id="63H-h6-0Ou"/>
                         <outlet property="moveBackButton" destination="DjO-0e-Glz" id="ckm-91-Rcv"/>
+                        <outlet property="moveForwardButton" destination="xsn-Xn-auf" id="Zk0-cX-V63"/>
                         <outlet property="playPauseButton" destination="hgg-jI-8rA" id="Jad-B8-AaB"/>
                         <outlet property="playerView" destination="RfZ-8J-afy" id="vHF-CH-QFc"/>
                         <outlet property="startTimeLabel" destination="4qa-CW-XGr" id="Dg8-pS-gvv"/>
