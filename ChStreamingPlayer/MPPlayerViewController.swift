@@ -14,30 +14,32 @@ class MPPlayerViewController: UIViewController {
     // MARK: - IBOutlets
     
     @IBOutlet weak var playerView: UIView!
-    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var timeSlider: UISlider!
+    @IBOutlet weak var startTimeLabel: UILabel!
+    @IBOutlet weak var durationLabel: UILabel!
+    @IBOutlet weak var rewindButton: UIButton!
+    @IBOutlet weak var forwardButton: UIButton!
+    @IBOutlet weak var playPauseButton: UIButton!
     
     
     // MARK: - Vars
     
-    private let videoPlayer = StreamingVideoPlayer()
+    private let videoPlayer = QueueVideoPlayer()
+    
+   
     
     
     // MARK: - IBActions
     
     /// Control Play
     @IBAction func playButtonTapped() {
-        guard let path = Bundle.main.path(forResource: "v1", ofType: "mp4"),
-        let url = URL(string: path) else {
-         print(#function, #file, #line, "Error Occurred when Parsing Url")
-            return
-        }
-        
-        videoPlayer.play(url: url)
+        videoPlayer.resume()
     }
     
     
     /// Control Pause
     @IBAction func pauseButtonTapped() {
+        videoPlayer.updateCurrentTime()
         videoPlayer.pause()
     }
     
@@ -72,14 +74,14 @@ class MPPlayerViewController: UIViewController {
         super.viewDidLoad()
         
         setupVideoPlayer()
-        initializeData()
+        playVideo()
     }
     
     
-    // MARK: - Initialize Data
-    
-    private func initializeData() {
-        backgroundImageView.isHidden = true
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        videoPlayer.pause()
     }
     
     
@@ -90,15 +92,17 @@ class MPPlayerViewController: UIViewController {
     }
     
     
-    // MARK: - Update UI
+    // MARK: - Play Video
     
-    private func updateUI() {
-        videoPlayer.updateStatus { [weak self] (isPlaying) in
-            guard let self = self else { return }
-            
-            self.backgroundImageView.isHidden = isPlaying ? true : false
-            self.backgroundImageView.isHighlighted = isPlaying ? false : true
+    private func playVideo() {
+        let urlStr = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        
+        guard let url = URL(string: urlStr) else {
+            print(#function, #file, #line, "Error Occurred when Parsing Url")
+            return
         }
+        
+        videoPlayer.play(url: url)
     }
 }
 

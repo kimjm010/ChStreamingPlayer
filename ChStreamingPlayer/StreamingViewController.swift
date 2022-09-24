@@ -13,7 +13,6 @@ class StreamingViewController: UIViewController {
     
     // MARK: - IBOutlets
     
-    @IBOutlet weak var textField: UITextField!
     @IBOutlet weak var videoView: UIView!
     
     
@@ -25,15 +24,8 @@ class StreamingViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func playButtonTapped() {
-        
-        let urlStr = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
-        
-        guard let url = URL(string: urlStr) else {
-            print(#function, #file, #line, "Error Occurred when Parsing Url")
-            return
-        }
-        
-        videoPlayer.play(url: url)
+        print(#function)
+        videoPlayer.resume()
     }
     
     
@@ -58,6 +50,7 @@ class StreamingViewController: UIViewController {
         super.viewDidLoad()
         
         setupVideoPlayer()
+        playVideo()
     }
     
     
@@ -72,6 +65,20 @@ class StreamingViewController: UIViewController {
     
     private func setupVideoPlayer() {
         videoPlayer.add(to: videoView)
+    }
+    
+    
+    // MARK: - Play Video
+    
+    private func playVideo() {
+        let urlStr = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
+        
+        guard let url = URL(string: urlStr) else {
+            print(#function, #file, #line, "Error Occurred when Parsing Url")
+            return
+        }
+        
+        videoPlayer.play(url: url)
     }
 }
 
