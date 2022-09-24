@@ -18,4 +18,17 @@ extension UIViewController {
         
         present(alert, animated: true, completion: nil)
     }
+    
+    
+    func alertAddItemsToPlayer(title: String, message: String, completion: ((UIAlertAction) -> Void)? = nil) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "Ok", style: .default, handler: completion)
+        alert.addAction(okAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
 }
