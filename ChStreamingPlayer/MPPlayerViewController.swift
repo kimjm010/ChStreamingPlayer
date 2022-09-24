@@ -56,6 +56,8 @@ class MPPlayerViewController: UIViewController {
     
     private var playerCurrentItem: NSKeyValueObservation?
     
+    var isRepeat = false
+    
     
     // MARK: - IBActions
     
@@ -106,9 +108,13 @@ class MPPlayerViewController: UIViewController {
     
     /// 10초 앞으로 이동
     @IBAction func moveForward(_ sender: Any) {
-//        if avPlayer.currentItem?.currentTime() == avPlayer.currentItem?.duration {
-//            #warning("Todo: - 다음 영상 재생, 마지막 영상이면 재생 종료 -> 알림창 띄우기(새로 재생할 것인지 말 것인지)")
-//        }
+        if avPlayer.currentItem?.currentTime() == avPlayer.currentItem?.duration {
+            avPlayer.advanceToNextItem()
+            
+            if avPlayer.currentItem == avPlayer.items().last {
+                alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.")
+            }
+        }
         
         let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
         let newTime = currentTime + 10
@@ -119,9 +125,13 @@ class MPPlayerViewController: UIViewController {
     
     /// 10초 앞으로 이동
     @IBAction func moveBackward(_ sender: Any) {
-//        if avPlayer.currentItem?.currentTime() == .zero {
-//            #warning("Todo: - 이전 영상 재생, 첫 번째 영상이면 재생 종료 -> 알림창 띄우기(새로 재생할 것인지 말 것인지)")
-//        }
+        if avPlayer.currentItem?.currentTime() == .zero {
+            if avPlayer.currentItem == avPlayer.items().first {
+                ProgressHUD.showFailed("There is no previous video anymore")
+            }
+            
+            avPlayer.seek(to: .zero)
+        }
         
         let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
         let newTime = currentTime - 10
@@ -143,18 +153,28 @@ class MPPlayerViewController: UIViewController {
     
     /// 이전 재생항목으로 이동
     @IBAction func previousVideo() {
-        avPlayer.seek(to: .zero)
+        if avPlayer.currentItem?.currentTime() == .zero {
+            if avPlayer.currentItem != avPlayer.items().first {
+                
+            }
+        } else {
+            avPlayer.seek(to: .zero)
+        }
     }
     
     
+    /// 반복재생
     @IBAction func repeatVideoPlay(_ sender: Any) {
-        guard let currentItem = avPlayer.currentItem else { return }
+        isRepeat.toggle()
         
-        #warning("Todo: - 계속해서 반복재생할 수 있도록 수정할 것  -> looping(playerLooper) 다시 확인 해볼것")
-        
-        if avPlayer.currentItem?.currentTime() == avPlayer.currentItem?.duration {
-            
-            avPlayer.seek(to: .zero)
+        if isRepeat {
+            repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
+            guard let currentItem = avPlayer.currentItem else { return }
+            playerLooper = AVPlayerLooper(player: avPlayer, templateItem: currentItem)
+            avPlayer.play()
+        } else {
+            repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
+            avPlayer.play()
         }
     }
     
@@ -171,7 +191,7 @@ class MPPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let url = Bundle.main.url(forResource: "v2", withExtension: "mp4") else { return }
+        guard let url = Bundle.main.url(forResource: "v1", withExtension: "mp4") else { return }
         
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
@@ -181,14 +201,14 @@ class MPPlayerViewController: UIViewController {
     
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
         avPlayer.pause()
         
         if let timeObservetToken = timeObservetToken {
             avPlayer.removeTimeObserver(timeObservetToken)
             self.timeObservetToken = nil
         }
-        
-        super.viewWillDisappear(animated)
     }
     
     

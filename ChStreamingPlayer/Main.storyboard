@@ -106,7 +106,7 @@
                                 <rect key="frame" x="5" y="682.33333333333337" width="380" height="44.333333333333371"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DjO-0e-Glz">
-                                        <rect key="frame" x="0.0" y="0.0" width="36.333333333333336" height="44.333333333333336"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="48.333333333333336" height="44.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="gobackward.10" catalog="system"/>
                                         <connections>
@@ -114,7 +114,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgg-jI-8rA">
-                                        <rect key="frame" x="36.333333333333336" y="0.0" width="31.666666666666664" height="44.333333333333336"/>
+                                        <rect key="frame" x="48.333333333333343" y="0.0" width="42" height="44.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="play.fill" catalog="system"/>
                                         <connections>
@@ -122,7 +122,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xsn-Xn-auf">
-                                        <rect key="frame" x="68" y="0.0" width="36.666666666666657" height="44.333333333333336"/>
+                                        <rect key="frame" x="90.333333333333329" y="0.0" width="48.333333333333329" height="44.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="goforward.10" catalog="system"/>
                                         <connections>
@@ -130,10 +130,10 @@
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EP2-c3-ciL">
-                                        <rect key="frame" x="104.66666666666666" y="0.0" width="275.33333333333337" height="44.333333333333336"/>
+                                        <rect key="frame" x="138.66666666666663" y="0.0" width="241.33333333333337" height="44.333333333333336"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="EtH-00-c8f">
-                                                <rect key="frame" x="0.0" y="0.0" width="275.33333333333331" height="14.333333333333334"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="241.33333333333334" height="14.333333333333334"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4qa-CW-XGr">
                                                         <rect key="frame" x="0.0" y="0.0" width="26.333333333333332" height="14.333333333333334"/>
@@ -142,7 +142,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-:--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="43r-N0-jJr">
-                                                        <rect key="frame" x="254.6666666666666" y="0.0" width="20.666666666666657" height="14.333333333333334"/>
+                                                        <rect key="frame" x="220.66666666666666" y="0.0" width="20.666666666666657" height="14.333333333333334"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -150,7 +150,7 @@
                                                 </subviews>
                                             </stackView>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Q88-yQ-keM">
-                                                <rect key="frame" x="-2" y="14.333333333333258" width="279.33333333333331" height="31"/>
+                                                <rect key="frame" x="-2" y="14.333333333333258" width="245.33333333333334" height="31"/>
                                                 <connections>
                                                     <action selector="timseSliderDidChange:" destination="3qe-GV-xjU" eventType="valueChanged" id="Ar7-9R-a0g"/>
                                                 </connections>
