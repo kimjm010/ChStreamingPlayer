@@ -26,11 +26,14 @@ class MPPlayerViewController: UIViewController {
     @IBOutlet weak var moveForwardButton: UIButton!
     @IBOutlet weak var nextVideoButton: UIButton!
     @IBOutlet weak var previousVideoButton: UIButton!
+    @IBOutlet weak var repeatButton: UIButton!
     
     
     // MARK: - Vars
     
-    private let avPlayer = AVQueuePlayer()
+    private var avPlayer = AVQueuePlayer()
+    
+    private var playerLooper: NSObject?
     
     let timeRemainingFormatter: DateComponentsFormatter = {
        let formatter = DateComponentsFormatter()
@@ -141,6 +144,18 @@ class MPPlayerViewController: UIViewController {
     /// 이전 재생항목으로 이동
     @IBAction func previousVideo() {
         avPlayer.seek(to: .zero)
+    }
+    
+    
+    @IBAction func repeatVideoPlay(_ sender: Any) {
+        guard let currentItem = avPlayer.currentItem else { return }
+        
+        #warning("Todo: - 계속해서 반복재생할 수 있도록 수정할 것  -> looping(playerLooper) 다시 확인 해볼것")
+        
+        if avPlayer.currentItem?.currentTime() == avPlayer.currentItem?.duration {
+            
+            avPlayer.seek(to: .zero)
+        }
     }
     
     
