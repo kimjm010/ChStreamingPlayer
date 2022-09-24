@@ -8,6 +8,7 @@
 import Foundation
 import AVKit
 import AVFoundation
+import ProgressHUD
 
 
 class MPPlayerViewController: UIViewController {
@@ -23,11 +24,13 @@ class MPPlayerViewController: UIViewController {
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var moveBackButton: UIButton!
     @IBOutlet weak var moveForwardButton: UIButton!
+    @IBOutlet weak var nextVideoButton: UIButton!
+    @IBOutlet weak var previousVideoButton: UIButton!
     
     
     // MARK: - Vars
     
-    private let avPlayer = AVPlayer()
+    private let avPlayer = AVQueuePlayer()
     
     let timeRemainingFormatter: DateComponentsFormatter = {
        let formatter = DateComponentsFormatter()
@@ -48,13 +51,7 @@ class MPPlayerViewController: UIViewController {
     
     private var playerTimeControlStatusObserver: NSKeyValueObservation?
     
-    private var playerItemMoveBackObserver: NSKeyValueObservation?
-    
-    private var playerItemMoveFrontObserver: NSKeyValueObservation?
-    
-    static let playButtonImageName = "play.fill"
-    
-    static let pauseButtonImageName = "play.fill"
+    private var playerCurrentItem: NSKeyValueObservation?
     
     
     // MARK: - IBActions
@@ -130,6 +127,23 @@ class MPPlayerViewController: UIViewController {
     }
     
     
+    /// 다음 재생항목으로 이동
+    @IBAction func nextVideo() {
+        if avPlayer.items().count > 1 {
+            avPlayer.advanceToNextItem()
+        } else {
+            alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.")
+            addAllViedeosToPlayer()
+        }
+    }
+    
+    
+    /// 이전 재생항목으로 이동
+    @IBAction func previousVideo() {
+        avPlayer.seek(to: .zero)
+    }
+    
+    
     /// Change Slider value
     @IBAction func timseSliderDidChange(_ sender: UISlider) {
         let newTime = CMTime(seconds: Double(sender.value), preferredTimescale: 600)
@@ -146,6 +160,8 @@ class MPPlayerViewController: UIViewController {
         
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
+        addAllViedeosToPlayer()
+        print(#function, #file, #line, "\(avPlayer.items().count)")
     }
     
     
@@ -211,7 +227,7 @@ class MPPlayerViewController: UIViewController {
     func setupPlayerObservers() {
         
         // Create observer to toggle play/pause button
-        playerTimeControlStatusObserver = avPlayer.observe(\AVPlayer.timeControlStatus, options: [.initial, .new]) { [weak self] (_, _) in
+        playerTimeControlStatusObserver = avPlayer.observe(\AVQueuePlayer.timeControlStatus, options: [.initial, .new]) { [weak self] (_, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -231,7 +247,7 @@ class MPPlayerViewController: UIViewController {
         })
         
         
-        playerItemFastForwardObserver = avPlayer.observe(\AVPlayer.currentItem?.canPlayFastForward, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
+        playerItemFastForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastForward, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -240,7 +256,7 @@ class MPPlayerViewController: UIViewController {
         })
         
         
-        playerItemReverseObserver = avPlayer.observe(\AVPlayer.currentItem?.canPlayReverse,
+        playerItemReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayReverse,
                                                    options: [.new, .initial]) { [unowned self] player, _ in
             DispatchQueue.main.async {
                 self.backwardButton.isEnabled = player.currentItem?.canPlayReverse ?? false
@@ -248,7 +264,7 @@ class MPPlayerViewController: UIViewController {
         }
         
         
-        playerItemFastReverseObserver = avPlayer.observe(\AVPlayer.currentItem?.canPlayFastReverse,
+        playerItemFastReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastReverse,
                                                        options: [.new, .initial]) { [unowned self] player, _ in
             DispatchQueue.main.async {
                 self.backwardButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
@@ -256,11 +272,22 @@ class MPPlayerViewController: UIViewController {
         }
         
         
-        playerItemStatusObserver = avPlayer.observe(\AVPlayer.currentItem?.status, options: [.new, .initial]) { [unowned self] _, _ in
+        playerItemStatusObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.status, options: [.new, .initial]) { [unowned self] _, _ in
             DispatchQueue.main.async {
                 self.updateUIForPlayerItemStatus()
             }
         }
+        
+        
+        playerCurrentItem = avPlayer.observe(\.currentItem, changeHandler: { [weak self] (player, _) in
+          if player.items().count == 1 {
+            // player에 재생할 item이 1개만 남았을 때
+            // 비디오를 다시 Queue에 추가한다
+            print(#function, #file, #line, "여기에 자동으로 추가하는 것이 아닌것 같아요")
+//              self?.addAllViedeosToPlayer()
+          }
+        })
+        
     }
     
     
@@ -275,7 +302,7 @@ class MPPlayerViewController: UIViewController {
         case .paused, .waitingToPlayAtSpecifiedRate:
             buttonImage = UIImage(systemName: "play.fill")
         default:
-            buttonImage = UIImage(systemName: MPPlayerViewController.playButtonImageName)
+            buttonImage = UIImage(systemName: "play.fill")
         }
         
         guard let buttonImage = buttonImage else { return }
@@ -294,10 +321,22 @@ class MPPlayerViewController: UIViewController {
             timeSlider.isEnabled = false
             startTimeLabel.isEnabled = false
             durationLabel.isEnabled = false
-            #warning("Todo: - Progress HUD 로 에러 메세지 전달하기")
+            moveBackButton.isEnabled = false
+            moveForwardButton.isEnabled = false
+            nextVideoButton.isEnabled = false
+            previousVideoButton.isEnabled = false
+            forwardButton.isEnabled = false
+            backwardButton.isEnabled = false
+            ProgressHUD.showFailed("Error ocurred when playing video. Please try again later.")
         
         case .readyToPlay:
             playPauseButton.isEnabled = true
+            moveBackButton.isEnabled = true
+            moveForwardButton.isEnabled = true
+            nextVideoButton.isEnabled = true
+            previousVideoButton.isEnabled = true
+            forwardButton.isEnabled = true
+            backwardButton.isEnabled = true
             
             let newDurationSeconds = Float(currentItem.duration.seconds)
             let currentTimes = Float(CMTimeGetSeconds(avPlayer.currentTime()))
@@ -309,12 +348,18 @@ class MPPlayerViewController: UIViewController {
             startTimeLabel.text = createTimeString(time: currentTimes)
             durationLabel.isEnabled = true
             durationLabel.text = createTimeString(time: newDurationSeconds)
-        
+            
         default:
             playPauseButton.isEnabled = false
             timeSlider.isEnabled = false
             startTimeLabel.isEnabled = false
             durationLabel.isEnabled = false
+            moveBackButton.isEnabled = false
+            moveForwardButton.isEnabled = false
+            nextVideoButton.isEnabled = false
+            previousVideoButton.isEnabled = false
+            forwardButton.isEnabled = false
+            backwardButton.isEnabled = false
         }
     }
     
@@ -329,6 +374,7 @@ class MPPlayerViewController: UIViewController {
     
     
     // MARK: - Error Handling
+    
     func handleErrorWithMessage(_ message: String, error: Error? = nil) {
         if let err = error {
             print("Error occurred with message: \(message), error: \(err).")
@@ -341,6 +387,21 @@ class MPPlayerViewController: UIViewController {
         let alertAction = UIAlertAction(title: alertActionTitle, style: .default, handler: nil)
         alert.addAction(alertAction)
         present(alert, animated: true, completion: nil)
+    }
+    
+    
+    // MARK: - Add Videos To Player
+    private func addAllViedeosToPlayer() {
+        for i in 1...5 {
+            guard let url = Bundle.main.url(forResource: "v\(i)", withExtension: "mp4") else { return }
+            
+            let asset = AVURLAsset(url: url)
+            
+            let item = AVPlayerItem(asset: asset)
+            
+            avPlayer.insert(item, after: avPlayer.items().last)
+        }
+        print(#function, #file, #line, "\(avPlayer.items().count)")
     }
 }
 

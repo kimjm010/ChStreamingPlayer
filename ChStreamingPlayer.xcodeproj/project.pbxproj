@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F3CEAB3DB0FC19AC0F89A7E /* Pods_ChStreamingPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 090FF6FB89FC82D01D6F9076 /* Pods_ChStreamingPlayer.framework */; };
+		6387535EDC57C41CED3D7917 /* Pods_StreamingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BF5BB72CC8899820DB4F565 /* Pods_StreamingKit.framework */; };
 		F536F66628DBE0B900751D9F /* StreamingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F66528DBE0B900751D9F /* StreamingViewController.swift */; };
 		F536F66C28DBE4EF00751D9F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F536F66B28DBE4EF00751D9F /* Main.storyboard */; };
 		F536F67628DC360C00751D9F /* StreamingKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = F536F67528DC360C00751D9F /* StreamingKit.docc */; };
@@ -16,10 +18,10 @@
 		F536F68328DC365700751D9F /* StreamingVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */; };
 		F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68428DC661A00751D9F /* MPPlayerViewController.swift */; };
 		F5C04DC028DEA32A005332D4 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */; };
-		F5E221D528DD537200AF7752 /* v1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D028DD537100AF7752 /* v1.mp4 */; };
+		F5E221D528DD537200AF7752 /* v2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D028DD537100AF7752 /* v2.mp4 */; };
 		F5E221D628DD537200AF7752 /* v4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D128DD537200AF7752 /* v4.mp4 */; };
 		F5E221D728DD537200AF7752 /* v3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D228DD537200AF7752 /* v3.mp4 */; };
-		F5E221D828DD537200AF7752 /* v2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D328DD537200AF7752 /* v2.mp4 */; };
+		F5E221D828DD537200AF7752 /* v1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D328DD537200AF7752 /* v1.mp4 */; };
 		F5E221D928DD537200AF7752 /* v5.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D428DD537200AF7752 /* v5.mp4 */; };
 		F5E221DD28DD89E600AF7752 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E221DC28DD89E600AF7752 /* UIViewController+Alert.swift */; };
 		F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */; };
@@ -53,6 +55,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		069B61C9867352F9C66C7C9E /* Pods-StreamingKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamingKit.debug.xcconfig"; path = "Target Support Files/Pods-StreamingKit/Pods-StreamingKit.debug.xcconfig"; sourceTree = "<group>"; };
+		090FF6FB89FC82D01D6F9076 /* Pods_ChStreamingPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChStreamingPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3BF5BB72CC8899820DB4F565 /* Pods_StreamingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_StreamingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		475AE325645BDCB43AC09243 /* Pods-ChStreamingPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChStreamingPlayer.debug.xcconfig"; path = "Target Support Files/Pods-ChStreamingPlayer/Pods-ChStreamingPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		693710C50F0338C0646CAEA2 /* Pods-ChStreamingPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChStreamingPlayer.release.xcconfig"; path = "Target Support Files/Pods-ChStreamingPlayer/Pods-ChStreamingPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		B8174DC2D5D92491159DF615 /* Pods-StreamingKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamingKit.release.xcconfig"; path = "Target Support Files/Pods-StreamingKit/Pods-StreamingKit.release.xcconfig"; sourceTree = "<group>"; };
 		F536F66528DBE0B900751D9F /* StreamingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingViewController.swift; sourceTree = "<group>"; };
 		F536F66B28DBE4EF00751D9F /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		F536F67228DC360C00751D9F /* StreamingKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StreamingKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -61,10 +69,10 @@
 		F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingVideoPlayer.swift; sourceTree = "<group>"; };
 		F536F68428DC661A00751D9F /* MPPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPlayerViewController.swift; sourceTree = "<group>"; };
 		F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
-		F5E221D028DD537100AF7752 /* v1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v1.mp4; sourceTree = "<group>"; };
+		F5E221D028DD537100AF7752 /* v2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v2.mp4; sourceTree = "<group>"; };
 		F5E221D128DD537200AF7752 /* v4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v4.mp4; sourceTree = "<group>"; };
 		F5E221D228DD537200AF7752 /* v3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v3.mp4; sourceTree = "<group>"; };
-		F5E221D328DD537200AF7752 /* v2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v2.mp4; sourceTree = "<group>"; };
+		F5E221D328DD537200AF7752 /* v1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v1.mp4; sourceTree = "<group>"; };
 		F5E221D428DD537200AF7752 /* v5.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v5.mp4; sourceTree = "<group>"; };
 		F5E221DC28DD89E600AF7752 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
 		F5EF3D3028D43A0A00A66655 /* ChStreamingPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChStreamingPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6387535EDC57C41CED3D7917 /* Pods_StreamingKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,12 +97,33 @@
 			buildActionMask = 2147483647;
 			files = (
 				F536F67A28DC360C00751D9F /* StreamingKit.framework in Frameworks */,
+				5F3CEAB3DB0FC19AC0F89A7E /* Pods_ChStreamingPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		15A0B78CA325E489FEC7A37E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				475AE325645BDCB43AC09243 /* Pods-ChStreamingPlayer.debug.xcconfig */,
+				693710C50F0338C0646CAEA2 /* Pods-ChStreamingPlayer.release.xcconfig */,
+				069B61C9867352F9C66C7C9E /* Pods-StreamingKit.debug.xcconfig */,
+				B8174DC2D5D92491159DF615 /* Pods-StreamingKit.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		D2034C16283119F328B5762C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				090FF6FB89FC82D01D6F9076 /* Pods_ChStreamingPlayer.framework */,
+				3BF5BB72CC8899820DB4F565 /* Pods_StreamingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		F536F67328DC360C00751D9F /* StreamingKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -118,6 +148,8 @@
 				F5EF3D3228D43A0A00A66655 /* ChStreamingPlayer */,
 				F536F67328DC360C00751D9F /* StreamingKit */,
 				F5EF3D3128D43A0A00A66655 /* Products */,
+				15A0B78CA325E489FEC7A37E /* Pods */,
+				D2034C16283119F328B5762C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,8 +174,8 @@
 				F536F66B28DBE4EF00751D9F /* Main.storyboard */,
 				F5EF3D3E28D43A0B00A66655 /* LaunchScreen.storyboard */,
 				F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */,
-				F5E221D028DD537100AF7752 /* v1.mp4 */,
-				F5E221D328DD537200AF7752 /* v2.mp4 */,
+				F5E221D028DD537100AF7752 /* v2.mp4 */,
+				F5E221D328DD537200AF7752 /* v1.mp4 */,
 				F5E221D228DD537200AF7752 /* v3.mp4 */,
 				F5E221D128DD537200AF7752 /* v4.mp4 */,
 				F5E221D428DD537200AF7752 /* v5.mp4 */,
@@ -170,6 +202,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F536F67C28DC360C00751D9F /* Build configuration list for PBXNativeTarget "StreamingKit" */;
 			buildPhases = (
+				4F0349CAD29AB9EF5AA0D3F9 /* [CP] Check Pods Manifest.lock */,
 				F536F66D28DC360C00751D9F /* Headers */,
 				F536F66E28DC360C00751D9F /* Sources */,
 				F536F66F28DC360C00751D9F /* Frameworks */,
@@ -188,10 +221,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F5EF3D4428D43A0B00A66655 /* Build configuration list for PBXNativeTarget "ChStreamingPlayer" */;
 			buildPhases = (
+				2779141241F335BDF267EAD5 /* [CP] Check Pods Manifest.lock */,
 				F5EF3D2C28D43A0A00A66655 /* Sources */,
 				F5EF3D2D28D43A0A00A66655 /* Frameworks */,
 				F5EF3D2E28D43A0A00A66655 /* Resources */,
 				F536F67F28DC360C00751D9F /* Embed Frameworks */,
+				B46003BA1FB0641C624D2953 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -254,8 +289,8 @@
 			files = (
 				F5E221D928DD537200AF7752 /* v5.mp4 in Resources */,
 				F5E221D628DD537200AF7752 /* v4.mp4 in Resources */,
-				F5E221D528DD537200AF7752 /* v1.mp4 in Resources */,
-				F5E221D828DD537200AF7752 /* v2.mp4 in Resources */,
+				F5E221D528DD537200AF7752 /* v2.mp4 in Resources */,
+				F5E221D828DD537200AF7752 /* v1.mp4 in Resources */,
 				F5EF3D4028D43A0B00A66655 /* LaunchScreen.storyboard in Resources */,
 				F5EF3D3D28D43A0B00A66655 /* Assets.xcassets in Resources */,
 				F5E221D728DD537200AF7752 /* v3.mp4 in Resources */,
@@ -264,6 +299,70 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2779141241F335BDF267EAD5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ChStreamingPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4F0349CAD29AB9EF5AA0D3F9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-StreamingKit-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B46003BA1FB0641C624D2953 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChStreamingPlayer/Pods-ChStreamingPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ChStreamingPlayer/Pods-ChStreamingPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ChStreamingPlayer/Pods-ChStreamingPlayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F536F66E28DC360C00751D9F /* Sources */ = {
@@ -312,6 +411,7 @@
 /* Begin XCBuildConfiguration section */
 		F536F67D28DC360C00751D9F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 069B61C9867352F9C66C7C9E /* Pods-StreamingKit.debug.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
@@ -344,6 +444,7 @@
 		};
 		F536F67E28DC360C00751D9F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8174DC2D5D92491159DF615 /* Pods-StreamingKit.release.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CODE_SIGN_STYLE = Automatic;
@@ -490,6 +591,7 @@
 		};
 		F5EF3D4528D43A0B00A66655 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 475AE325645BDCB43AC09243 /* Pods-ChStreamingPlayer.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -520,6 +622,7 @@
 		};
 		F5EF3D4628D43A0B00A66655 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 693710C50F0338C0646CAEA2 /* Pods-ChStreamingPlayer.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
