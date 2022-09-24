@@ -22,6 +22,7 @@ class MPPlayerViewController: UIViewController {
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var moveBackButton: UIButton!
+    @IBOutlet weak var moveForwardButton: UIButton!
     
     
     // MARK: - Vars
@@ -100,6 +101,32 @@ class MPPlayerViewController: UIViewController {
         }
         
         avPlayer.rate = min(avPlayer.rate + 2.0, 2.0)
+    }
+    
+    
+    /// 10초 앞으로 이동
+    @IBAction func moveForward(_ sender: Any) {
+//        if avPlayer.currentItem?.currentTime() == avPlayer.currentItem?.duration {
+//            #warning("Todo: - 다음 영상 재생, 마지막 영상이면 재생 종료 -> 알림창 띄우기(새로 재생할 것인지 말 것인지)")
+//        }
+        
+        let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
+        let newTime = currentTime + 10
+        let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
+        avPlayer.seek(to: setTime, toleranceBefore: .zero, toleranceAfter: .zero)
+    }
+    
+    
+    /// 10초 앞으로 이동
+    @IBAction func moveBackward(_ sender: Any) {
+//        if avPlayer.currentItem?.currentTime() == .zero {
+//            #warning("Todo: - 이전 영상 재생, 첫 번째 영상이면 재생 종료 -> 알림창 띄우기(새로 재생할 것인지 말 것인지)")
+//        }
+        
+        let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
+        let newTime = currentTime - 10
+        let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
+        avPlayer.seek(to: setTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
     }
     
     
@@ -204,8 +231,6 @@ class MPPlayerViewController: UIViewController {
         })
         
         
-        #warning("Todo: - 10초 앞으로 이동하도록 변경할 것")
-        // Create an observer on the player's 'canPlayFastForward' property
         playerItemFastForwardObserver = avPlayer.observe(\AVPlayer.currentItem?.canPlayFastForward, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
             guard let self = self else { return }
             
@@ -218,10 +243,24 @@ class MPPlayerViewController: UIViewController {
         playerItemReverseObserver = avPlayer.observe(\AVPlayer.currentItem?.canPlayReverse,
                                                    options: [.new, .initial]) { [unowned self] player, _ in
             DispatchQueue.main.async {
-
-                
-                
-                
+                self.backwardButton.isEnabled = player.currentItem?.canPlayReverse ?? false
+            }
+        }
+        
+        
+        playerItemFastReverseObserver = avPlayer.observe(\AVPlayer.currentItem?.canPlayFastReverse,
+                                                       options: [.new, .initial]) { [unowned self] player, _ in
+            DispatchQueue.main.async {
+                self.backwardButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
+            }
+        }
+        
+        
+        playerItemStatusObserver = avPlayer.observe(\AVPlayer.currentItem?.status, options: [.new, .initial]) { [unowned self] _, _ in
+            DispatchQueue.main.async {
+                self.updateUIForPlayerItemStatus()
+            }
+        }
     }
     
     
@@ -229,7 +268,6 @@ class MPPlayerViewController: UIViewController {
     
     private func setPlayPauseButtonImage() {
         var buttonImage: UIImage?
-        print(#function, #file, #line, "\(avPlayer.timeControlStatus)")
         
         switch avPlayer.timeControlStatus {
         case .playing:
