@@ -15,11 +15,14 @@
 		F536F67B28DC360C00751D9F /* StreamingKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F536F67228DC360C00751D9F /* StreamingKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F536F68328DC365700751D9F /* StreamingVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */; };
 		F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68428DC661A00751D9F /* MPPlayerViewController.swift */; };
+		F5C04DBF28DE8A7E005332D4 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */; };
 		F5E221D528DD537200AF7752 /* v1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D028DD537100AF7752 /* v1.mp4 */; };
 		F5E221D628DD537200AF7752 /* v4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D128DD537200AF7752 /* v4.mp4 */; };
 		F5E221D728DD537200AF7752 /* v3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D228DD537200AF7752 /* v3.mp4 */; };
 		F5E221D828DD537200AF7752 /* v2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D328DD537200AF7752 /* v2.mp4 */; };
 		F5E221D928DD537200AF7752 /* v5.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D428DD537200AF7752 /* v5.mp4 */; };
+		F5E221DD28DD89E600AF7752 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E221DC28DD89E600AF7752 /* UIViewController+Alert.swift */; };
+		F5E221DF28DD8E1000AF7752 /* QueueVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E221DE28DD8E1000AF7752 /* QueueVideoPlayer.swift */; };
 		F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */; };
 		F5EF3D3628D43A0A00A66655 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */; };
 		F5EF3D3D28D43A0B00A66655 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */; };
@@ -58,11 +61,14 @@
 		F536F67528DC360C00751D9F /* StreamingKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = StreamingKit.docc; sourceTree = "<group>"; };
 		F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingVideoPlayer.swift; sourceTree = "<group>"; };
 		F536F68428DC661A00751D9F /* MPPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPlayerViewController.swift; sourceTree = "<group>"; };
+		F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F5E221D028DD537100AF7752 /* v1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v1.mp4; sourceTree = "<group>"; };
 		F5E221D128DD537200AF7752 /* v4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v4.mp4; sourceTree = "<group>"; };
 		F5E221D228DD537200AF7752 /* v3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v3.mp4; sourceTree = "<group>"; };
 		F5E221D328DD537200AF7752 /* v2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v2.mp4; sourceTree = "<group>"; };
 		F5E221D428DD537200AF7752 /* v5.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v5.mp4; sourceTree = "<group>"; };
+		F5E221DC28DD89E600AF7752 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
+		F5E221DE28DD8E1000AF7752 /* QueueVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueVideoPlayer.swift; sourceTree = "<group>"; };
 		F5EF3D3028D43A0A00A66655 /* ChStreamingPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChStreamingPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +102,8 @@
 				F536F67428DC360C00751D9F /* StreamingKit.h */,
 				F536F67528DC360C00751D9F /* StreamingKit.docc */,
 				F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */,
+				F5E221DE28DD8E1000AF7752 /* QueueVideoPlayer.swift */,
+				F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */,
 			);
 			path = StreamingKit;
 			sourceTree = "<group>";
@@ -110,6 +118,14 @@
 				F5E221D428DD537200AF7752 /* v5.mp4 */,
 			);
 			path = Videos;
+			sourceTree = "<group>";
+		};
+		F5E221DB28DD89CB00AF7752 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				F5E221DC28DD89E600AF7752 /* UIViewController+Alert.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 		F5EF3D2728D43A0A00A66655 = {
@@ -133,6 +149,7 @@
 		F5EF3D3228D43A0A00A66655 /* ChStreamingPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				F5E221DB28DD89CB00AF7752 /* Extension */,
 				F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */,
 				F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */,
 				F536F66528DBE0B900751D9F /* StreamingViewController.swift */,
@@ -265,7 +282,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F536F67628DC360C00751D9F /* StreamingKit.docc in Sources */,
+				F5E221DF28DD8E1000AF7752 /* QueueVideoPlayer.swift in Sources */,
 				F536F68328DC365700751D9F /* StreamingVideoPlayer.swift in Sources */,
+				F5C04DBF28DE8A7E005332D4 /* PlayerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5E221DD28DD89E600AF7752 /* UIViewController+Alert.swift in Sources */,
 				F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */,
 				F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */,
 				F5EF3D3628D43A0A00A66655 /* SceneDelegate.swift in Sources */,

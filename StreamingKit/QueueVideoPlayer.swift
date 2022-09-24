@@ -1,23 +1,23 @@
 //
-//  File.swift
+//  QueueVideoPlayer.swift
 //  StreamingKit
 //
-//  Created by Chris Kim on 9/22/22.
+//  Created by Chris Kim on 9/23/22.
 //
 
 import AVKit
 import AVFoundation
 
 
-public class StreamingVideoPlayer {
-    
+public class QueueVideoPlayer {
     public init() { }
     
-    // MARK: - Vars
+    
+    // MARK: -  Vars
     
     private let playerViewController = AVPlayerViewController()
     
-    private let avPlayer = AVPlayer()
+    private let avPlayer = AVQueuePlayer()
     
     private lazy var playerView: UIView = {
         let view = playerViewController.view!
@@ -25,16 +25,34 @@ public class StreamingVideoPlayer {
         return view
     }()
     
-    var isPlaying: Bool {
-        return avPlayer.rate != 0 && avPlayer.error != nil
+    private var currentTime: Float64?
+    
+    private let playImage = UIImage(named: "play_background")
+    
+    private let pauseImage = UIImage(named: "pause_Background")
+    
+    private var videoList = [
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4"
+    ]
+    
+    private var token: NSKeyValueObservation?
+    
+    private var allUrls = [URL]()
+    
+    
+    init(urls: [URL]) {
+        allUrls = urls
+        
+        
     }
     
-    var currentTime: Float64?
-
     
-    // MARK: - Public Interface
+    // MARK: - Add PlayerView to SuperView
     
-    /// superView에 playerView를 추가하기 위한 메소드
     public func add(to view: UIView) {
         view.addSubview(playerView)
         NSLayoutConstraint.activate([
@@ -44,6 +62,18 @@ public class StreamingVideoPlayer {
             playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
+    
+    
+    // MARK: - Set Background Image
+    
+    private func setBackgroundImage(name: String) {
+        print(#function)
+        
+        UIGraphicsBeginImageContext(playerView.frame.size)
+        UIImage(named: name)?.draw(in: playerView.bounds)
+        UIGraphicsEndImageContext()
+    }
+    
     
     // MARK: - Control Play
     
@@ -56,10 +86,9 @@ public class StreamingVideoPlayer {
     }
     
     
-    public func pause(completion: (() -> Void)? = nil) {
+    public func pause() {
         avPlayer.pause()
         currentTime = CMTimeGetSeconds(avPlayer.currentTime())
-        completion?()
     }
     
     
@@ -103,19 +132,6 @@ public class StreamingVideoPlayer {
     }
     
     
-    // MARK: - Update Status
-    
-    public func updateStatus(completion: (Bool) -> Void) {
-        if isPlaying {
-            avPlayer.pause()
-            completion(true)
-        } else {
-            avPlayer.play()
-            completion(false)
-        }
-    }
-    
-    
     // MARK: - Update Current Time
     
     public func updateCurrentTime() {
@@ -123,20 +139,25 @@ public class StreamingVideoPlayer {
     }
     
     
-//    private func addPeriodicTimeObserver() {
-//        let interval = CMTimeMakeWithSeconds(1, preferredTimescale: Int32(NSEC_PER_SEC))
-//        avPlayer.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (elapsedTime) in
-//            guard let self = self else { return }
-//            let elapsedTimeSecondsFloat = CMTimeGetSeconds(elapsedTime)
-//            let totalTimeSecondsFloat = CMTimeGetSeconds(self.avPlayer.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
-//
-//            guard !elapsedTimeSecondsFloat.isNaN,
-//                  !elapsedTimeSecondsFloat.isInfinite,
-//                  !totalTimeSecondsFloat.isNaN,
-//                  !totalTimeSecondsFloat.isInfinite else { return }
-//
-//            self.elapsedTimeSecondsFloat = elapsedTimeSecondsFloat
-//            self.totalTimeSecondsFloat = totalTimeSecondsFloat
-//        }
-//    }
+    // MARK: - Parse UrlStr to Url
+    
+    private func addAllVideosToPlayer() {
+        for i in 0...4 {
+            guard let path = Bundle.main.path(forResource: "v\(i)", ofType: "mp4"),
+                  let url = URL(string: path) else { return }
+            
+            let asset = AVURLAsset(url: url)
+            let item = AVPlayerItem(asset: asset)
+            avPlayer.insert(item, after: avPlayer.items().last)
+        }
+    }
+    
+    
+    // ======================================================================================
+    
+    // MARK: - Key-Value Observing
+    
+    func setupPlayerObservers() {
+        
+    }
 }
