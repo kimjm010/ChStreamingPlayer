@@ -18,9 +18,10 @@ class MPPlayerViewController: UIViewController {
     @IBOutlet weak var timeSlider: UISlider!
     @IBOutlet weak var startTimeLabel: UILabel!
     @IBOutlet weak var durationLabel: UILabel!
-    @IBOutlet weak var rewindButton: UIButton!
+    @IBOutlet weak var backwardButton: UIButton!
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var playPauseButton: UIButton!
+    @IBOutlet weak var moveBackButton: UIButton!
     
     
     // MARK: - Vars
@@ -46,6 +47,10 @@ class MPPlayerViewController: UIViewController {
     
     private var playerTimeControlStatusObserver: NSKeyValueObservation?
     
+    private var playerItemMoveBackObserver: NSKeyValueObservation?
+    
+    private var playerItemMoveFrontObserver: NSKeyValueObservation?
+    
     static let playButtonImageName = "play.fill"
     
     static let pauseButtonImageName = "play.fill"
@@ -53,8 +58,8 @@ class MPPlayerViewController: UIViewController {
     
     // MARK: - IBActions
     
+    /// Play Video
     @IBAction func togglePlay(_ sender: Any) {
-        print(#function, #file, #line, "재생 버튼 누름")
         
         switch avPlayer.timeControlStatus {
         case .playing:
@@ -65,28 +70,30 @@ class MPPlayerViewController: UIViewController {
             let currentItem = avPlayer.currentItem
             if currentItem?.currentTime() == currentItem?.duration {
                 currentItem?.seek(to: .zero, completionHandler: nil)
-                avPlayer.play()
             }
-            
+            avPlayer.play()
         default:
             avPlayer.pause()
         }
     }
     
     
-    @IBAction func moveBack(_ sender: Any) {
-        // player의 현재 시각이 처음 시각과 같은 경우 재생시간 맨 끝으로 이동
-        if avPlayer.currentItem?.currentTime() == .zero {
-            if let itemDuration = avPlayer.currentItem?.duration {
-                avPlayer.currentItem?.seek(to: itemDuration, completionHandler: nil)
-            }
-        }
+    /// Play Fast Backward
+    @IBAction func moveFastBackward(_ sender: Any) {
         
-        avPlayer.rate = max(avPlayer.rate - 2.0, 2.0)
+            // player의 현재 시각이 처음 시각과 같은 경우 재생시간 맨 끝으로 이동
+            if avPlayer.currentItem?.currentTime() == .zero {
+                if let itemDuration = avPlayer.currentItem?.duration {
+                    avPlayer.currentItem?.seek(to: itemDuration, completionHandler: nil)
+                }
+            }
+            
+            avPlayer.rate = max(avPlayer.rate - 2.0, -2.0)
     }
     
     
-    @IBAction func moveForward(_ sender: Any) {
+    /// Play Fast Forward
+    @IBAction func moveFastForward(_ sender: Any) {
         // player의 현재 시각이 끝 시각과 같은 경우 재생시간 처음으로 이동
         if avPlayer.currentItem?.currentTime() == avPlayer.currentItem?.duration {
             avPlayer.currentItem?.seek(to: .zero, completionHandler: nil)
@@ -96,6 +103,7 @@ class MPPlayerViewController: UIViewController {
     }
     
     
+    /// Change Slider value
     @IBAction func timseSliderDidChange(_ sender: UISlider) {
         let newTime = CMTime(seconds: Double(sender.value), preferredTimescale: 600)
         avPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
@@ -107,25 +115,29 @@ class MPPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let url = Bundle.main.url(forResource: "v1", withExtension: "mp4") else { return }
+        guard let url = Bundle.main.url(forResource: "v2", withExtension: "mp4") else { return }
         
         let asset = AVURLAsset(url: url)
-        
         loadPropertyValues(forAsset: asset)
     }
     
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
         avPlayer.pause()
+        
         if let timeObservetToken = timeObservetToken {
             avPlayer.removeTimeObserver(timeObservetToken)
             self.timeObservetToken = nil
         }
+        
+        super.viewWillDisappear(animated)
     }
     
+    
+    // MARK: - Asset Property Handling
+    
     func loadPropertyValues(forAsset newAsset: AVURLAsset) {
+        /// Load and test the following asset keys before playback begins.
         let assetKeysRequiredToPlay = [
             "playable",
             "hasProtectedContent"
@@ -142,7 +154,8 @@ class MPPlayerViewController: UIViewController {
         }
     }
     
-    private func validateValues(forKeys keys: [String], forAsset newAsset: AVAsset) -> Bool {
+
+    func validateValues(forKeys keys: [String], forAsset newAsset: AVAsset) -> Bool {
         for key in keys {
             var error: NSError?
             if newAsset.statusOfValue(forKey: key, error: &error) == .failed {
@@ -157,10 +170,6 @@ class MPPlayerViewController: UIViewController {
         }
         
         if !newAsset.isPlayable || newAsset.hasProtectedContent {
-            /*
-             You can't play the asset. Either the asset can't initialize a
-             player item, or it contains protected content.
-             */
             let message = NSLocalizedString("The media isn't playable or it contains protected content.",
                                             comment: "You can't use this AVAsset because it isn't playable or it contains protected content.")
             handleErrorWithMessage(message)
@@ -169,7 +178,6 @@ class MPPlayerViewController: UIViewController {
         
         return true
     }
-    
     
     // MARK: - Key-Value Observing
     
@@ -186,7 +194,7 @@ class MPPlayerViewController: UIViewController {
         
         
         // Create a periodic observer to update movie player time slider
-        let interval = CMTime(value: 1, timescale: 2)
+        let interval = CMTime(value: 1, timescale: 1)
         timeObservetToken = avPlayer.addPeriodicTimeObserver(forInterval: interval, queue: .main, using: { [weak self] (time) in
             guard let self = self else { return }
             
@@ -210,27 +218,10 @@ class MPPlayerViewController: UIViewController {
         playerItemReverseObserver = avPlayer.observe(\AVPlayer.currentItem?.canPlayReverse,
                                                    options: [.new, .initial]) { [unowned self] player, _ in
             DispatchQueue.main.async {
-                self.rewindButton.isEnabled = player.currentItem?.canPlayReverse ?? false
-            }
-        }
-        
-        #warning("Todo: - 10초 뒤로 이동하도록 변경할 것")
-        playerItemFastReverseObserver = avPlayer.observe(\AVPlayer.currentItem?.canPlayFastReverse,
-                                                       options: [.new, .initial]) { [unowned self] player, _ in
-            DispatchQueue.main.async {
-                self.rewindButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
-            }
-        }
-        
-        playerItemStatusObserver = avPlayer.observe(\AVPlayer.currentItem?.status, options: [.new, .initial]) { [unowned self] _, _ in
-            DispatchQueue.main.async {
-                /*
-                 Configure the user interface elements for playback when the
-                 player item's `status` changes to `readyToPlay`.
-                 */
-                self.updateUIForPlayerItemStatus()
-            }
-        }
+
+                
+                
+                
     }
     
     
@@ -238,12 +229,13 @@ class MPPlayerViewController: UIViewController {
     
     private func setPlayPauseButtonImage() {
         var buttonImage: UIImage?
+        print(#function, #file, #line, "\(avPlayer.timeControlStatus)")
         
         switch avPlayer.timeControlStatus {
         case .playing:
-            buttonImage = UIImage(systemName: MPPlayerViewController.pauseButtonImageName)
+            buttonImage = UIImage(systemName: "pause.fill")
         case .paused, .waitingToPlayAtSpecifiedRate:
-            buttonImage = UIImage(systemName: MPPlayerViewController.playButtonImageName)
+            buttonImage = UIImage(systemName: "play.fill")
         default:
             buttonImage = UIImage(systemName: MPPlayerViewController.playButtonImageName)
         }

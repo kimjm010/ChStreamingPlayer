@@ -15,7 +15,6 @@ class PlayerView: UIView {
         get {
             playerLayer.player
         }
-        
         set {
             playerLayer.player = newValue
         }
