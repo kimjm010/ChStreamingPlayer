@@ -57,6 +57,8 @@ class MPPlayerViewController: UIViewController {
     
     private var playerItemMoveBackwardObserver: NSKeyValueObservation?
     
+    private var playerItemPresentationSize: NSKeyValueObservation?
+    
     private var playerTimeControlStatusObserver: NSKeyValueObservation?
     
     private var playerCurrentItem: NSKeyValueObservation?
@@ -65,6 +67,12 @@ class MPPlayerViewController: UIViewController {
     
     var isRepeat = false
     
+    var isZoom = false
+    
+    var landscapeMode: UIInterfaceOrientationMask {
+        return .landscapeRight
+    }
+    
     
     // MARK: - IBActions
     
@@ -72,7 +80,8 @@ class MPPlayerViewController: UIViewController {
     @IBAction func togglePlay(_ sender: Any) {
         
         if avPlayer.items().count == 0 {
-            alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
+            alertAddItemsToPlayer(title: "Alert",
+                                  message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
                 
                 guard let self = self else { return }
                 self.addAllViedeosToPlayer()
@@ -127,7 +136,8 @@ class MPPlayerViewController: UIViewController {
             avPlayer.advanceToNextItem()
             
             if avPlayer.currentItem == avPlayer.items().last {
-                alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
+                alertAddItemsToPlayer(title: "Alert",
+                                      message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
                     
                     guard let self = self else { return }
                     self.addAllViedeosToPlayer()
@@ -164,7 +174,8 @@ class MPPlayerViewController: UIViewController {
         if avPlayer.items().count > 1 {
             avPlayer.advanceToNextItem()
         } else {
-            alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
+            alertAddItemsToPlayer(title: "Alert",
+                                  message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
                 guard let self = self else { return }
                 
                 self.addAllViedeosToPlayer()
@@ -177,7 +188,11 @@ class MPPlayerViewController: UIViewController {
     @IBAction func previousVideo() {
         if avPlayer.currentItem?.currentTime() == .zero {
             if avPlayer.currentItem != avPlayer.items().first {
-                
+                #warning("Todo: - 이전 영상 재생 기능 확인 할 것")
+                avPlayer.currentItem?.step(byCount: -1)
+                avPlayer.play()
+            } else {
+                alertErrorMsg(title: "Alert", message: "There is no previous video.")
             }
         } else {
             avPlayer.seek(to: .zero)
@@ -201,6 +216,17 @@ class MPPlayerViewController: UIViewController {
     }
     
     
+    @IBAction func controlZoom(_ sender: Any) {
+        isZoom.toggle()
+        
+        let buttonImage = isZoom ? UIImage(systemName: "minus.magnifyingglass") : UIImage(systemName: "plus.magnifyingglass")
+        controlZoomButton.setImage(buttonImage, for: .normal)
+    
+        #warning("Todo: - 확대 축소 기능 구현할 것 -> AVPlayerLayer 참고할 것")
+    }
+    
+    
+    
     /// Change Slider value
     @IBAction func timseSliderDidChange(_ sender: UISlider) {
         let newTime = CMTime(seconds: Double(sender.value), preferredTimescale: 600)
@@ -214,14 +240,11 @@ class MPPlayerViewController: UIViewController {
         super.viewDidLoad()
         
         guard let url = Bundle.main.url(forResource: "v1", withExtension: "mp4") else { return }
-        
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
         
         addAllViedeosToPlayer()
         addPinchGesturer()
-        
-        playerView.playerLayer.videoGravity = .resizeAspect
     }
     
     
@@ -310,6 +333,7 @@ class MPPlayerViewController: UIViewController {
         })
         
         
+        // create player canPlayFastForward observer
         playerItemFastForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastForward,
                                                           options: [.initial, .new],
                                                           changeHandler: { [weak self] (player, _) in
@@ -322,6 +346,7 @@ class MPPlayerViewController: UIViewController {
         })
         
         
+        // create player canPlayReverse observer
         playerItemReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayReverse,
                                                    options: [.new, .initial]) { [weak self] (player, _) in
             guard let self = self else { return }
@@ -333,6 +358,7 @@ class MPPlayerViewController: UIViewController {
         }
         
         
+        // create player canStepForward observer
         playerItemMoveForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepForward,
                                                           options: [.initial, .new],
                                                           changeHandler: { [weak self] (player, _) in
@@ -344,6 +370,7 @@ class MPPlayerViewController: UIViewController {
         })
         
         
+        // create player canStepBackward observer
         playerItemMoveBackwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepBackward,
                                                           options: [.initial, .new],
                                                           changeHandler: { [weak self] (player, _) in
@@ -355,6 +382,7 @@ class MPPlayerViewController: UIViewController {
         })
         
         
+        // create player canPlayFastReverse observer
         playerItemFastReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastReverse,
                                                        options: [.new, .initial]) { [weak self] (player, _) in
             guard let self = self else { return }
@@ -366,6 +394,20 @@ class MPPlayerViewController: UIViewController {
         }
         
         
+        // create player current item's presentationSize observer
+        playerItemPresentationSize = avPlayer.observe(\AVQueuePlayer.currentItem?.presentationSize,
+                                                       options: [.initial, .new],
+                                                       changeHandler: { [weak self] (player, _) in
+            guard let self = self else { return }
+            guard let currentSize = player.currentItem?.presentationSize else { return }
+            
+            DispatchQueue.main.async {
+                self.checkPortraitAndUpdateUI(width: currentSize.width, height: currentSize.height)
+            }
+        })
+        
+        
+        // create player current item's status observer
         playerItemStatusObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.status,
                                                      options: [.new, .initial]) { [weak self] (_, _) in
             guard let self = self else { return }
@@ -375,7 +417,7 @@ class MPPlayerViewController: UIViewController {
             }
         }
         
-        
+        // create player current items observer
         playerCurrentItem = avPlayer.observe(\.currentItem, changeHandler: { [weak self] (player, _) in
             guard let self = self else { return }
             
@@ -386,7 +428,6 @@ class MPPlayerViewController: UIViewController {
               }
           }
         })
-        
     }
     
     
@@ -474,7 +515,7 @@ class MPPlayerViewController: UIViewController {
     
     // MARK: - Add Videos To Player
     private func addAllViedeosToPlayer() {
-        for i in 1...5 {
+        for i in 1...8 {
             guard let url = Bundle.main.url(forResource: "v\(i)", withExtension: "mp4") else { return }
             
             let asset = AVURLAsset(url: url)
@@ -507,9 +548,31 @@ class MPPlayerViewController: UIViewController {
     }
     
     
-    private func controlVideoPlayerZoomStatus() {
+    // MARK: - Check the Video Mode and Update UI
+    
+    private func checkPortraitAndUpdateUI(width: Double, height: Double) {
+        var isPortrait: Bool?
         
+        if width > height {
+            isPortrait = true
+            setPortraitMode(isPortrait: isPortrait)
+        } else {
+            isPortrait = false
+            setPortraitMode(isPortrait: isPortrait)
+        }
     }
     
+    
+    // MARK: - Adjust UI to Portrait Mode or Landscape Mode
+    
+    private func setPortraitMode(isPortrait: Bool?) {
+        guard let isPortrait = isPortrait else { return }
+        
+        if !isPortrait {
+            #warning("Todo: - landscape Mode로 변경할 것")
+        } else {
+            #warning("Todo: - portrait Mode로 변경할 것")
+        }
+    }
 }
 
