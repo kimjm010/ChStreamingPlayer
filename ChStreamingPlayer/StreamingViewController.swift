@@ -24,8 +24,14 @@ class StreamingViewController: UIViewController {
     // MARK: - IBActions
     
     @IBAction func playButtonTapped() {
-        print(#function)
-        videoPlayer.resume()
+        let urlStr = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
+        
+        guard let url = URL(string: urlStr) else {
+            print(#function, #file, #line, "Error Occurred when Parsing Url")
+            return
+        }
+        
+        videoPlayer.play(url: url)
     }
     
     

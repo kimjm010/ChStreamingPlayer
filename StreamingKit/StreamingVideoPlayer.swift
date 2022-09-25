@@ -56,20 +56,9 @@ public class StreamingVideoPlayer {
     }
     
     
-    public func pause(completion: (() -> Void)? = nil) {
+    public func pause() {
         avPlayer.pause()
         currentTime = CMTimeGetSeconds(avPlayer.currentTime())
-        completion?()
-    }
-    
-    
-    public func resume() {
-        guard let currentTime = currentTime else {
-            
-            return
-        }
-        let setTime: CMTime = CMTimeMake(value: Int64(currentTime * 1000 as Float64), timescale: 1000)
-        avPlayer.seek(to: setTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     
     
