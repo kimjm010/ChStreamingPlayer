@@ -28,6 +28,7 @@ class MPPlayerViewController: UIViewController {
     @IBOutlet weak var previousVideoButton: UIButton!
     @IBOutlet weak var repeatButton: UIButton!
     @IBOutlet weak var controlZoomButton: UIButton!
+    @IBOutlet weak var videoModeLabel: UILabel!
     
     
     // MARK: - Vars
@@ -239,12 +240,16 @@ class MPPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let url = Bundle.main.url(forResource: "v1", withExtension: "mp4") else { return }
+        guard let url = Bundle.main.url(forResource: "v2", withExtension: "mp4") else { return }
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
         
         addAllViedeosToPlayer()
         addPinchGesturer()
+        
+        #if DEBUG
+        print(#function, #file, #line, "\(playerView.playerLayer.bounds) \(playerView.playerLayer.frame)")
+        #endif
     }
     
     
@@ -554,10 +559,10 @@ class MPPlayerViewController: UIViewController {
         var isPortrait: Bool?
         
         if width > height {
-            isPortrait = true
+            isPortrait = false
             setPortraitMode(isPortrait: isPortrait)
         } else {
-            isPortrait = false
+            isPortrait = true
             setPortraitMode(isPortrait: isPortrait)
         }
     }
@@ -569,9 +574,9 @@ class MPPlayerViewController: UIViewController {
         guard let isPortrait = isPortrait else { return }
         
         if !isPortrait {
-            #warning("Todo: - landscape Mode로 변경할 것")
+            videoModeLabel.text = "Landscape Mode"
         } else {
-            #warning("Todo: - portrait Mode로 변경할 것")
+            videoModeLabel.text = "Portrait Mode"
         }
     }
 }
