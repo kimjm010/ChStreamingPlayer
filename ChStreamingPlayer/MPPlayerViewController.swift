@@ -145,8 +145,11 @@ class MPPlayerViewController: UIViewController {
         if avPlayer.items().count > 1 {
             avPlayer.advanceToNextItem()
         } else {
-            alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.")
-            addAllViedeosToPlayer()
+            alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
+                guard let self = self else { return }
+                
+                self.addAllViedeosToPlayer()
+            }
         }
     }
     
@@ -262,7 +265,8 @@ class MPPlayerViewController: UIViewController {
     func setupPlayerObservers() {
         
         // Create observer to toggle play/pause button
-        playerTimeControlStatusObserver = avPlayer.observe(\AVQueuePlayer.timeControlStatus, options: [.initial, .new]) { [weak self] (_, _) in
+        playerTimeControlStatusObserver = avPlayer.observe(\AVQueuePlayer.timeControlStatus,
+                                                            options: [.initial, .new]) { [weak self] (_, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -273,7 +277,9 @@ class MPPlayerViewController: UIViewController {
         
         // Create a periodic observer to update movie player time slider
         let interval = CMTime(value: 1, timescale: 1)
-        timeObservetToken = avPlayer.addPeriodicTimeObserver(forInterval: interval, queue: .main, using: { [weak self] (time) in
+        timeObservetToken = avPlayer.addPeriodicTimeObserver(forInterval: interval,
+                                                             queue: .main,
+                                                             using: { [weak self] (time) in
             guard let self = self else { return }
             
             let timeElapsed = Float(time.seconds)
@@ -282,7 +288,9 @@ class MPPlayerViewController: UIViewController {
         })
         
         
-        playerItemFastForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastForward, options: [.initial, .new], changeHandler: { [weak self] (player, _) in
+        playerItemFastForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastForward,
+                                                          options: [.initial, .new],
+                                                          changeHandler: { [weak self] (player, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -292,7 +300,9 @@ class MPPlayerViewController: UIViewController {
         
         
         playerItemReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayReverse,
-                                                   options: [.new, .initial]) { [unowned self] player, _ in
+                                                   options: [.new, .initial]) { [weak self] player, _ in
+            guard let self = self else { return }
+            
             DispatchQueue.main.async {
                 self.backwardButton.isEnabled = player.currentItem?.canPlayReverse ?? false
             }
@@ -300,14 +310,19 @@ class MPPlayerViewController: UIViewController {
         
         
         playerItemFastReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastReverse,
-                                                       options: [.new, .initial]) { [unowned self] player, _ in
+                                                       options: [.new, .initial]) { [weak self] player, _ in
+            guard let self = self else { return }
+            
             DispatchQueue.main.async {
                 self.backwardButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
             }
         }
         
         
-        playerItemStatusObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.status, options: [.new, .initial]) { [unowned self] _, _ in
+        playerItemStatusObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.status,
+                                                     options: [.new, .initial]) { [weak self] _, _ in
+            guard let self = self else { return }
+            
             DispatchQueue.main.async {
                 self.updateUIForPlayerItemStatus()
             }
@@ -315,11 +330,13 @@ class MPPlayerViewController: UIViewController {
         
         
         playerCurrentItem = avPlayer.observe(\.currentItem, changeHandler: { [weak self] (player, _) in
+            guard let self = self else { return }
+            
           if player.items().count == 1 {
-            // player에 재생할 item이 1개만 남았을 때
-            // 비디오를 다시 Queue에 추가한다
-            print(#function, #file, #line, "여기에 자동으로 추가하는 것이 아닌것 같아요")
-//              self?.addAllViedeosToPlayer()
+              self.alertAddItemsToPlayer(title: "Alert",
+                                         message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { _ in
+                  self.addAllViedeosToPlayer()
+              }
           }
         })
         
@@ -405,23 +422,6 @@ class MPPlayerViewController: UIViewController {
         let components = NSDateComponents()
         components.second = Int(max(0.0, time))
         return timeRemainingFormatter.string(from: components as DateComponents)!
-    }
-    
-    
-    // MARK: - Error Handling
-    
-    func handleErrorWithMessage(_ message: String, error: Error? = nil) {
-        if let err = error {
-            print("Error occurred with message: \(message), error: \(err).")
-        }
-        let alertTitle = NSLocalizedString("Error", comment: "Alert title for errors")
-        
-        let alert = UIAlertController(title: alertTitle, message: message,
-                                      preferredStyle: UIAlertController.Style.alert)
-        let alertActionTitle = NSLocalizedString("OK", comment: "OK on error alert")
-        let alertAction = UIAlertAction(title: alertActionTitle, style: .default, handler: nil)
-        alert.addAction(alertAction)
-        present(alert, animated: true, completion: nil)
     }
     
     
