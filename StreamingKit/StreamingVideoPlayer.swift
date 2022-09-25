@@ -25,11 +25,7 @@ public class StreamingVideoPlayer {
         return view
     }()
     
-    var isPlaying: Bool {
-        return avPlayer.rate != 0 && avPlayer.error != nil
-    }
-    
-    var currentTime: Float64?
+    var currentVolume: Float = 0.0
 
     
     // MARK: - Public Interface
@@ -58,7 +54,6 @@ public class StreamingVideoPlayer {
     
     public func pause() {
         avPlayer.pause()
-        currentTime = CMTimeGetSeconds(avPlayer.currentTime())
     }
     
     
@@ -83,49 +78,13 @@ public class StreamingVideoPlayer {
     // MARK: - Control Volume
     
     public func turnOnVolume() {
-        avPlayer.volume = 1.0
+        currentVolume = avPlayer.volume
+        currentVolume += 0.1
+        avPlayer.volume = currentVolume
     }
     
     
     public func muteVolume() {
         avPlayer.volume = 0.0
     }
-    
-    
-    // MARK: - Update Status
-    
-    public func updateStatus(completion: (Bool) -> Void) {
-        if isPlaying {
-            avPlayer.pause()
-            completion(true)
-        } else {
-            avPlayer.play()
-            completion(false)
-        }
-    }
-    
-    
-    // MARK: - Update Current Time
-    
-    public func updateCurrentTime() {
-        currentTime = CMTimeGetSeconds(avPlayer.currentTime())
-    }
-    
-    
-//    private func addPeriodicTimeObserver() {
-//        let interval = CMTimeMakeWithSeconds(1, preferredTimescale: Int32(NSEC_PER_SEC))
-//        avPlayer.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (elapsedTime) in
-//            guard let self = self else { return }
-//            let elapsedTimeSecondsFloat = CMTimeGetSeconds(elapsedTime)
-//            let totalTimeSecondsFloat = CMTimeGetSeconds(self.avPlayer.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
-//
-//            guard !elapsedTimeSecondsFloat.isNaN,
-//                  !elapsedTimeSecondsFloat.isInfinite,
-//                  !totalTimeSecondsFloat.isNaN,
-//                  !totalTimeSecondsFloat.isInfinite else { return }
-//
-//            self.elapsedTimeSecondsFloat = elapsedTimeSecondsFloat
-//            self.totalTimeSecondsFloat = totalTimeSecondsFloat
-//        }
-//    }
 }
