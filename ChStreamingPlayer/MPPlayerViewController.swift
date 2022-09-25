@@ -27,6 +27,7 @@ class MPPlayerViewController: UIViewController {
     @IBOutlet weak var nextVideoButton: UIButton!
     @IBOutlet weak var previousVideoButton: UIButton!
     @IBOutlet weak var repeatButton: UIButton!
+    @IBOutlet weak var controlZoomButton: UIButton!
     
     
     // MARK: - Vars
@@ -52,6 +53,10 @@ class MPPlayerViewController: UIViewController {
     
     private var playerItemReverseObserver: NSKeyValueObservation?
     
+    private var playerItemMoveForwardObserver: NSKeyValueObservation?
+    
+    private var playerItemMoveBackwardObserver: NSKeyValueObservation?
+    
     private var playerTimeControlStatusObserver: NSKeyValueObservation?
     
     private var playerCurrentItem: NSKeyValueObservation?
@@ -65,6 +70,14 @@ class MPPlayerViewController: UIViewController {
     
     /// Play Video
     @IBAction func togglePlay(_ sender: Any) {
+        
+        if avPlayer.items().count == 0 {
+            alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
+                
+                guard let self = self else { return }
+                self.addAllViedeosToPlayer()
+            }
+        }
         
         switch avPlayer.timeControlStatus {
         case .playing:
@@ -114,7 +127,11 @@ class MPPlayerViewController: UIViewController {
             avPlayer.advanceToNextItem()
             
             if avPlayer.currentItem == avPlayer.items().last {
-                alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.")
+                alertAddItemsToPlayer(title: "Alert", message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
+                    
+                    guard let self = self else { return }
+                    self.addAllViedeosToPlayer()
+                }
             }
         }
         
@@ -203,6 +220,8 @@ class MPPlayerViewController: UIViewController {
         
         addAllViedeosToPlayer()
         addPinchGesturer()
+        
+        playerView.playerLayer.videoGravity = .resizeAspect
     }
     
     
@@ -298,32 +317,57 @@ class MPPlayerViewController: UIViewController {
             
             DispatchQueue.main.async {
                 self.forwardButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
+                self.nextVideoButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
             }
         })
         
         
         playerItemReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayReverse,
-                                                   options: [.new, .initial]) { [weak self] player, _ in
+                                                   options: [.new, .initial]) { [weak self] (player, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
                 self.backwardButton.isEnabled = player.currentItem?.canPlayReverse ?? false
+                self.previousVideoButton.isEnabled = player.currentItem?.canPlayReverse ?? false
             }
         }
         
         
+        playerItemMoveForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepForward,
+                                                          options: [.initial, .new],
+                                                          changeHandler: { [weak self] (player, _) in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.moveForwardButton.isEnabled = player.currentItem?.canStepForward ?? false
+            }
+        })
+        
+        
+        playerItemMoveBackwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepBackward,
+                                                          options: [.initial, .new],
+                                                          changeHandler: { [weak self] (player, _) in
+            guard let self = self else { return }
+            
+            DispatchQueue.main.async {
+                self.moveBackButton.isEnabled = player.currentItem?.canStepBackward ?? false
+            }
+        })
+        
+        
         playerItemFastReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastReverse,
-                                                       options: [.new, .initial]) { [weak self] player, _ in
+                                                       options: [.new, .initial]) { [weak self] (player, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
                 self.backwardButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
+                self.repeatButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
             }
         }
         
         
         playerItemStatusObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.status,
-                                                     options: [.new, .initial]) { [weak self] _, _ in
+                                                     options: [.new, .initial]) { [weak self] (_, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -439,7 +483,6 @@ class MPPlayerViewController: UIViewController {
             
             avPlayer.insert(item, after: avPlayer.items().last)
         }
-        print(#function, #file, #line, "\(avPlayer.items().count)")
     }
     
     
@@ -462,5 +505,11 @@ class MPPlayerViewController: UIViewController {
             gestureRecognizer.scale = 1
         }
     }
+    
+    
+    private func controlVideoPlayerZoomStatus() {
+        
+    }
+    
 }
 
