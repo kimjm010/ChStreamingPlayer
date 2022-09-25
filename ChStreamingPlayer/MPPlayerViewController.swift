@@ -56,6 +56,8 @@ class MPPlayerViewController: UIViewController {
     
     private var playerCurrentItem: NSKeyValueObservation?
     
+    var tapGesture = UITapGestureRecognizer()
+    
     var isRepeat = false
     
     
@@ -198,8 +200,9 @@ class MPPlayerViewController: UIViewController {
         
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
+        
         addAllViedeosToPlayer()
-        print(#function, #file, #line, "\(avPlayer.items().count)")
+        addPinchGesturer()
     }
     
     
@@ -437,6 +440,27 @@ class MPPlayerViewController: UIViewController {
             avPlayer.insert(item, after: avPlayer.items().last)
         }
         print(#function, #file, #line, "\(avPlayer.items().count)")
+    }
+    
+    
+    // MARK: - Add Pinch Gesture To Zoom in/out the Video
+    
+    private func addPinchGesturer() {
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
+        playerView.addGestureRecognizer(pinchGesture)
+    }
+    
+    
+    @objc
+    private func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
+        guard gestureRecognizer.view != nil else { return }
+        
+        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
+            guard let view = gestureRecognizer.view else { return }
+            
+            gestureRecognizer.view?.transform = view.transform.scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale)
+            gestureRecognizer.scale = 1
+        }
     }
 }
 
