@@ -33,6 +33,16 @@ extension UIViewController {
     }
     
     
+    func alertErrorMsg(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "Ok", style: .default)
+        alert.addAction(okAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    
     func handleErrorWithMessage(_ message: String, error: Error? = nil) {
         if let err = error {
             print("Error occurred with message: \(message), error: \(err).")
