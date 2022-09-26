@@ -175,13 +175,6 @@ class MPPlayerViewController: UIViewController {
     @IBAction func nextVideo() {
         if avPlayer.items().count > 1 {
             avPlayer.advanceToNextItem()
-        } else {
-            alertAddItemsToPlayer(title: "Alert",
-                                  message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add by pressing 'play' button") { [weak self] _ in
-                guard let self = self else { return }
-                
-                self.addAllViedeosToPlayer()
-            }
         }
     }
     
@@ -428,7 +421,7 @@ class MPPlayerViewController: UIViewController {
             
             if player.items().count == 0 {
                 self.alertAddItemsToPlayer(title: "Alert",
-                                           message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { _ in
+                                           message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") { _ in
                     self.addAllViedeosToPlayer()
                 }
             }
@@ -604,6 +597,14 @@ class MPPlayerViewController: UIViewController {
         } else {
             videoModeLabel.text = "Portrait Mode"
         }
+    }
+    
+    
+    // MARK: - 비디오 재생 목록이 없는 경우 nextVideo버튼 비활성화
+    
+    /// Disable Next Video Button if there is no Video items to play
+    private func disableNextVideoButton() {
+        nextVideoButton.isEnabled = false
     }
 }
 
