@@ -38,7 +38,7 @@ class MPPlayerViewController: UIViewController {
     private var playerLooper: NSObject?
     
     let timeRemainingFormatter: DateComponentsFormatter = {
-       let formatter = DateComponentsFormatter()
+        let formatter = DateComponentsFormatter()
         formatter.zeroFormattingBehavior = .pad
         formatter.allowedUnits = [.minute, .second]
         return formatter
@@ -86,6 +86,7 @@ class MPPlayerViewController: UIViewController {
                 
                 guard let self = self else { return }
                 self.addAllViedeosToPlayer()
+                self.dismiss(animated: true, completion: nil)
             }
         }
         
@@ -93,7 +94,7 @@ class MPPlayerViewController: UIViewController {
         case .playing:
             // player 가 playing중인 경우 멈춤
             avPlayer.pause()
-        
+            
         case .paused:
             let currentItem = avPlayer.currentItem
             if currentItem?.currentTime() == currentItem?.duration {
@@ -109,14 +110,14 @@ class MPPlayerViewController: UIViewController {
     /// Play Fast Backward
     @IBAction func moveFastBackward(_ sender: Any) {
         
-            // player의 현재 시각이 처음 시각과 같은 경우 재생시간 맨 끝으로 이동
-            if avPlayer.currentItem?.currentTime() == .zero {
-                if let itemDuration = avPlayer.currentItem?.duration {
-                    avPlayer.currentItem?.seek(to: itemDuration, completionHandler: nil)
-                }
+        // player의 현재 시각이 처음 시각과 같은 경우 재생시간 맨 끝으로 이동
+        if avPlayer.currentItem?.currentTime() == .zero {
+            if let itemDuration = avPlayer.currentItem?.duration {
+                avPlayer.currentItem?.seek(to: itemDuration, completionHandler: nil)
             }
-            
-            avPlayer.rate = max(avPlayer.rate - 2.0, -2.0)
+        }
+        
+        avPlayer.rate = max(avPlayer.rate - 2.0, -2.0)
     }
     
     
@@ -176,7 +177,7 @@ class MPPlayerViewController: UIViewController {
             avPlayer.advanceToNextItem()
         } else {
             alertAddItemsToPlayer(title: "Alert",
-                                  message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
+                                  message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add by pressing 'play' button") { [weak self] _ in
                 guard let self = self else { return }
                 
                 self.addAllViedeosToPlayer()
@@ -189,7 +190,7 @@ class MPPlayerViewController: UIViewController {
     @IBAction func previousVideo() {
         if avPlayer.currentItem?.currentTime() == .zero {
             if avPlayer.currentItem != avPlayer.items().first {
-                #warning("Todo: - 이전 영상 재생 기능 확인 할 것")
+#warning("Todo: - 이전 영상 재생 기능 확인 할 것")
                 avPlayer.currentItem?.step(byCount: -1)
                 avPlayer.play()
             } else {
@@ -219,11 +220,14 @@ class MPPlayerViewController: UIViewController {
     
     @IBAction func controlZoom(_ sender: Any) {
         isZoom.toggle()
-        
         let buttonImage = isZoom ? UIImage(systemName: "minus.magnifyingglass") : UIImage(systemName: "plus.magnifyingglass")
         controlZoomButton.setImage(buttonImage, for: .normal)
-    
-        #warning("Todo: - 확대 축소 기능 구현할 것 -> AVPlayerLayer 참고할 것")
+        
+        
+#if DEBUG
+        controlVideoZoom(isZoom: isZoom)
+        print(#function, #file, #line, "\(playerView.playerLayer.frame)")
+#endif
     }
     
     
@@ -240,16 +244,12 @@ class MPPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let url = Bundle.main.url(forResource: "v2", withExtension: "mp4") else { return }
+        guard let url = Bundle.main.url(forResource: "v1", withExtension: "mp4") else { return }
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
         
         addAllViedeosToPlayer()
         addPinchGesturer()
-        
-        #if DEBUG
-        print(#function, #file, #line, "\(playerView.playerLayer.bounds) \(playerView.playerLayer.frame)")
-        #endif
     }
     
     
@@ -285,7 +285,7 @@ class MPPlayerViewController: UIViewController {
         }
     }
     
-
+    
     func validateValues(forKeys keys: [String], forAsset newAsset: AVAsset) -> Bool {
         for key in keys {
             var error: NSError?
@@ -353,7 +353,7 @@ class MPPlayerViewController: UIViewController {
         
         // create player canPlayReverse observer
         playerItemReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayReverse,
-                                                   options: [.new, .initial]) { [weak self] (player, _) in
+                                                      options: [.new, .initial]) { [weak self] (player, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -377,8 +377,8 @@ class MPPlayerViewController: UIViewController {
         
         // create player canStepBackward observer
         playerItemMoveBackwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepBackward,
-                                                          options: [.initial, .new],
-                                                          changeHandler: { [weak self] (player, _) in
+                                                           options: [.initial, .new],
+                                                           changeHandler: { [weak self] (player, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -389,7 +389,7 @@ class MPPlayerViewController: UIViewController {
         
         // create player canPlayFastReverse observer
         playerItemFastReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastReverse,
-                                                       options: [.new, .initial]) { [weak self] (player, _) in
+                                                          options: [.new, .initial]) { [weak self] (player, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -414,7 +414,7 @@ class MPPlayerViewController: UIViewController {
         
         // create player current item's status observer
         playerItemStatusObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.status,
-                                                     options: [.new, .initial]) { [weak self] (_, _) in
+                                                     options: [.new, .initial]) { [weak self] (player, _) in
             guard let self = self else { return }
             
             DispatchQueue.main.async {
@@ -426,12 +426,12 @@ class MPPlayerViewController: UIViewController {
         playerCurrentItem = avPlayer.observe(\.currentItem, changeHandler: { [weak self] (player, _) in
             guard let self = self else { return }
             
-          if player.items().count == 1 {
-              self.alertAddItemsToPlayer(title: "Alert",
-                                         message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { _ in
-                  self.addAllViedeosToPlayer()
-              }
-          }
+            if player.items().count == 0 {
+                self.alertAddItemsToPlayer(title: "Alert",
+                                           message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { _ in
+                    self.addAllViedeosToPlayer()
+                }
+            }
         })
     }
     
@@ -453,7 +453,7 @@ class MPPlayerViewController: UIViewController {
         guard let buttonImage = buttonImage else { return }
         playPauseButton.setImage(buttonImage, for: .normal)
     }
-
+    
     
     // MARK: - Update UI based on Player Item Status
     
@@ -473,7 +473,7 @@ class MPPlayerViewController: UIViewController {
             forwardButton.isEnabled = false
             backwardButton.isEnabled = false
             ProgressHUD.showFailed("Error ocurred when playing video. Please try again later.")
-        
+            
         case .readyToPlay:
             playPauseButton.isEnabled = true
             moveBackButton.isEnabled = true
@@ -519,6 +519,7 @@ class MPPlayerViewController: UIViewController {
     
     
     // MARK: - Add Videos To Player
+    
     private func addAllViedeosToPlayer() {
         for i in 1...8 {
             guard let url = Bundle.main.url(forResource: "v\(i)", withExtension: "mp4") else { return }
@@ -541,6 +542,8 @@ class MPPlayerViewController: UIViewController {
     
     
     @objc
+    /// Pinch제스처를 처리합니다.
+    /// - Parameter gestureRecognizer: PinchGesture객체
     private func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
         guard gestureRecognizer.view != nil else { return }
         
@@ -553,8 +556,29 @@ class MPPlayerViewController: UIViewController {
     }
     
     
+    /// isZoom속성에 따라 화면을 확대/축소합니다.
+    /// - Parameter isZoom: 확대 여부 속성
+    private func controlVideoZoom(isZoom: Bool) {
+        if isZoom {
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                guard let self = self else { return }
+                self.playerView.transform = self.playerView.transform.scaledBy(x: 2.0, y: 2.0)
+            }
+        } else {
+            UIView.animate(withDuration: 0.3) { [weak self] in
+                guard let self = self else { return }
+                self.playerView.transform = .identity
+            }
+        }
+    }
+    
+    
     // MARK: - Check the Video Mode and Update UI
     
+    /// 가로/세로모드 확인 후 UI업데이트
+    /// - Parameters:
+    ///   - width: 비디오의 가로 크기
+    ///   - height: 비디오의 세로 크기
     private func checkPortraitAndUpdateUI(width: Double, height: Double) {
         var isPortrait: Bool?
         
@@ -570,6 +594,8 @@ class MPPlayerViewController: UIViewController {
     
     // MARK: - Adjust UI to Portrait Mode or Landscape Mode
     
+    /// 비디오 가로/세로모드를 사용자에게 표시합니다.
+    /// - Parameter isPortrait: 세로모드 Bool속성
     private func setPortraitMode(isPortrait: Bool?) {
         guard let isPortrait = isPortrait else { return }
         
