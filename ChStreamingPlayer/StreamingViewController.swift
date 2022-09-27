@@ -28,6 +28,7 @@ class StreamingViewController: UIViewController {
     
     private let avPlayer = AVPlayer()
     
+    private var playerVolume = 0.0
     
     // MARK: - IBActions
     
@@ -83,26 +84,6 @@ class StreamingViewController: UIViewController {
                     .disposed(by: self.rx.disposeBag)
             }
             .disposed(by: rx.disposeBag)
-        
-        
-        muteButton.rx.tap
-            .throttle(0.5, scheduler: MainScheduler.instance)
-            .subscribe(onNext: {
-                print(#function, #file, #line, "\(self.avPlayer.isMuted)")
-                if !self.avPlayer.isMuted {
-                    self.videoPlayer.muteVolume()
-                }
-            })
-            .disposed(by: rx.disposeBag)
-        
-        turnOnVolumeButton.rx.tap
-            .throttle(0.5, scheduler: MainScheduler.instance)
-            .subscribe(onNext: {
-                
-            })
-        
-                
-                
     }
     
     

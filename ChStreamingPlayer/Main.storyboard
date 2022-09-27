@@ -149,9 +149,6 @@
                                         <rect key="frame" x="250.66666666666666" y="0.0" width="55.666666666666657" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="forward.end.fill" catalog="system"/>
-                                        <connections>
-                                            <action selector="nextVideo" destination="3qe-GV-xjU" eventType="touchUpInside" id="tDr-zs-I5S"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ggA-KB-uzn">
                                         <rect key="frame" x="334.33333333333331" y="0.0" width="55.666666666666686" height="34.333333333333336"/>
@@ -212,9 +209,6 @@
                                             </stackView>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Q88-yQ-keM">
                                                 <rect key="frame" x="-2" y="14.333333333333258" width="251.33333333333334" height="31"/>
-                                                <connections>
-                                                    <action selector="timseSliderDidChange:" destination="3qe-GV-xjU" eventType="valueChanged" id="Ar7-9R-a0g"/>
-                                                </connections>
                                             </slider>
                                         </subviews>
                                         <constraints>
