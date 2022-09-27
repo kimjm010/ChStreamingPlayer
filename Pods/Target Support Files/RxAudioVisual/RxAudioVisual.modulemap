@@ -1,0 +1,6 @@
+framework module RxAudioVisual {
+  umbrella header "RxAudioVisual-umbrella.h"
+
+  export *
+  module * { export * }
+}

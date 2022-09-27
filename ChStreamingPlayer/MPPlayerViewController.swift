@@ -5,10 +5,12 @@
 //  Created by Chris Kim on 9/22/22.
 //
 
-import Foundation
-import AVKit
 import AVFoundation
 import ProgressHUD
+import RxAudioVisual
+import NSObject_Rx
+import RxSwift
+import RxCocoa
 
 
 class MPPlayerViewController: UIViewController {
@@ -58,7 +60,7 @@ class MPPlayerViewController: UIViewController {
     
     private var playerItemMoveBackwardObserver: NSKeyValueObservation?
     
-    private var playerItemPresentationSize: NSKeyValueObservation?
+    private var playerItemPresentationSizeObserver: NSKeyValueObservation?
     
     private var playerTimeControlStatusObserver: NSKeyValueObservation?
     
@@ -73,6 +75,14 @@ class MPPlayerViewController: UIViewController {
     var landscapeMode: UIInterfaceOrientationMask {
         return .landscapeRight
     }
+    
+    var selectedPreviousItem: AVPlayerItem?
+    
+    private static let pauseImage = "pause.fill"
+    
+    private static let playImage = "play.fill"
+    
+    private let timeControlStatusRx = BehaviorRelay<AVPlayer.TimeControlStatus>(value: .waitingToPlayAtSpecifiedRate)
     
     
     // MARK: - IBActions
@@ -150,7 +160,7 @@ class MPPlayerViewController: UIViewController {
         let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
         let newTime = currentTime + 10
         let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-        avPlayer.seek(to: setTime, toleranceBefore: .zero, toleranceAfter: .zero)
+        avPlayer.seek(to: setTime)
     }
     
     
@@ -167,7 +177,7 @@ class MPPlayerViewController: UIViewController {
         let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
         let newTime = currentTime - 10
         let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-        avPlayer.seek(to: setTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        avPlayer.seek(to: setTime)
     }
     
     
@@ -181,16 +191,20 @@ class MPPlayerViewController: UIViewController {
     
     /// 이전 재생항목으로 이동
     @IBAction func previousVideo() {
-        if avPlayer.currentItem?.currentTime() == .zero {
-            if avPlayer.currentItem != avPlayer.items().first {
-#warning("Todo: - 이전 영상 재생 기능 확인 할 것")
-                avPlayer.currentItem?.step(byCount: -1)
-                avPlayer.play()
-            } else {
-                alertErrorMsg(title: "Alert", message: "There is no previous video.")
-            }
-        } else {
+        
+        if avPlayer.currentItem?.currentTime() != .zero {
             avPlayer.seek(to: .zero)
+        }
+        
+        #warning("Todo: - Previous Item을 저장해서 insert 후 다른 아이템 추가할 것")
+        guard let selectedPreviousItem = selectedPreviousItem else { return }
+        let currentItems = avPlayer.items()
+        
+        avPlayer.removeAllItems()
+        avPlayer.insert(selectedPreviousItem, after: nil)
+        
+        for item in currentItems {
+            avPlayer.insert(item, after: nil)
         }
     }
     
@@ -228,7 +242,7 @@ class MPPlayerViewController: UIViewController {
     /// Change Slider value
     @IBAction func timseSliderDidChange(_ sender: UISlider) {
         let newTime = CMTime(seconds: Double(sender.value), preferredTimescale: 600)
-        avPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
+        avPlayer.seek(to: newTime)
     }
     
     
@@ -272,7 +286,6 @@ class MPPlayerViewController: UIViewController {
                 if self.validateValues(forKeys: assetKeysRequiredToPlay, forAsset: newAsset) {
                     self.setupPlayerObservers()
                     self.playerView.player = self.avPlayer
-                    self.avPlayer.replaceCurrentItem(with: AVPlayerItem(asset: newAsset))
                 }
             }
         }
@@ -307,16 +320,14 @@ class MPPlayerViewController: UIViewController {
     
     func setupPlayerObservers() {
         
-        // Create observer to toggle play/pause button
-        playerTimeControlStatusObserver = avPlayer.observe(\AVQueuePlayer.timeControlStatus,
-                                                            options: [.initial, .new]) { [weak self] (_, _) in
-            guard let self = self else { return }
+        // play/pause button 이미지 변경
+        avPlayer.rx.timeControlStatus.asDriver(onErrorJustReturn: .playing)
+            .map { $0 == .playing ? UIImage(systemName: MPPlayerViewController.pauseImage) : UIImage(systemName: MPPlayerViewController.playImage) }
+            .drive(playPauseButton.rx.image())
+            .disposed(by: rx.disposeBag)
             
-            DispatchQueue.main.async {
-                self.setPlayPauseButtonImage()
-            }
-        }
-        
+            
+            
         
         // Create a periodic observer to update movie player time slider
         let interval = CMTime(value: 1, timescale: 1)
@@ -393,7 +404,7 @@ class MPPlayerViewController: UIViewController {
         
         
         // create player current item's presentationSize observer
-        playerItemPresentationSize = avPlayer.observe(\AVQueuePlayer.currentItem?.presentationSize,
+        playerItemPresentationSizeObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.presentationSize,
                                                        options: [.initial, .new],
                                                        changeHandler: { [weak self] (player, _) in
             guard let self = self else { return }
@@ -409,11 +420,12 @@ class MPPlayerViewController: UIViewController {
         playerItemStatusObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.status,
                                                      options: [.new, .initial]) { [weak self] (player, _) in
             guard let self = self else { return }
-            
+
             DispatchQueue.main.async {
                 self.updateUIForPlayerItemStatus()
             }
         }
+        
         
         // create player current items observer
         playerCurrentItem = avPlayer.observe(\.currentItem, changeHandler: { [weak self] (player, _) in
@@ -426,25 +438,6 @@ class MPPlayerViewController: UIViewController {
                 }
             }
         })
-    }
-    
-    
-    // MARK: - Adjust Play/Pause Button Image
-    
-    private func setPlayPauseButtonImage() {
-        var buttonImage: UIImage?
-        
-        switch avPlayer.timeControlStatus {
-        case .playing:
-            buttonImage = UIImage(systemName: "pause.fill")
-        case .paused, .waitingToPlayAtSpecifiedRate:
-            buttonImage = UIImage(systemName: "play.fill")
-        default:
-            buttonImage = UIImage(systemName: "play.fill")
-        }
-        
-        guard let buttonImage = buttonImage else { return }
-        playPauseButton.setImage(buttonImage, for: .normal)
     }
     
     
@@ -514,12 +507,14 @@ class MPPlayerViewController: UIViewController {
     // MARK: - Add Videos To Player
     
     private func addAllViedeosToPlayer() {
+        var items = [AVPlayerItem]()
         for i in 1...8 {
             guard let url = Bundle.main.url(forResource: "v\(i)", withExtension: "mp4") else { return }
             
             let asset = AVURLAsset(url: url)
             
             let item = AVPlayerItem(asset: asset)
+            items.append(item)
             
             avPlayer.insert(item, after: avPlayer.items().last)
         }
@@ -534,9 +529,9 @@ class MPPlayerViewController: UIViewController {
     }
     
     
-    @objc
     /// Pinch제스처를 처리합니다.
     /// - Parameter gestureRecognizer: PinchGesture객체
+    @objc
     private func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
         guard gestureRecognizer.view != nil else { return }
         

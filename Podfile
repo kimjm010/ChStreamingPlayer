@@ -6,6 +6,9 @@ target 'ChStreamingPlayer' do
   use_frameworks!
 
 pod 'ProgressHUD'
+pod "RxAudioVisual"
+pod 'NSObject+Rx'
+pod 'RxSwift'
 
   # Pods for ChStreamingPlayer
 
@@ -14,6 +17,10 @@ end
 target 'StreamingKit' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
+
+pod "RxAudioVisual"
+pod 'NSObject+Rx'
+pod 'RxSwift'
 
   # Pods for StreamingKit
 
