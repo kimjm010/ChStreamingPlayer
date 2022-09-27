@@ -1,16 +1,35 @@
 PODS:
+  - "NSObject+Rx (4.4.1)":
+    - RxSwift (~> 4.3)
   - ProgressHUD (13.6)
+  - RxAudioVisual (1.2.0):
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
+  - RxCocoa (4.5.0):
+    - RxSwift (>= 4.4.2, ~> 4.4)
+  - RxSwift (4.5.0)
 
 DEPENDENCIES:
+  - "NSObject+Rx"
   - ProgressHUD
+  - RxAudioVisual
+  - RxSwift
 
 SPEC REPOS:
   trunk:
+    - "NSObject+Rx"
     - ProgressHUD
+    - RxAudioVisual
+    - RxCocoa
+    - RxSwift
 
 SPEC CHECKSUMS:
+  "NSObject+Rx": 9884a92f19b610795c431e10b4e601913b59c9e9
   ProgressHUD: 4bdaa0d2ddf676b23324b199f9facffb5c3a1620
+  RxAudioVisual: d5aa2c703acadaaf5fc37d0d3424366b267be036
+  RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
+  RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
 
-PODFILE CHECKSUM: 694506745db897dbf94a8c502b02985982049ae3
+PODFILE CHECKSUM: c9d71cd4c8aad39a74d129dc6b5d064a5df73942
 
 COCOAPODS: 1.11.2
