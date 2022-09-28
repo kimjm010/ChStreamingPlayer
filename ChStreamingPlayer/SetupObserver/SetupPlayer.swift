@@ -29,6 +29,7 @@ extension MPPlayerViewController {
             .drive(playPauseButton.rx.image())
             .disposed(by: rx.disposeBag)
         
+        
         // 현재 재생시간 레이블 / slider 변경
         player.rx.playbackPosition(updateQueue: .main)
             .subscribe(onNext: { [weak self] in

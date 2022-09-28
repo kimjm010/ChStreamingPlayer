@@ -60,25 +60,13 @@ class MPPlayerViewController: UIViewController {
     private let timeControlStatusRx = BehaviorRelay<AVPlayer.TimeControlStatus>(value: .waitingToPlayAtSpecifiedRate)
     
     
-    //MARK: - Disposables
-    
-    var canPlayFastForwardDisposable: Disposable? = nil
-    var durationDisposable: Disposable? = nil
-    var canPlayReverseDisposable: Disposable? = nil
-    var canStepForwardDisposable: Disposable? = nil
-    var canStepBackwardDisposable: Disposable? = nil
-    var canPlayFastReverseDisposable: Disposable? = nil
-    var presentationDisposable: Disposable? = nil
-    var statusDisposable: Disposable? = nil
-    
-    
     // MARK: - IBActions
     @IBAction func togglePlay(_ sender: Any) {
         switch avPlayer.timeControlStatus {
             case .playing:
                 // player 가 playing중인 경우 멈춤
                 avPlayer.pause()
-                
+
             case .paused:
                 let currentItem = avPlayer.currentItem
                 if currentItem?.currentTime() == currentItem?.duration {
@@ -88,76 +76,6 @@ class MPPlayerViewController: UIViewController {
             default:
                 avPlayer.pause()
             }
-    }
-    
-    
-    /// Play Fast Backward
-    @IBAction func moveFastBackward(_ sender: Any) {
-        
-        // player의 현재 시각이 처음 시각과 같은 경우 재생시간 맨 끝으로 이동
-        if avPlayer.currentItem?.currentTime() == .zero {
-            if let itemDuration = avPlayer.currentItem?.duration {
-                avPlayer.currentItem?.seek(to: itemDuration, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
-            }
-        }
-        
-        avPlayer.rate = max(avPlayer.rate - 2.0, -2.0)
-    }
-    
-    
-    /// Play Fast Forward
-    @IBAction func moveFastForward(_ sender: Any) {
-        // player의 현재 시각이 끝 시각과 같은 경우 재생시간 처음으로 이동
-        if avPlayer.currentItem?.currentTime() == avPlayer.currentItem?.duration {
-            avPlayer.currentItem?.seek(to: .zero, completionHandler: nil)
-        }
-        
-        avPlayer.rate = min(avPlayer.rate + 2.0, 2.0)
-    }
-    
-    
-    /// 10초 앞으로 이동
-    @IBAction func moveForward(_ sender: Any) {
-//        if let currentItem = avPlayer.currentItem {
-//            self.subscribeCurrentItem(currentItem)
-//        }
-//
-//        if avPlayer.currentItem?.currentTime() == avPlayer.currentItem?.duration {
-//            avPlayer.advanceToNextItem()
-//
-//
-//
-//            if avPlayer.currentItem == avPlayer.items().last {
-//                alertAddItemsToPlayer(title: "Alert",
-//                                      message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
-//
-//                    guard let self = self else { return }
-//                    self.addAllViedeosToPlayer()
-//                }
-//            }
-//        }
-//
-//        let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
-//        let newTime = currentTime + 10
-//        let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-//        avPlayer.seek(to: setTime, toleranceBefore: .zero, toleranceAfter: .zero)
-    }
-    
-    
-    /// 10초 앞으로 이동
-    @IBAction func moveBackward(_ sender: Any) {
-//        if avPlayer.currentItem?.currentTime() == .zero {
-//            if avPlayer.currentItem == avPlayer.items().first {
-//                ProgressHUD.showFailed("There is no previous video anymore")
-//            }
-//
-//            avPlayer.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
-//        }
-//
-//        let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
-//        let newTime = currentTime - 10
-//        let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-//        avPlayer.seek(to: setTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     
     
@@ -258,6 +176,7 @@ class MPPlayerViewController: UIViewController {
              .disposed(by: rx.disposeBag)
          */
         
+        // 앞으로 10초 이동
         moveForwardButton.rx.tap
             .throttle(0.2, scheduler: MainScheduler.instance)
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
@@ -287,6 +206,89 @@ class MPPlayerViewController: UIViewController {
             })
             .disposed(by: rx.disposeBag)
         
+        // 10초 뒤로 이동
+        moveBackButton.rx.tap
+            .throttle(0.2, scheduler: MainScheduler.instance)
+            .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
+            .map { $0.value }
+            .ignoreNil()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                if $0.currentTime() == .zero {
+                    if $0 == self.avPlayer.items().first {
+                        ProgressHUD.showFailed("There is no previous video anymore")
+                    }
+                }
+                
+                self.avPlayer.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
+                
+                let currentTime = CMTimeGetSeconds(self.avPlayer.currentTime())
+                let newTime = currentTime - 10
+                let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
+                self.avPlayer.seek(to: setTime, toleranceBefore: .zero, toleranceAfter: .zero)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        // 앞으로 감기
+        forwardButton.rx.tap
+            .throttle(0.2, scheduler: MainScheduler.instance)
+            .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
+            .map { $0.value }
+            .ignoreNil()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                if $0.currentTime() == .zero {
+                    let itemDuration = $0.duration
+                    $0.seek(to: itemDuration, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
+                }
+                
+                self.avPlayer.rate = min(self.avPlayer.rate + 2.0, 2.0)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        // 뒤로 감기
+        backwardButton.rx.tap
+            .throttle(0.2, scheduler: MainScheduler.instance)
+            .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
+            .map { $0.value }
+            .ignoreNil()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                if $0.currentTime() == $0.duration {
+                    $0.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
+                }
+                
+                self.avPlayer.rate = max(self.avPlayer.rate - 2.0, -2.0)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        /*
+         // 재생/일시정지
+         playPauseButton.rx.tap
+             .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
+             .map { $0.rawValue }
+             .subscribe(onNext: { [weak self] in
+                 guard let self = self else { return }
+                 
+                 switch $0 {
+                 case 0:
+                     let currentItem = self.avPlayer.currentItem
+                     if currentItem?.currentTime() == currentItem?.duration {
+                         currentItem?.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
+                     }
+                     self.avPlayer.play()
+                 default:
+                     self.avPlayer.pause()
+                 }
+             })
+             .disposed(by: rx.disposeBag)
+         */
+        
+        
+        // 현재 미디어 아이템을 방출
         avPlayer.rx.currentItem
             .map { $0.value }
             .ignoreNil()
@@ -294,6 +296,15 @@ class MPPlayerViewController: UIViewController {
                 guard let self = self else { return }
                 
                 self.subscribeCurrentItem($0)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        /// timeSlider의 value 변경
+        timeSlider.rx.value
+            .map { Variable(Float($0)) }
+            .subscribe(onNext: { [weak self] in
+                let newTime = CMTime(seconds: Double($0.value), preferredTimescale: 600)
+                self?.avPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
             })
             .disposed(by: rx.disposeBag)
     }
@@ -365,14 +376,7 @@ class MPPlayerViewController: UIViewController {
     
     func setupPlayerObservers() {
         
-        /// timeSlider의 value 변경
-        timeSlider.rx.value
-            .map { Variable(Float($0)) }
-            .subscribe(onNext: { [weak self] in
-                let newTime = CMTime(seconds: Double($0.value), preferredTimescale: 600)
-                self?.avPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
-            })
-            .disposed(by: rx.disposeBag)
+        
         
         
         /// 다음 재생항목으로 이동
@@ -390,38 +394,6 @@ class MPPlayerViewController: UIViewController {
                 }
             })
             .disposed(by: rx.disposeBag)
-       
-        
-        /// ** CurrentSize Observer -> Swift**
-        /*
-         // create player current item's presentationSize observer
-         playerItemPresentationSizeObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.presentationSize,
-                                                        options: [.initial, .new],
-                                                        changeHandler: { [weak self] (player, _) in
-             guard let self = self else { return }
-             guard let currentSize = player.currentItem?.presentationSize else { return }
-
-             print(#fileID, #function, #line, "- currentSize: \(currentSize)")
-
-             DispatchQueue.main.async {
-                 self.checkPortraitAndUpdateUI(width: currentSize.width, height: currentSize.height)
-             }
-         })
-         */
-        
-        
-           
-        // create player current items observer
-//        playerCurrentItemObserver = avPlayer.observe(\.currentItem, changeHandler: { [weak self] (player, _) in
-//            guard let self = self else { return }
-//
-//            if player.items().count == 0 {
-//                self.alertAddItemsToPlayer(title: "Alert",
-//                                           message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") { _ in
-//                    self.addAllViedeosToPlayer()
-//                }
-//            }
-//        })
     }
 
     

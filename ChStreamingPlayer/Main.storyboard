@@ -133,17 +133,11 @@
                                         <rect key="frame" x="83.666666666666671" y="0.0" width="55.666666666666671" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="backward.fill" catalog="system"/>
-                                        <connections>
-                                            <action selector="moveFastBackward:" destination="3qe-GV-xjU" eventType="touchUpInside" id="ovA-Wy-3hQ"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Z0-uF-Rm7">
                                         <rect key="frame" x="167.33333333333334" y="0.0" width="55.333333333333343" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="forward.fill" catalog="system"/>
-                                        <connections>
-                                            <action selector="moveFastForward:" destination="3qe-GV-xjU" eventType="touchUpInside" id="HXG-o1-xYo"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2hz-Do-tnN">
                                         <rect key="frame" x="250.66666666666666" y="0.0" width="55.666666666666657" height="34.333333333333336"/>
@@ -167,9 +161,6 @@
                                         <rect key="frame" x="0.0" y="0.0" width="49.666666666666664" height="44.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="gobackward.10" catalog="system"/>
-                                        <connections>
-                                            <action selector="moveBackward:" destination="3qe-GV-xjU" eventType="touchUpInside" id="fPR-CQ-c5I"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hgg-jI-8rA">
                                         <rect key="frame" x="49.666666666666657" y="0.0" width="43.333333333333343" height="44.333333333333336"/>
@@ -183,9 +174,6 @@
                                         <rect key="frame" x="93" y="0.0" width="49.666666666666657" height="44.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="goforward.10" catalog="system"/>
-                                        <connections>
-                                            <action selector="moveForward:" destination="3qe-GV-xjU" eventType="touchUpInside" id="ZdY-n2-4n8"/>
-                                        </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="EP2-c3-ciL">
                                         <rect key="frame" x="142.66666666666663" y="0.0" width="247.33333333333337" height="44.333333333333336"/>
@@ -207,7 +195,7 @@
                                                     </label>
                                                 </subviews>
                                             </stackView>
-                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Q88-yQ-keM">
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Q88-yQ-keM">
                                                 <rect key="frame" x="-2" y="14.333333333333258" width="251.33333333333334" height="31"/>
                                             </slider>
                                         </subviews>
