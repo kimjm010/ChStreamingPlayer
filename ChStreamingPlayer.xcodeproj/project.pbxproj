@@ -11,6 +11,7 @@
 		6387535EDC57C41CED3D7917 /* Pods_StreamingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BF5BB72CC8899820DB4F565 /* Pods_StreamingKit.framework */; };
 		F502C66A28E2F33000807A9B /* AVPlayer+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F502C66928E2F33000807A9B /* AVPlayer+Rx.swift */; };
 		F502C66C28E2F35C00807A9B /* Observer+IgnoreNill.swift in Sources */ = {isa = PBXBuildFile; fileRef = F502C66B28E2F35C00807A9B /* Observer+IgnoreNill.swift */; };
+		F502C66E28E2FD5800807A9B /* AVPlayerItem+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F502C66D28E2FD5800807A9B /* AVPlayerItem+Rx.swift */; };
 		F5258E9F28E0485A005AAE39 /* v8.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5258E9C28E0485A005AAE39 /* v8.mp4 */; };
 		F5258EA028E0485A005AAE39 /* v7.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5258E9D28E0485A005AAE39 /* v7.mp4 */; };
 		F5258EA128E0485A005AAE39 /* v6.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5258E9E28E0485A005AAE39 /* v6.mp4 */; };
@@ -68,6 +69,7 @@
 		B8174DC2D5D92491159DF615 /* Pods-StreamingKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-StreamingKit.release.xcconfig"; path = "Target Support Files/Pods-StreamingKit/Pods-StreamingKit.release.xcconfig"; sourceTree = "<group>"; };
 		F502C66928E2F33000807A9B /* AVPlayer+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayer+Rx.swift"; sourceTree = "<group>"; };
 		F502C66B28E2F35C00807A9B /* Observer+IgnoreNill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Observer+IgnoreNill.swift"; sourceTree = "<group>"; };
+		F502C66D28E2FD5800807A9B /* AVPlayerItem+Rx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AVPlayerItem+Rx.swift"; sourceTree = "<group>"; };
 		F5258E9C28E0485A005AAE39 /* v8.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v8.mp4; sourceTree = "<group>"; };
 		F5258E9D28E0485A005AAE39 /* v7.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v7.mp4; sourceTree = "<group>"; };
 		F5258E9E28E0485A005AAE39 /* v6.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v6.mp4; sourceTree = "<group>"; };
@@ -164,6 +166,7 @@
 			children = (
 				F5E221DC28DD89E600AF7752 /* UIViewController+Alert.swift */,
 				F502C66928E2F33000807A9B /* AVPlayer+Rx.swift */,
+				F502C66D28E2FD5800807A9B /* AVPlayerItem+Rx.swift */,
 				F502C66B28E2F35C00807A9B /* Observer+IgnoreNill.swift */,
 			);
 			path = Extension;
@@ -412,6 +415,7 @@
 				F5C04DC028DEA32A005332D4 /* PlayerView.swift in Sources */,
 				F5EF3D3628D43A0A00A66655 /* SceneDelegate.swift in Sources */,
 				F536F66628DBE0B900751D9F /* StreamingViewController.swift in Sources */,
+				F502C66E28E2FD5800807A9B /* AVPlayerItem+Rx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

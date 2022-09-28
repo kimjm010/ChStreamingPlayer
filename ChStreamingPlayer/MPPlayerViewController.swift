@@ -112,7 +112,7 @@ class MPPlayerViewController: UIViewController {
         case .paused:
             let currentItem = avPlayer.currentItem
             if currentItem?.currentTime() == currentItem?.duration {
-                currentItem?.seek(to: .zero, completionHandler: nil)
+                currentItem?.seek(to: .zero,  toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
             }
             avPlayer.play()
         default:
@@ -127,7 +127,7 @@ class MPPlayerViewController: UIViewController {
         // player의 현재 시각이 처음 시각과 같은 경우 재생시간 맨 끝으로 이동
         if avPlayer.currentItem?.currentTime() == .zero {
             if let itemDuration = avPlayer.currentItem?.duration {
-                avPlayer.currentItem?.seek(to: itemDuration, completionHandler: nil)
+                avPlayer.currentItem?.seek(to: itemDuration, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
             }
         }
         
@@ -164,7 +164,7 @@ class MPPlayerViewController: UIViewController {
         let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
         let newTime = currentTime + 10
         let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-        avPlayer.seek(to: setTime)
+        avPlayer.seek(to: setTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     
     
@@ -175,13 +175,13 @@ class MPPlayerViewController: UIViewController {
                 ProgressHUD.showFailed("There is no previous video anymore")
             }
             
-            avPlayer.seek(to: .zero)
+            avPlayer.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
         }
         
         let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
         let newTime = currentTime - 10
         let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-        avPlayer.seek(to: setTime)
+        avPlayer.seek(to: setTime, toleranceBefore: .zero, toleranceAfter: .zero)
     }
     
     
@@ -189,7 +189,7 @@ class MPPlayerViewController: UIViewController {
     @IBAction func previousVideo() {
         
         if avPlayer.currentItem?.currentTime() != .zero {
-            avPlayer.seek(to: .zero)
+            avPlayer.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
         }
         
         #warning("Todo: - Previous Item을 저장해서 insert 후 다른 아이템 추가할 것")
@@ -241,7 +241,7 @@ class MPPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        guard let url = Bundle.main.url(forResource: "v1", withExtension: "mp4") else { return }
+        guard let url = Bundle.main.url(forResource: "v2", withExtension: "mp4") else { return }
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
         
@@ -310,12 +310,20 @@ class MPPlayerViewController: UIViewController {
     
     func setupPlayerObservers() {
         
+        avPlayer.currentItem?.rx.duration
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                self.durationLabel.text = self.createTimeString(time: Float($0.seconds))
+            })
+            .disposed(by: rx.disposeBag)
+        
         /// timeSlider의 value 변경
         timeSlider.rx.value
             .map { Variable(Float($0)) }
             .subscribe(onNext: { [weak self] in
                 let newTime = CMTime(seconds: Double($0.value), preferredTimescale: 600)
-                self?.avPlayer.seek(to: newTime)
+                self?.avPlayer.seek(to: newTime, toleranceBefore: .zero, toleranceAfter: .zero)
             })
             .disposed(by: rx.disposeBag)
         
@@ -349,71 +357,131 @@ class MPPlayerViewController: UIViewController {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 
+                #warning("Todo: - 시작할 때 왜 timevalue가 0.5일까?")
+                print(#fileID, #function, #line, "- time value: \($0)")
                 self.timeSlider.value = $0
                 self.startTimeLabel.text = self.createTimeString(time: $0)
             })
             .disposed(by: rx.disposeBag)
         
         
-        // create player canPlayFastForward observer
-        playerItemFastForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastForward,
-                                                          options: [.initial, .new],
-                                                          changeHandler: { [weak self] (player, _) in
-            guard let self = self else { return }
-
-            DispatchQueue.main.async {
-                self.forwardButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
-                self.nextVideoButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
-            }
-        })
-        
-        
-        // create player canPlayReverse observer
-        playerItemReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayReverse,
-                                                      options: [.new, .initial]) { [weak self] (player, _) in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                self.backwardButton.isEnabled = player.currentItem?.canPlayReverse ?? false
-                self.previousVideoButton.isEnabled = player.currentItem?.canPlayReverse ?? false
-            }
-        }
-        
-        
-        // create player canStepForward observer
-        playerItemMoveForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepForward,
-                                                          options: [.initial, .new],
-                                                          changeHandler: { [weak self] (player, _) in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                self.moveForwardButton.isEnabled = player.currentItem?.canStepForward ?? false
-            }
-        })
-        
-        
-        // create player canStepBackward observer
-        playerItemMoveBackwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepBackward,
+        /*
+         // create player canPlayFastForward observer
+         playerItemFastForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastForward,
                                                            options: [.initial, .new],
                                                            changeHandler: { [weak self] (player, _) in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                self.moveBackButton.isEnabled = player.currentItem?.canStepBackward ?? false
-            }
-        })
+             guard let self = self else { return }
+
+             DispatchQueue.main.async {
+                 self.forwardButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
+                 self.nextVideoButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
+             }
+         })
+         */
+        
+        // 빨리감기 가능 여부 확인
+        avPlayer.currentItem?.rx.canPlayFastForward()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+
+                self.forwardButton.isEnabled = $0
+                self.nextVideoButton.isEnabled = $0
+            })
+            .disposed(by: rx.disposeBag)
+        
+        /*
+         // create player canPlayReverse observer
+         playerItemReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayReverse,
+                                                       options: [.new, .initial]) { [weak self] (player, _) in
+             guard let self = self else { return }
+
+             DispatchQueue.main.async {
+                 self.backwardButton.isEnabled = player.currentItem?.canPlayReverse ?? false
+                 self.previousVideoButton.isEnabled = player.currentItem?.canPlayReverse ?? false
+             }
+         }
+         */
         
         
-        // create player canPlayFastReverse observer
-        playerItemFastReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastReverse,
-                                                          options: [.new, .initial]) { [weak self] (player, _) in
-            guard let self = self else { return }
-            
-            DispatchQueue.main.async {
-                self.backwardButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
-                self.repeatButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
-            }
-        }
+        // 되감기 가능 여부 확인
+        avPlayer.currentItem?.rx.canPlayReverse()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+
+                self.backwardButton.isEnabled = $0
+                self.previousVideoButton.isEnabled = $0
+            })
+            .disposed(by: rx.disposeBag)
+        
+        /*
+         // create player canStepForward observer
+         playerItemMoveForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepForward,
+                                                           options: [.initial, .new],
+                                                           changeHandler: { [weak self] (player, _) in
+             guard let self = self else { return }
+
+             DispatchQueue.main.async {
+                 self.moveForwardButton.isEnabled = player.currentItem?.canStepForward ?? false
+             }
+         })
+         */
+        
+        
+        // 앞으로 이동 가능 여부 확인
+        avPlayer.currentItem?.rx.canStepForward()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+
+                self.moveForwardButton.isEnabled = $0
+            })
+            .disposed(by: rx.disposeBag)
+        
+        /*
+         // create player canStepBackward observer
+         playerItemMoveBackwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepBackward,
+                                                            options: [.initial, .new],
+                                                            changeHandler: { [weak self] (player, _) in
+             guard let self = self else { return }
+
+             DispatchQueue.main.async {
+                 self.moveBackButton.isEnabled = player.currentItem?.canStepBackward ?? false
+             }
+         })
+         */
+        
+        
+        // 뒤로 이동 가능 여부 확인
+        avPlayer.currentItem?.rx.canStepBackward()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+
+                self.moveBackButton.isEnabled = $0
+            })
+            .disposed(by: rx.disposeBag)
+        
+        /*
+         // create player canPlayFastReverse observer
+         playerItemFastReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastReverse,
+                                                           options: [.new, .initial]) { [weak self] (player, _) in
+             guard let self = self else { return }
+
+             DispatchQueue.main.async {
+                 self.backwardButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
+                 self.repeatButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
+             }
+         }
+         */
+        
+        
+        // 뒤로 이동 가능 여부 확인
+        avPlayer.currentItem?.rx.canPlayFastReverse()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+
+                self.backwardButton.isEnabled = $0
+                self.repeatButton.isEnabled = $0
+            })
+            .disposed(by: rx.disposeBag)
         
         
         // create player current item's presentationSize observer
@@ -423,21 +491,41 @@ class MPPlayerViewController: UIViewController {
             guard let self = self else { return }
             guard let currentSize = player.currentItem?.presentationSize else { return }
             
+            print(#fileID, #function, #line, "- currentSize: \(currentSize)")
+
             DispatchQueue.main.async {
                 self.checkPortraitAndUpdateUI(width: currentSize.width, height: currentSize.height)
             }
         })
         
         
-//         create player current item's status observer
-        playerItemStatusObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.status,
-                                                     options: [.new, .initial]) { [weak self] (player, _) in
-            guard let self = self else { return }
+        #warning("Todo: - 다음 비디오 재생 시 이벤트를 방출하지 않는다....")
+        avPlayer.currentItem?.rx.presentation()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
 
-            DispatchQueue.main.async {
-                self.updateUIForPlayerItemStatus()
-            }
-        }
+                print(#fileID, #function, #line, "- size: \($0)")
+                
+                self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
+            })
+            .disposed(by: rx.disposeBag)
+        
+        
+        /// playerItem Status에 따라 버튼 UI 변경
+        avPlayer.currentItem?.rx.status()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                switch $0 {
+                case .failed:
+                    self.updateUIForPlayerItemFailedState()
+                case .readyToPlay:
+                    self.updateUIForPlayerItemReadyToPlayState()
+                default:
+                    self.updateUIForPlayerItemDefaultState()
+                }
+            })
+            .disposed(by: rx.disposeBag)
         
            
         // create player current items observer
@@ -584,7 +672,7 @@ class MPPlayerViewController: UIViewController {
             let item = AVPlayerItem(asset: asset)
             items.append(item)
             
-            avPlayer.insert(item, after: avPlayer.items().last)
+            avPlayer.insert(item, after: nil)
         }
     }
     
