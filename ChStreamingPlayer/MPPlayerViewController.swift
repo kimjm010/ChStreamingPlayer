@@ -35,36 +35,15 @@ class MPPlayerViewController: UIViewController {
     
     // MARK: - Vars
     
-    private var avPlayer = AVQueuePlayer()
-    
     private var playerLooper: NSObject?
-    
-    let timeRemainingFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.zeroFormattingBehavior = .pad
-        formatter.allowedUnits = [.minute, .second]
-        return formatter
-    }()
     
     private var timeObservetToken: Any?
     
-    private var playerItemStatusObserver: NSKeyValueObservation?
-    
-    private var playerItemFastForwardObserver: NSKeyValueObservation?
-    
-    private var playerItemFastReverseObserver: NSKeyValueObservation?
-    
-    private var playerItemReverseObserver: NSKeyValueObservation?
-    
-    private var playerItemMoveForwardObserver: NSKeyValueObservation?
-    
-    private var playerItemMoveBackwardObserver: NSKeyValueObservation?
-    
     private var playerItemPresentationSizeObserver: NSKeyValueObservation?
     
-    private var playerTimeControlStatusObserver: NSKeyValueObservation?
+    private var playerCurrentItemObserver: NSKeyValueObservation?
     
-    private var playerCurrentItem: NSKeyValueObservation?
+    var avPlayer = AVQueuePlayer()
     
     var tapGesture = UITapGestureRecognizer()
     
@@ -72,15 +51,7 @@ class MPPlayerViewController: UIViewController {
     
     var isZoom = false
     
-    var landscapeMode: UIInterfaceOrientationMask {
-        return .landscapeRight
-    }
-    
     var selectedPreviousItem: AVPlayerItem?
-    
-    private static let pauseImage = "pause.fill"
-    
-    private static let playImage = "play.fill"
     
     private static let repeatImage = "repeat.1"
     
@@ -90,34 +61,21 @@ class MPPlayerViewController: UIViewController {
     
     
     // MARK: - IBActions
-    
-    /// Play Video
     @IBAction func togglePlay(_ sender: Any) {
-        
-        if avPlayer.items().count == 0 {
-            alertAddItemsToPlayer(title: "Alert",
-                                  message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
-                
-                guard let self = self else { return }
-                self.addAllViedeosToPlayer()
-                self.dismiss(animated: true, completion: nil)
-            }
-        }
-        
         switch avPlayer.timeControlStatus {
-        case .playing:
-            // player 가 playing중인 경우 멈춤
-            avPlayer.pause()
-            
-        case .paused:
-            let currentItem = avPlayer.currentItem
-            if currentItem?.currentTime() == currentItem?.duration {
-                currentItem?.seek(to: .zero,  toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
+            case .playing:
+                // player 가 playing중인 경우 멈춤
+                avPlayer.pause()
+                
+            case .paused:
+                let currentItem = avPlayer.currentItem
+                if currentItem?.currentTime() == currentItem?.duration {
+                    currentItem?.seek(to: .zero,  toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
+                }
+                avPlayer.play()
+            default:
+                avPlayer.pause()
             }
-            avPlayer.play()
-        default:
-            avPlayer.pause()
-        }
     }
     
     
@@ -151,10 +109,14 @@ class MPPlayerViewController: UIViewController {
         if avPlayer.currentItem?.currentTime() == avPlayer.currentItem?.duration {
             avPlayer.advanceToNextItem()
             
+            if let currentItem = avPlayer.currentItem {
+                self.subscribeCurrentItem(currentItem)
+            }
+            
             if avPlayer.currentItem == avPlayer.items().last {
                 alertAddItemsToPlayer(title: "Alert",
                                       message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
-                    
+
                     guard let self = self else { return }
                     self.addAllViedeosToPlayer()
                 }
@@ -209,8 +171,6 @@ class MPPlayerViewController: UIViewController {
     @IBAction func repeatVideoPlay(_ sender: Any) {
         isRepeat.toggle()
         
-        
-        
         if isRepeat {
             repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
             guard let currentItem = avPlayer.currentItem else { return }
@@ -229,10 +189,10 @@ class MPPlayerViewController: UIViewController {
         controlZoomButton.setImage(buttonImage, for: .normal)
         
         
-#if DEBUG
+        #if DEBUG
         controlVideoZoom(isZoom: isZoom)
         print(#function, #file, #line, "\(playerView.playerLayer.frame)")
-#endif
+        #endif
     }
     
     
@@ -247,6 +207,43 @@ class MPPlayerViewController: UIViewController {
         
         addAllViedeosToPlayer()
         addPinchGesturer()
+        
+        /*
+         playPauseButton.rx.tap
+             .throttle(0.2, scheduler: MainScheduler.instance)
+             .flatMap { self.avPlayer.rx.timeControlStatus }
+             .observeOn(MainScheduler.instance)
+             .subscribe(onNext: { [unowned self] (status) in
+                 switch status {
+                 case .playing:
+                     avPlayer.pause()
+                 case .paused:
+                     let currentItem = avPlayer.currentItem
+                     if currentItem?.currentTime() == currentItem?.duration {
+                         currentItem?.seek(to: .zero,  toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
+                     }
+                     avPlayer.play()
+                 default:
+                     avPlayer.pause()
+                 }
+             })
+             .disposed(by: rx.disposeBag)
+         
+         playPauseButton.rx.tap
+             .observeOn(MainScheduler.asyncInstance)
+             .filter { self.avPlayer.items().count == 0 }
+             .flatMap { [unowned self] in self.alertAddItemsToPlayer(title: "Alert",
+                                                                     message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") }
+             .subscribe(onNext: { [unowned self] (actionType) in
+                 switch actionType {
+                 case .ok:
+                     self.addAllViedeosToPlayer()
+                 case .cancel:
+                     break
+                 }
+             })
+             .disposed(by: rx.disposeBag)
+         */
     }
     
     
@@ -272,9 +269,15 @@ class MPPlayerViewController: UIViewController {
         ]
         
         newAsset.loadValuesAsynchronously(forKeys: assetKeysRequiredToPlay) {
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
                 if self.validateValues(forKeys: assetKeysRequiredToPlay, forAsset: newAsset) {
                     self.setupPlayerObservers()
+                    self.subscribePlayer(self.avPlayer)
+                    if let currentItem = self.avPlayer.currentItem {
+                        self.subscribeCurrentItem(currentItem)
+                    }
                     self.playerView.player = self.avPlayer
                 }
             }
@@ -310,14 +313,6 @@ class MPPlayerViewController: UIViewController {
     
     func setupPlayerObservers() {
         
-        avPlayer.currentItem?.rx.duration
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                
-                self.durationLabel.text = self.createTimeString(time: Float($0.seconds))
-            })
-            .disposed(by: rx.disposeBag)
-        
         /// timeSlider의 value 변경
         timeSlider.rx.value
             .map { Variable(Float($0)) }
@@ -343,322 +338,57 @@ class MPPlayerViewController: UIViewController {
                 }
             })
             .disposed(by: rx.disposeBag)
+       
         
-        
-        // play/pause button 이미지 변경
-        avPlayer.rx.timeControlStatus.asDriver(onErrorJustReturn: .playing)
-            .map { $0 == .playing ? UIImage(systemName: MPPlayerViewController.pauseImage) : UIImage(systemName: MPPlayerViewController.playImage) }
-            .drive(playPauseButton.rx.image())
-            .disposed(by: rx.disposeBag)
-        
-        
-        // 현재 재생시간 레이블 / slider 변경
-        avPlayer.rx.playbackPosition(updateQueue: .main)
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                
-                #warning("Todo: - 시작할 때 왜 timevalue가 0.5일까?")
-                print(#fileID, #function, #line, "- time value: \($0)")
-                self.timeSlider.value = $0
-                self.startTimeLabel.text = self.createTimeString(time: $0)
-            })
-            .disposed(by: rx.disposeBag)
-        
-        
+        /// ** CurrentSize Observer -> Swift**
         /*
-         // create player canPlayFastForward observer
-         playerItemFastForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastForward,
-                                                           options: [.initial, .new],
-                                                           changeHandler: { [weak self] (player, _) in
+         // create player current item's presentationSize observer
+         playerItemPresentationSizeObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.presentationSize,
+                                                        options: [.initial, .new],
+                                                        changeHandler: { [weak self] (player, _) in
              guard let self = self else { return }
+             guard let currentSize = player.currentItem?.presentationSize else { return }
+
+             print(#fileID, #function, #line, "- currentSize: \(currentSize)")
 
              DispatchQueue.main.async {
-                 self.forwardButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
-                 self.nextVideoButton.isEnabled = player.currentItem?.canPlayFastForward ?? false
+                 self.checkPortraitAndUpdateUI(width: currentSize.width, height: currentSize.height)
              }
          })
          */
         
-        // 빨리감기 가능 여부 확인
-        avPlayer.currentItem?.rx.canPlayFastForward()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-
-                self.forwardButton.isEnabled = $0
-                self.nextVideoButton.isEnabled = $0
-            })
-            .disposed(by: rx.disposeBag)
-        
-        /*
-         // create player canPlayReverse observer
-         playerItemReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayReverse,
-                                                       options: [.new, .initial]) { [weak self] (player, _) in
-             guard let self = self else { return }
-
-             DispatchQueue.main.async {
-                 self.backwardButton.isEnabled = player.currentItem?.canPlayReverse ?? false
-                 self.previousVideoButton.isEnabled = player.currentItem?.canPlayReverse ?? false
-             }
-         }
-         */
-        
-        
-        // 되감기 가능 여부 확인
-        avPlayer.currentItem?.rx.canPlayReverse()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-
-                self.backwardButton.isEnabled = $0
-                self.previousVideoButton.isEnabled = $0
-            })
-            .disposed(by: rx.disposeBag)
-        
-        /*
-         // create player canStepForward observer
-         playerItemMoveForwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepForward,
-                                                           options: [.initial, .new],
-                                                           changeHandler: { [weak self] (player, _) in
-             guard let self = self else { return }
-
-             DispatchQueue.main.async {
-                 self.moveForwardButton.isEnabled = player.currentItem?.canStepForward ?? false
-             }
-         })
-         */
-        
-        
-        // 앞으로 이동 가능 여부 확인
-        avPlayer.currentItem?.rx.canStepForward()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-
-                self.moveForwardButton.isEnabled = $0
-            })
-            .disposed(by: rx.disposeBag)
-        
-        /*
-         // create player canStepBackward observer
-         playerItemMoveBackwardObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canStepBackward,
-                                                            options: [.initial, .new],
-                                                            changeHandler: { [weak self] (player, _) in
-             guard let self = self else { return }
-
-             DispatchQueue.main.async {
-                 self.moveBackButton.isEnabled = player.currentItem?.canStepBackward ?? false
-             }
-         })
-         */
-        
-        
-        // 뒤로 이동 가능 여부 확인
-        avPlayer.currentItem?.rx.canStepBackward()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-
-                self.moveBackButton.isEnabled = $0
-            })
-            .disposed(by: rx.disposeBag)
-        
-        /*
-         // create player canPlayFastReverse observer
-         playerItemFastReverseObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.canPlayFastReverse,
-                                                           options: [.new, .initial]) { [weak self] (player, _) in
-             guard let self = self else { return }
-
-             DispatchQueue.main.async {
-                 self.backwardButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
-                 self.repeatButton.isEnabled = player.currentItem?.canPlayFastReverse ?? false
-             }
-         }
-         */
-        
-        
-        // 뒤로 이동 가능 여부 확인
-        avPlayer.currentItem?.rx.canPlayFastReverse()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-
-                self.backwardButton.isEnabled = $0
-                self.repeatButton.isEnabled = $0
-            })
-            .disposed(by: rx.disposeBag)
-        
-        
-        // create player current item's presentationSize observer
-        playerItemPresentationSizeObserver = avPlayer.observe(\AVQueuePlayer.currentItem?.presentationSize,
-                                                       options: [.initial, .new],
-                                                       changeHandler: { [weak self] (player, _) in
-            guard let self = self else { return }
-            guard let currentSize = player.currentItem?.presentationSize else { return }
-            
-            print(#fileID, #function, #line, "- currentSize: \(currentSize)")
-
-            DispatchQueue.main.async {
-                self.checkPortraitAndUpdateUI(width: currentSize.width, height: currentSize.height)
-            }
-        })
-        
-        
-        #warning("Todo: - 다음 비디오 재생 시 이벤트를 방출하지 않는다....")
-        avPlayer.currentItem?.rx.presentation()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-
-                print(#fileID, #function, #line, "- size: \($0)")
-                
-                self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
-            })
-            .disposed(by: rx.disposeBag)
-        
-        
-        /// playerItem Status에 따라 버튼 UI 변경
-        avPlayer.currentItem?.rx.status()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                
-                switch $0 {
-                case .failed:
-                    self.updateUIForPlayerItemFailedState()
-                case .readyToPlay:
-                    self.updateUIForPlayerItemReadyToPlayState()
-                default:
-                    self.updateUIForPlayerItemDefaultState()
-                }
-            })
-            .disposed(by: rx.disposeBag)
         
            
         // create player current items observer
-        playerCurrentItem = avPlayer.observe(\.currentItem, changeHandler: { [weak self] (player, _) in
-            guard let self = self else { return }
-            
-            if player.items().count == 0 {
-                self.alertAddItemsToPlayer(title: "Alert",
-                                           message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") { _ in
-                    self.addAllViedeosToPlayer()
-                }
-            }
-        })
-    }
-    
-    
-    // MARK: - Update UI based on Player Item Status
-    
-    /// playerItem이 fail인 경우 표시할 UI
-    private func updateUIForPlayerItemFailedState() {
-        playPauseButton.isEnabled = false
-        timeSlider.isEnabled = false
-        startTimeLabel.isEnabled = false
-        durationLabel.isEnabled = false
-        moveBackButton.isEnabled = false
-        moveForwardButton.isEnabled = false
-        nextVideoButton.isEnabled = false
-        previousVideoButton.isEnabled = false
-        forwardButton.isEnabled = false
-        backwardButton.isEnabled = false
-        ProgressHUD.showFailed("Error ocurred when playing video. Please try again later.")
-    }
-    
-    
-    /// playerItem이 readyToPlay인 경우 표시할 UI
-    private func updateUIForPlayerItemReadyToPlayState() {
-        guard let currentItem = avPlayer.currentItem else { return }
+//        playerCurrentItemObserver = avPlayer.observe(\.currentItem, changeHandler: { [weak self] (player, _) in
+//            guard let self = self else { return }
+//
+//            if player.items().count == 0 {
+//                self.alertAddItemsToPlayer(title: "Alert",
+//                                           message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") { _ in
+//                    self.addAllViedeosToPlayer()
+//                }
+//            }
+//        })
         
-        playPauseButton.isEnabled = true
-        moveBackButton.isEnabled = true
-        moveForwardButton.isEnabled = true
-        nextVideoButton.isEnabled = true
-        previousVideoButton.isEnabled = true
-        forwardButton.isEnabled = true
-        backwardButton.isEnabled = true
         
-        let newDurationSeconds = Float(currentItem.duration.seconds)
-        let currentTimes = Float(CMTimeGetSeconds(avPlayer.currentTime()))
+//        playPauseButton.rx.tap
+//            .flatMap { [unowned self] in self.avPlayer.rx.items() }
+//            .map { $0.count }
+//            .subscribe(onNext: { [weak self] in
+//                guard let self = self else { return }
+//
+//                if $0 == 0 {
+//                    self.alertAddItemsToPlayer(title: "Alert",
+//                                               message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") { _ in
+//                        self.addAllViedeosToPlayer()
+//                    }
+//                }
+//
+//            })
         
-        timeSlider.maximumValue = newDurationSeconds
-        timeSlider.value = currentTimes
-        timeSlider.isEnabled = true
-        startTimeLabel.isEnabled = true
-        startTimeLabel.text = createTimeString(time: currentTimes)
-        durationLabel.isEnabled = true
-        durationLabel.text = createTimeString(time: newDurationSeconds)
     }
-    
-    
-    /// playerItem의 기본 UI
-    private func updateUIForPlayerItemDefaultState() {
-        playPauseButton.isEnabled = false
-        timeSlider.isEnabled = false
-        startTimeLabel.isEnabled = false
-        durationLabel.isEnabled = false
-        moveBackButton.isEnabled = false
-        moveForwardButton.isEnabled = false
-        nextVideoButton.isEnabled = false
-        previousVideoButton.isEnabled = false
-        forwardButton.isEnabled = false
-        backwardButton.isEnabled = false
-    }
-    
-    private func updateUIForPlayerItemStatus() {
-        guard let currentItem = avPlayer.currentItem else { return }
-        
-        switch currentItem.status {
-        case .failed:
-            playPauseButton.isEnabled = false
-            timeSlider.isEnabled = false
-            startTimeLabel.isEnabled = false
-            durationLabel.isEnabled = false
-            moveBackButton.isEnabled = false
-            moveForwardButton.isEnabled = false
-            nextVideoButton.isEnabled = false
-            previousVideoButton.isEnabled = false
-            forwardButton.isEnabled = false
-            backwardButton.isEnabled = false
-            ProgressHUD.showFailed("Error ocurred when playing video. Please try again later.")
-            
-        case .readyToPlay:
-            playPauseButton.isEnabled = true
-            moveBackButton.isEnabled = true
-            moveForwardButton.isEnabled = true
-            nextVideoButton.isEnabled = true
-            previousVideoButton.isEnabled = true
-            forwardButton.isEnabled = true
-            backwardButton.isEnabled = true
-            
-            let newDurationSeconds = Float(currentItem.duration.seconds)
-            let currentTimes = Float(CMTimeGetSeconds(avPlayer.currentTime()))
-            
-            timeSlider.maximumValue = newDurationSeconds
-            timeSlider.value = currentTimes
-            timeSlider.isEnabled = true
-            startTimeLabel.isEnabled = true
-            startTimeLabel.text = createTimeString(time: currentTimes)
-            durationLabel.isEnabled = true
-            durationLabel.text = createTimeString(time: newDurationSeconds)
-            
-        default:
-            playPauseButton.isEnabled = false
-            timeSlider.isEnabled = false
-            startTimeLabel.isEnabled = false
-            durationLabel.isEnabled = false
-            moveBackButton.isEnabled = false
-            moveForwardButton.isEnabled = false
-            nextVideoButton.isEnabled = false
-            previousVideoButton.isEnabled = false
-            forwardButton.isEnabled = false
-            backwardButton.isEnabled = false
-        }
-    }
-    
-    
-    // MARK: - Convert Time to String
-    
-    private func createTimeString(time: Float) -> String {
-        let components = NSDateComponents()
-        components.second = Int(max(0.0, time))
-        return timeRemainingFormatter.string(from: components as DateComponents)!
-    }
-    
+
     
     // MARK: - Add Videos To Player
     
@@ -714,48 +444,6 @@ class MPPlayerViewController: UIViewController {
                 self.playerView.transform = .identity
             }
         }
-    }
-    
-    
-    // MARK: - Check the Video Mode and Update UI
-    
-    /// 가로/세로모드 확인 후 UI업데이트
-    /// - Parameters:
-    ///   - width: 비디오의 가로 크기
-    ///   - height: 비디오의 세로 크기
-    private func checkPortraitAndUpdateUI(width: Double, height: Double) {
-        var isPortrait: Bool?
-        
-        if width > height {
-            isPortrait = false
-            setPortraitMode(isPortrait: isPortrait)
-        } else {
-            isPortrait = true
-            setPortraitMode(isPortrait: isPortrait)
-        }
-    }
-    
-    
-    // MARK: - Adjust UI to Portrait Mode or Landscape Mode
-    
-    /// 비디오 가로/세로모드를 사용자에게 표시합니다.
-    /// - Parameter isPortrait: 세로모드 Bool속성
-    private func setPortraitMode(isPortrait: Bool?) {
-        guard let isPortrait = isPortrait else { return }
-        
-        if !isPortrait {
-            videoModeLabel.text = "Landscape Mode"
-        } else {
-            videoModeLabel.text = "Portrait Mode"
-        }
-    }
-    
-    
-    // MARK: - 비디오 재생 목록이 없는 경우 nextVideo버튼 비활성화
-    
-    /// Disable Next Video Button if there is no Video items to play
-    private func disableNextVideoButton() {
-        nextVideoButton.isEnabled = false
     }
 }
 

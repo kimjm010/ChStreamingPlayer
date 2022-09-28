@@ -41,7 +41,7 @@ class StreamingViewController: UIViewController {
         let item = AVPlayerItem(url: url)
         avPlayer.replaceCurrentItem(with: item)
         
-//        videoPlayer.play(url: url)
+        videoPlayer.play(url: url)
     }
     
     
@@ -51,13 +51,13 @@ class StreamingViewController: UIViewController {
     
     
     @IBAction func muteButtonTapped() {
-//        videoPlayer.muteVolume()
+        videoPlayer.muteVolume()
         
     }
     
     
     @IBAction func volUpButtonTapped() {
-//        videoPlayer.turnOnVolume()
+        videoPlayer.turnOnVolume()
     }
 
     
@@ -68,22 +68,6 @@ class StreamingViewController: UIViewController {
         
         setupVideoPlayer()
         playVideo()
-        
-        muteButton.rx.tap
-            .subscribe { [weak self] in
-                guard let self = self else { return }
-                print(#function, #file, #line, "\($0)")
-                self.avPlayer.rx.muted
-                    .subscribe {
-                        if $0 {
-                            self.videoPlayer.muteVolume()
-                        } else {
-                            self.videoPlayer.turnOnVolume()
-                        }
-                    }
-                    .disposed(by: self.rx.disposeBag)
-            }
-            .disposed(by: rx.disposeBag)
     }
     
     
