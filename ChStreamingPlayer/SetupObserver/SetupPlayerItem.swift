@@ -16,6 +16,7 @@ import ProgressHUD
 extension MPPlayerViewController {
     
     func subscribeCurrentItem(_ currentItem: AVPlayerItem) {
+        
         // 빨리감기 가능 여부 확인
         currentItem.rx.canPlayFastForward()
             .subscribe(onNext: { [weak self] in
@@ -67,7 +68,6 @@ extension MPPlayerViewController {
         /// ** CurrentSize Observer -> Swift**
         // 미디어 아이템에 따라 portrait / landscape모드 레이블 표시
         currentItem.rx.presentation()
-            .debug()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 
@@ -76,6 +76,7 @@ extension MPPlayerViewController {
                 self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
             })
             .disposed(by: rx.disposeBag)
+        
         
         // playerItem Status에 따라 버튼 UI 변경
         currentItem.rx.status()
@@ -94,7 +95,7 @@ extension MPPlayerViewController {
             .disposed(by: rx.disposeBag)
         
         // 현재 미디어 아이템의 남은시간을 업데이트
-        avPlayer.currentItem?.rx.duration
+        currentItem.rx.duration
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 
@@ -112,13 +113,6 @@ extension MPPlayerViewController {
          
          avPlayer.rate = max(avPlayer.rate - 2.0, -2.0)
          */
-        
-        // 현재 미디어 아이템으로 빨리감기 재생
-        avPlayer.currentItem?.rx.currentTime()
-            .subscribe(onNext: {
-                print(#fileID, #function, #line, "- \($0.seconds)")
-            })
-            .disposed(by: rx.disposeBag)
     }
     
     
