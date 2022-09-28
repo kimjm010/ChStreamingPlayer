@@ -71,8 +71,6 @@ extension MPPlayerViewController {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 
-                print(#fileID, #function, #line, "- size: \($0)")
-                
                 self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
             })
             .disposed(by: rx.disposeBag)
