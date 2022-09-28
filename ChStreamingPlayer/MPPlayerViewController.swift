@@ -13,6 +13,7 @@ import RxSwift
 import RxCocoa
 
 
+#warning("Todo: - 메모리 누수 확인하기")
 class MPPlayerViewController: UIViewController {
     
     // MARK: - IBOutlets
@@ -39,10 +40,6 @@ class MPPlayerViewController: UIViewController {
     
     private var timeObservetToken: Any?
     
-    private var playerItemPresentationSizeObserver: NSKeyValueObservation?
-    
-    private var playerCurrentItemObserver: NSKeyValueObservation?
-    
     var avPlayer = AVQueuePlayer()
     
     var tapGesture = UITapGestureRecognizer()
@@ -56,8 +53,6 @@ class MPPlayerViewController: UIViewController {
     private static let repeatImage = "repeat.1"
     
     private static let finishRepeatImage = "repeat"
-    
-    private let timeControlStatusRx = BehaviorRelay<AVPlayer.TimeControlStatus>(value: .waitingToPlayAtSpecifiedRate)
     
     
     // MARK: - IBActions
@@ -102,7 +97,7 @@ class MPPlayerViewController: UIViewController {
     /// 반복재생
     @IBAction func repeatVideoPlay(_ sender: Any) {
         isRepeat.toggle()
-        
+
         if isRepeat {
             repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
             guard let currentItem = avPlayer.currentItem else { return }
@@ -139,42 +134,6 @@ class MPPlayerViewController: UIViewController {
         addAllViedeosToPlayer()
         addPinchGesturer()
         
-        /*
-         playPauseButton.rx.tap
-             .throttle(0.2, scheduler: MainScheduler.instance)
-             .flatMap { self.avPlayer.rx.timeControlStatus }
-             .observeOn(MainScheduler.instance)
-             .subscribe(onNext: { [unowned self] (status) in
-                 switch status {
-                 case .playing:
-                     avPlayer.pause()
-                 case .paused:
-                     let currentItem = avPlayer.currentItem
-                     if currentItem?.currentTime() == currentItem?.duration {
-                         currentItem?.seek(to: .zero,  toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
-                     }
-                     avPlayer.play()
-                 default:
-                     avPlayer.pause()
-                 }
-             })
-             .disposed(by: rx.disposeBag)
-         
-         playPauseButton.rx.tap
-             .observeOn(MainScheduler.asyncInstance)
-             .filter { self.avPlayer.items().count == 0 }
-             .flatMap { [unowned self] in self.alertAddItemsToPlayer(title: "Alert",
-                                                                     message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") }
-             .subscribe(onNext: { [unowned self] (actionType) in
-                 switch actionType {
-                 case .ok:
-                     self.addAllViedeosToPlayer()
-                 case .cancel:
-                     break
-                 }
-             })
-             .disposed(by: rx.disposeBag)
-         */
         
         // 앞으로 10초 이동
         moveForwardButton.rx.tap
@@ -264,9 +223,54 @@ class MPPlayerViewController: UIViewController {
                 self.avPlayer.rate = max(self.avPlayer.rate - 2.0, -2.0)
             })
             .disposed(by: rx.disposeBag)
+    
         
+        
+        
+        // 다음 영상 재생
+        nextVideoButton.rx.tap
+            .flatMap { [unowned self] in self.avPlayer.rx.items() }
+            .map { $0.count }
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                if $0 > 1 {
+                    self.avPlayer.advanceToNextItem()
+                } else {
+                    self.alertAddItemsToPlayer(title: "Alert",
+                                               message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") { _ in
+                        self.addAllViedeosToPlayer()
+                    }
+                }
+            })
+            .disposed(by: rx.disposeBag)
+        
+        // 반복재생
         /*
-         // 재생/일시정지
+         repeatButton.rx.tap
+             .throttle(0.2, scheduler: MainScheduler.instance)
+             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
+             .map { $0.value }
+             .ignoreNil()
+             .observeOn(MainScheduler.instance)
+             .subscribe(onNext: { [weak self] in
+                 guard let self = self else { return }
+
+                 self.isRepeat.toggle()
+
+                 if self.isRepeat {
+                     self.repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
+                     self.playerLooper = AVPlayerLooper(player: self.avPlayer, templateItem: $0)
+                 } else {
+                     self.avPlayer.pause()
+                     self.repeatButton.setImage(UIImage(systemName: MPPlayerViewController.finishRepeatImage), for: .normal)
+                 }
+             })
+             .disposed(by: rx.disposeBag)
+         */
+        
+        // 재생/일시정지
+        /*
          playPauseButton.rx.tap
              .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
              .map { $0.rawValue }
@@ -336,11 +340,7 @@ class MPPlayerViewController: UIViewController {
                 guard let self = self else { return }
                 
                 if self.validateValues(forKeys: assetKeysRequiredToPlay, forAsset: newAsset) {
-                    self.setupPlayerObservers()
                     self.subscribePlayer(self.avPlayer)
-                    if let currentItem = self.avPlayer.currentItem {
-                        self.subscribeCurrentItem(currentItem)
-                    }
                     self.playerView.player = self.avPlayer
                 }
             }
@@ -370,30 +370,6 @@ class MPPlayerViewController: UIViewController {
         }
         
         return true
-    }
-    
-    // MARK: - Key-Value Observing
-    
-    func setupPlayerObservers() {
-        
-        
-        
-        
-        /// 다음 재생항목으로 이동
-        nextVideoButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                
-                if self.avPlayer.items().count > 1 {
-                    self.avPlayer.advanceToNextItem()
-                } else {
-                    self.alertAddItemsToPlayer(title: "Alert",
-                                               message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") { _ in
-                        self.addAllViedeosToPlayer()
-                    }
-                }
-            })
-            .disposed(by: rx.disposeBag)
     }
 
     
