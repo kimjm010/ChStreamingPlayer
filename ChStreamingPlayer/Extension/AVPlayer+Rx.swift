@@ -57,12 +57,10 @@ extension Reactive where Base: AVPlayer
     ///   - updateInterval: Interval in which is position updated.
     ///   - updateQueue: Queue which is used to update position. If this is set to `nil` then updates are done on main queue.
     /// - Returns: Observable which will emitt playback position.
-    public func playbackPosition(updateInterval: TimeInterval = 1, updateQueue: DispatchQueue?) -> Observable<Float>
-    {
+    public func playbackPosition(updateInterval: TimeInterval = 1, updateQueue: DispatchQueue?) -> Observable<Float> {
         return Observable.create({[weak base] observer in
             
-            guard let player = base else
-            {
+            guard let player = base else {
                 observer.onCompleted()
                 return Disposables.create()
             }
@@ -76,8 +74,7 @@ extension Reactive where Base: AVPlayer
                     observer.onNext(Float(positionTime.seconds))
             })
             
-            return Disposables.create
-            {
+            return Disposables.create {
                 player.removeTimeObserver(obj)
             }
         })
