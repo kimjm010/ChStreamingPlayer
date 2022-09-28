@@ -78,10 +78,32 @@ extension Reactive where Base: AVPlayerItem
     }
     
     
+    public func currentTime(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<CMTime> {
+        return base.rx.observe(CMTime.self, "currentTime", options: options, retainSelf: false)
+            .ignoreNil()
+            .distinctUntilChanged()
+    }
+    
+    
     public func presentation(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<CGSize> {
         return base.rx.observe(CGSize.self, "presentationSize", options: options, retainSelf: false)
             .ignoreNil()
             .distinctUntilChanged()
+    }
+    
+    public func canPlayFastForward(updateQueue: DispatchQueue?) -> Observable<Bool> {
+        return Observable.create({[weak base] observer in
+            
+            guard let player = base else {
+                observer.onCompleted()
+                return Disposables.create()
+            }
+            
+            let object = player.canPlayFastForward
+            observer.onNext(object)
+            
+            return Disposables.create()
+        })
     }
     
     

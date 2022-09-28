@@ -51,6 +51,13 @@ extension Reactive where Base: AVPlayer
     }
     
     
+    public func items(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<[AVPlayerItem]> {
+        return base.rx.observe([AVPlayerItem].self, "items", options: options, retainSelf: false)
+            .ignoreNil()
+            .distinctUntilChanged()
+    }
+    
+    
     /// Create observable which will emitt playback position.
     ///
     /// - Parameters:
