@@ -104,7 +104,7 @@ class MPPlayerViewController: UIViewController {
             playerLooper = AVPlayerLooper(player: avPlayer, templateItem: currentItem)
             avPlayer.play()
         } else {
-            #warning("Todo: - 반복재생 취소시 다음 재생으로 looper 종료")
+            playerLooper = nil
             repeatButton.setImage(UIImage(systemName: MPPlayerViewController.finishRepeatImage), for: .normal)
         }
     }
@@ -114,11 +114,7 @@ class MPPlayerViewController: UIViewController {
         isZoom.toggle()
         let buttonImage = isZoom ? UIImage(systemName: "minus.magnifyingglass") : UIImage(systemName: "plus.magnifyingglass")
         controlZoomButton.setImage(buttonImage, for: .normal)
-        
-        
-        #if DEBUG
         controlVideoZoom(isZoom: isZoom)
-        #endif
     }
     
     
@@ -171,14 +167,8 @@ class MPPlayerViewController: UIViewController {
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
             .map { $0.value }
             .ignoreNil()
-            .subscribe(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                
-                if $0.currentTime() == .zero {
-                    if $0 == self.avPlayer.items().first {
-                        ProgressHUD.showFailed("There is no previous video anymore")
-                    }
-                }
                 
                 self.avPlayer.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
                 
@@ -223,9 +213,6 @@ class MPPlayerViewController: UIViewController {
                 self.avPlayer.rate = max(self.avPlayer.rate - 2.0, -2.0)
             })
             .disposed(by: rx.disposeBag)
-    
-        
-        
         
         // 다음 영상 재생
         nextVideoButton.rx.tap
