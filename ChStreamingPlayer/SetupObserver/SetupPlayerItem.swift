@@ -7,15 +7,28 @@
 
 import Foundation
 import AVFoundation
-import RxSwift
 import NSObject_Rx
 import ProgressHUD
+import RxSwift
+import UIKit
 
 
 
 extension MPPlayerViewController {
     
     func subscribeCurrentItem(_ currentItem: AVPlayerItem) {
+        
+        // 미디어 아이템에 따라 portrait / landscape모드 레이블 표시
+        currentItem.rx.presentation()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                #warning("Todo: - 몇 영상은 landscape mode로 돌아갔다 되돌아오네")
+                self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
+                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: $0.width > $0.height ? .landscape : .portrait))
+            })
+            .disposed(by: rx.disposeBag)
         
         // 빨리감기 가능 여부 확인
         currentItem.rx.canPlayFastForward()
@@ -65,16 +78,6 @@ extension MPPlayerViewController {
             })
             .disposed(by: rx.disposeBag)
         
-        /// ** CurrentSize Observer -> Swift**
-        // 미디어 아이템에 따라 portrait / landscape모드 레이블 표시
-        currentItem.rx.presentation()
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                
-                self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
-            })
-            .disposed(by: rx.disposeBag)
-        
         
         // playerItem Status에 따라 버튼 UI 변경
         currentItem.rx.status()
@@ -100,17 +103,6 @@ extension MPPlayerViewController {
                 self.durationLabel.text = self.createTimeString(time: Float($0.seconds))
             })
             .disposed(by: rx.disposeBag)
-        
-        /*
-         //player의 현재 시각이 처음 시각과 같은 경우 재생시간 맨 끝으로 이동
-         if avPlayer.currentItem?.currentTime() == .zero {
-         if let itemDuration = avPlayer.currentItem?.duration {
-         avPlayer.currentItem?.seek(to: itemDuration, toleranceBefore: .zero, toleranceAfter: .zero, completionHandler: nil)
-         }
-         }
-         
-         avPlayer.rate = max(avPlayer.rate - 2.0, -2.0)
-         */
     }
     
     
