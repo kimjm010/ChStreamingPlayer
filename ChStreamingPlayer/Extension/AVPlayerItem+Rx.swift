@@ -78,6 +78,10 @@ extension Reactive where Base: AVPlayerItem
     }
     
     
+    /// Create observable which will emitt `CurrentTime(CMTime)`. Only distinct values will be emitted.
+    /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
+    /// - Returns: Observable which emitt player item's currentTime every time it change.
+    /// - Author: 김정민(kimjm010@icloud.com)
     public func currentTime(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<CMTime> {
         return base.rx.observe(CMTime.self, "currentTime", options: options, retainSelf: false)
             .ignoreNil()
@@ -85,12 +89,21 @@ extension Reactive where Base: AVPlayerItem
     }
     
     
+    /// Create observable which will emitt `PresentationSize(CGSize)`. Only distinct values will be emitted.
+    /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
+    /// - Returns: Observable which emitt player item's presentationSize every time it change.
+    /// - Author: 김정민(kimjm010@icloud.com)
     public func presentation(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<CGSize> {
         return base.rx.observe(CGSize.self, "presentationSize", options: options, retainSelf: false)
             .ignoreNil()
             .distinctUntilChanged()
     }
     
+    
+    /// Create observable which will emitt `canPlayFastForward(Bool)`. Only distinct values will be emitted.
+    /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
+    /// - Returns: Observable which emitt player item's canPlayFastForward value every time it change.
+    /// - Author: 김정민(kimjm010@icloud.com)
     public func canPlayFastForward(updateQueue: DispatchQueue?) -> Observable<Bool> {
         return Observable.create({[weak base] observer in
             
@@ -107,6 +120,10 @@ extension Reactive where Base: AVPlayerItem
     }
     
     
+    /// Create observable which will emitt `canPlayFastForward(Bool)`. Only distinct values will be emitted.
+    /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
+    /// - Returns: Observable which emitt player item's canPlayFastForward value every time it change.
+    /// - Author: 김정민(kimjm010@icloud.com)
     public func canPlayFastForward(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<Bool> {
         return base.rx.observe(Bool.self, "canPlayFastForward", options: options, retainSelf: false)
             .ignoreNil()
@@ -114,6 +131,10 @@ extension Reactive where Base: AVPlayerItem
     }
     
     
+    /// Create observable which will emitt `canPlayReverse(Bool)`. Only distinct values will be emitted.
+    /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
+    /// - Returns: Observable which emitt player item's canPlayReverse value every time it change.
+    /// - Author: 김정민(kimjm010@icloud.com)
     public func canPlayReverse(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<Bool> {
         return base.rx.observe(Bool.self, "canPlayReverse", options: options, retainSelf: false)
             .ignoreNil()
@@ -121,6 +142,10 @@ extension Reactive where Base: AVPlayerItem
     }
     
     
+    /// Create observable which will emitt `canStepForward(Bool)`. Only distinct values will be emitted.
+    /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
+    /// - Returns: Observable which emitt player item's canStepForward value every time it change.
+    /// - Author: 김정민(kimjm010@icloud.com)
     public func canStepForward(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<Bool> {
         return base.rx.observe(Bool.self, "canStepForward", options: options, retainSelf: false)
             .ignoreNil()
@@ -128,6 +153,10 @@ extension Reactive where Base: AVPlayerItem
     }
     
     
+    /// Create observable which will emitt `canStepBackward(Bool)`. Only distinct values will be emitted.
+    /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
+    /// - Returns: Observable which emitt player item's canStepBackward value every time it change.
+    /// - Author: 김정민(kimjm010@icloud.com)
     public func canStepBackward(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<Bool> {
         return base.rx.observe(Bool.self, "canStepBackward", options: options, retainSelf: false)
             .ignoreNil()
@@ -135,6 +164,10 @@ extension Reactive where Base: AVPlayerItem
     }
     
     
+    /// Create observable which will emitt `canPlayFastReverse(Bool)`. Only distinct values will be emitted.
+    /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
+    /// - Returns: Observable which emitt player item's canPlayFastReverse value every time it change.
+    /// - Author: 김정민(kimjm010@icloud.com)
     public func canPlayFastReverse(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<Bool> {
         return base.rx.observe(Bool.self, "canPlayFastReverse", options: options, retainSelf: false)
             .ignoreNil()

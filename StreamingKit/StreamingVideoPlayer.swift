@@ -66,7 +66,7 @@ public class StreamingVideoPlayer {
         let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
         let newTime = currentTime - 10
         let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-        avPlayer.seek(to: setTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        avPlayer.seek(to: setTime)
     }
     
     
@@ -74,7 +74,7 @@ public class StreamingVideoPlayer {
         let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
         let newTime = currentTime + 10
         let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-        avPlayer.seek(to: setTime, toleranceBefore: CMTime.zero, toleranceAfter: CMTime.zero)
+        avPlayer.seek(to: setTime)
     }
     
     
