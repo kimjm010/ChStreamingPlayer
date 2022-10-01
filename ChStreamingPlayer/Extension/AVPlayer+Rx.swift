@@ -54,7 +54,7 @@ extension Reactive where Base: AVPlayer
     /// Create observable which will emitt `AVPlayerItem Array` every time player's rate change. Only distinct values will be emitted.
     ///
     /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
-    /// - Returns: Observable which emitt AVPlayerItem Array every time player's rate change.
+    /// - Returns: Observable which emitt AVPlayerItem Array every time player's items change.
     /// - Author: 김정민(kimjm010@icloud.com)
     public func items(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<[AVPlayerItem]> {
         return base.rx.observe([AVPlayerItem].self, "items", options: options, retainSelf: false)

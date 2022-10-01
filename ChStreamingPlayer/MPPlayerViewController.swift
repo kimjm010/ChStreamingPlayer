@@ -7,7 +7,6 @@
 
 import AVFoundation
 import ProgressHUD
-import RxAudioVisual
 import NSObject_Rx
 import RxSwift
 import RxCocoa
@@ -57,6 +56,18 @@ class MPPlayerViewController: UIViewController {
     var currentItemsForPlayer = [AVPlayerItem]()
     
     
+    //MARK: - Disposables
+    
+    var presentationDisposable: Disposable? = nil
+    var canPlayFastForwardDisposable: Disposable? = nil
+    var canPlayReverseDisposable: Disposable? = nil
+    var canStepForwardDisposable: Disposable? = nil
+    var canStepBackwardDisposable: Disposable? = nil
+    var canPlayFastReverseDisposable: Disposable? = nil
+    var statusDisposable: Disposable? = nil
+    var durationDisposable: Disposable? = nil
+    
+    
     // MARK: - IBActions
     @IBAction func togglePlay(_ sender: Any) {
 
@@ -83,14 +94,14 @@ class MPPlayerViewController: UIViewController {
 //        avPlayer.currentItem?.step(byCount: -1)
 //        let itemTrack = AVPlayerItemTrack()
 //        print(#fileID, #function, #line, "- \(avPlayer.items().count) \(itemTrack.description)")
-//
-//
-//
-//        if avPlayer.currentItem?.currentTime() != .zero {
-//            avPlayer.seek(to: .zero)
-//        }
+
+
+
+        if avPlayer.currentItem?.currentTime() != .zero {
+            avPlayer.seek(to: .zero)
+        }
         
-        moveToPreviousItem(avPlayer)
+//        moveToPreviousItem(avPlayer)
     }
     
     
@@ -99,6 +110,7 @@ class MPPlayerViewController: UIViewController {
         isRepeat.toggle()
 
         if isRepeat {
+            
             repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
             guard let currentItem = avPlayer.currentItem else { return }
             playerLooper = AVPlayerLooper(player: avPlayer, templateItem: currentItem)
@@ -106,6 +118,7 @@ class MPPlayerViewController: UIViewController {
         } else {
             playerLooper = nil
             repeatButton.setImage(UIImage(systemName: MPPlayerViewController.finishRepeatImage), for: .normal)
+            avPlayer.play()
         }
     }
     
@@ -144,7 +157,6 @@ class MPPlayerViewController: UIViewController {
         
         // 앞으로 10초 이동
         moveForwardButton.rx.tap
-            .throttle(0.2, scheduler: MainScheduler.instance)
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
             .map { $0.value }
             .ignoreNil()
@@ -172,7 +184,6 @@ class MPPlayerViewController: UIViewController {
         
         // 10초 뒤로 이동
         moveBackButton.rx.tap
-            .throttle(0.2, scheduler: MainScheduler.instance)
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
             .map { $0.value }
             .ignoreNil()
@@ -190,7 +201,6 @@ class MPPlayerViewController: UIViewController {
         
         // 앞으로 감기
         forwardButton.rx.tap
-            .throttle(0.2, scheduler: MainScheduler.instance)
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
             .map { $0.value }
             .ignoreNil()
@@ -208,7 +218,6 @@ class MPPlayerViewController: UIViewController {
         
         // 뒤로 감기
         backwardButton.rx.tap
-            .throttle(0.2, scheduler: MainScheduler.instance)
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
             .map { $0.value }
             .ignoreNil()
