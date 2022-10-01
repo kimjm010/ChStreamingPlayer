@@ -104,26 +104,6 @@ extension Reactive where Base: AVPlayerItem
     /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
     /// - Returns: Observable which emitt player item's canPlayFastForward value every time it change.
     /// - Author: 김정민(kimjm010@icloud.com)
-    public func canPlayFastForward(updateQueue: DispatchQueue?) -> Observable<Bool> {
-        return Observable.create({[weak base] observer in
-            
-            guard let player = base else {
-                observer.onCompleted()
-                return Disposables.create()
-            }
-            
-            let object = player.canPlayFastForward
-            observer.onNext(object)
-            
-            return Disposables.create()
-        })
-    }
-    
-    
-    /// Create observable which will emitt `canPlayFastForward(Bool)`. Only distinct values will be emitted.
-    /// - Parameter options: Observing options which determine the values that are returned. These options are passed to KVO method.
-    /// - Returns: Observable which emitt player item's canPlayFastForward value every time it change.
-    /// - Author: 김정민(kimjm010@icloud.com)
     public func canPlayFastForward(options: KeyValueObservingOptions = [.initial, .new]) -> Observable<Bool> {
         return base.rx.observe(Bool.self, "canPlayFastForward", options: options, retainSelf: false)
             .ignoreNil()

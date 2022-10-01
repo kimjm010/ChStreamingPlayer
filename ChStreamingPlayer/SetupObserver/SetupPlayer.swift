@@ -35,9 +35,21 @@ extension MPPlayerViewController {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 
-                #warning("Todo: - 시작할 때 왜 timevalue가 0.5일까?")
                 self.timeSlider.value = $0
                 self.startTimeLabel.text = self.createTimeString(time: $0)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        // AVQueuePlayer의 미디어 아이템목록을 구독
+        #warning("Todo: - 코드 처음에만 실행되고 그 뒤로는 실행되지 않아")
+        player.rx.items()
+            .observeOn(MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                if $0.count == 1 {
+                    self.nextVideoButton.isEnabled = false
+                }
             })
             .disposed(by: rx.disposeBag)
     }
