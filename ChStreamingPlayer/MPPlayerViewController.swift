@@ -31,17 +31,17 @@ class MPPlayerViewController: UIViewController {
     @IBOutlet weak var repeatButton: UIButton!
     @IBOutlet weak var controlZoomButton: UIButton!
     @IBOutlet weak var videoModeLabel: UILabel!
+    @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
+    @IBOutlet var tapGesture: UITapGestureRecognizer!
     
     
     // MARK: - Vars
     
     private var playerLooper: NSObject?
     
-    private var timeObservetToken: Any?
+    private var timeObserverToken: Any?
     
     var avPlayer = AVQueuePlayer()
-    
-    var tapGesture = UITapGestureRecognizer()
     
     var selectedPreviousItem: AVPlayerItem?
     
@@ -66,6 +66,9 @@ class MPPlayerViewController: UIViewController {
     var canPlayFastReverseDisposable: Disposable? = nil
     var statusDisposable: Disposable? = nil
     var durationDisposable: Disposable? = nil
+    var timeControlStatusDisposable: Disposable? = nil
+    var playbackPositionDisposable: Disposable? = nil
+    var playerItemsDisposable: Disposable? = nil
     
     
     // MARK: - IBActions
@@ -101,7 +104,6 @@ class MPPlayerViewController: UIViewController {
         isRepeat.toggle()
         
         if isRepeat {
-            
             repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
             guard let currentItem = avPlayer.currentItem else { return }
             playerLooper = AVPlayerLooper(player: avPlayer, templateItem: currentItem)
@@ -119,6 +121,11 @@ class MPPlayerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // 비디오 구성
+        guard let url = Bundle.main.url(forResource: "v2", withExtension: "mp4") else { return }
+        let asset = AVURLAsset(url: url)
+        loadPropertyValues(forAsset: asset)
+        addPinchGesturer()
         addAllViedeosToPlayer()
         
         
@@ -133,11 +140,28 @@ class MPPlayerViewController: UIViewController {
             })
             .disposed(by: rx.disposeBag)
         
-        // 비디오 구성
-        guard let url = Bundle.main.url(forResource: "v2", withExtension: "mp4") else { return }
-        let asset = AVURLAsset(url: url)
-        loadPropertyValues(forAsset: asset)
-        addPinchGesturer()
+        
+        // 재생/일시정지
+//        timeControlStatusDisposable = nil
+//        timeControlStatusDisposable = playPauseButton.rx.tap
+//             .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
+//             .debug()
+//             .map { $0.rawValue }
+//             .debug()
+//             .subscribe(onNext: { [weak self] in
+//                 guard let self = self else { return }
+//                 print(#fileID, #function, #line, "- \($0)")
+//                 switch $0 {
+//                 case 0:
+//                     let currentItem = self.avPlayer.currentItem
+//                     if currentItem?.currentTime() == currentItem?.duration {
+//                         currentItem?.seek(to: .zero, completionHandler: nil)
+//                     }
+//                     self.avPlayer.play()
+//                 default:
+//                     self.avPlayer.pause()
+//                 }
+//             })
         
         
         // 앞으로 10초 이동
@@ -250,7 +274,7 @@ class MPPlayerViewController: UIViewController {
             .disposed(by: rx.disposeBag)
         
         
-        #warning("Todo: - 코듣 개선 하기")
+        #warning("Todo: - 코듣 개선 하기 -> bind(to:) or driver로 이미지 바인딩")
         // 확대, 축소기능
         controlZoomButton.rx.tap
             .subscribe(onNext: { [weak self] in
@@ -289,32 +313,6 @@ class MPPlayerViewController: UIViewController {
              })
              .disposed(by: rx.disposeBag)
          */
-         
-        // 재생/일시정지
-        /*
-         playPauseButton.rx.tap
-             .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
-             .debug()
-             .map { $0.rawValue }
-             .debug()
-             .subscribe(onNext: { [weak self] in
-                 guard let self = self else { return }
-                 print(#fileID, #function, #line, "- \($0)")
-                 switch $0 {
-                 case 0:
-                     let currentItem = self.avPlayer.currentItem
-                     if currentItem?.currentTime() == currentItem?.duration {
-                         currentItem?.seek(to: .zero, completionHandler: nil)
-                     }
-                     self.avPlayer.play()
-                 default:
-                     self.avPlayer.pause()
-                 }
-             })
-             .disposed(by: rx.disposeBag)
-         */
-        
-        
     }
     
     
@@ -323,9 +321,9 @@ class MPPlayerViewController: UIViewController {
         
         avPlayer.pause()
         
-        if let timeObservetToken = timeObservetToken {
+        if let timeObservetToken = timeObserverToken {
             avPlayer.removeTimeObserver(timeObservetToken)
-            self.timeObservetToken = nil
+            self.timeObserverToken = nil
         }
     }
     
@@ -379,7 +377,7 @@ class MPPlayerViewController: UIViewController {
     
     // MARK: - Add Videos To Player
     
-    private func addAllViedeosToPlayer() {
+    func addAllViedeosToPlayer() {
         var items = [AVPlayerItem]()
         for i in 1...8 {
             guard let url = Bundle.main.url(forResource: "v\(i)", withExtension: "mp4") else { return }
@@ -393,28 +391,23 @@ class MPPlayerViewController: UIViewController {
         }
     }
     
-    
+
     // MARK: - Add Pinch Gesture To Zoom in/out the Video
     
     private func addPinchGesturer() {
-        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:)))
-        playerView.addGestureRecognizer(pinchGesture)
-    }
-    
-    
-    /// Pinch제스처를 처리합니다.
-    ///
-    /// - Parameter gestureRecognizer: PinchGesture객체
-    @objc
-    private func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
-        guard gestureRecognizer.view != nil else { return }
         
-        if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
-            guard let view = gestureRecognizer.view else { return }
-            
-            gestureRecognizer.view?.transform = view.transform.scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale)
-            gestureRecognizer.scale = 1
-        }
+        pinchGesture.rx.event
+            .subscribe(onNext: { (gesture) in
+                guard gesture.view != nil else { return }
+                
+                if gesture.state == .began || gesture.state == .changed {
+                    guard let view = gesture.view else { return }
+                    
+                    gesture.view?.transform = view.transform.scaledBy(x: gesture.scale, y: gesture.scale)
+                    gesture.scale = 1
+                }
+            })
+            .disposed(by: rx.disposeBag)
     }
     
     

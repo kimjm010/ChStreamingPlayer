@@ -28,11 +28,15 @@ extension MPPlayerViewController {
         presentationDisposable = currentItem.rx.presentation()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
+                self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
                 
                 #warning("Todo: - 몇 영상은 landscape mode로 돌아갔다 되돌아오는 문제 해결 필요")
-                self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
-//                let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
-//                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: $0.width > $0.height ? .landscape : .portrait))
+                /// **가로세로모드 자동 변경 코드**
+                /*
+                 let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+                 windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: $0.width > $0.height ? .landscape : .portrait))
+                 */
+                
             })
         
         canPlayFastForwardDisposable = nil
