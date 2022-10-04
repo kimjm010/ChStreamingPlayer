@@ -125,8 +125,10 @@ class MPPlayerViewController: UIViewController {
         guard let url = Bundle.main.url(forResource: "v2", withExtension: "mp4") else { return }
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
-        addPinchGesturer()
         addAllViedeosToPlayer()
+        
+        addPinchGesturer()
+        addDoubleTapGesture()
         
         
         // 현재 미디어 아이템을 방출
@@ -395,7 +397,6 @@ class MPPlayerViewController: UIViewController {
     // MARK: - Add Pinch Gesture To Zoom in/out the Video
     
     private func addPinchGesturer() {
-        
         pinchGesture.rx.event
             .subscribe(onNext: { (gesture) in
                 guard gesture.view != nil else { return }
@@ -403,13 +404,33 @@ class MPPlayerViewController: UIViewController {
                 if gesture.state == .began || gesture.state == .changed {
                     guard let view = gesture.view else { return }
                     
-                    gesture.view?.transform = view.transform.scaledBy(x: gesture.scale, y: gesture.scale)
+                    view.transform = view.transform.scaledBy(x: gesture.scale, y: gesture.scale)
                     gesture.scale = 1
                 }
             })
             .disposed(by: rx.disposeBag)
     }
     
+    
+    // MARK: - Add Double Tap Gesture To Set Zoom Status to Default
+    
+    private func addDoubleTapGesture() {
+        tapGesture.rx.event
+            .subscribe(onNext: { (gesture) in
+                gesture.numberOfTapsRequired = 2
+                guard gesture.view != nil else { return }
+                
+                if let view = gesture.view {
+                    UIView.animate(withDuration: 0.3) {
+                        view.transform = .identity
+                    }
+                }
+            })
+            .disposed(by: rx.disposeBag)
+    }
+    
+    
+    // MARK: - Control Zoom In / Out
     
     /// isZoom속성에 따라 화면을 확대/축소합니다.
     ///
@@ -428,6 +449,8 @@ class MPPlayerViewController: UIViewController {
         }
     }
     
+    
+    // MARK: - Move to Previous Player Item
     
     /// 이전 아이템 항목으로 이동합니다.
     ///
