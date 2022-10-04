@@ -111,12 +111,17 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="labelColor"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="dFk-yo-xwd" secondAttribute="bottom" constant="8" id="3hD-uU-V1n"/>
                                     <constraint firstItem="dFk-yo-xwd" firstAttribute="centerX" secondItem="RfZ-8J-afy" secondAttribute="centerX" id="AB4-Ce-aI9"/>
                                     <constraint firstAttribute="trailing" secondItem="dFk-yo-xwd" secondAttribute="trailing" id="JM2-s4-1Eo"/>
                                     <constraint firstItem="dFk-yo-xwd" firstAttribute="leading" secondItem="RfZ-8J-afy" secondAttribute="leading" id="mii-15-zMs"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="imM-nK-ZiZ" appends="YES" id="TfC-ln-b49"/>
+                                    <outletCollection property="gestureRecognizers" destination="Hft-Uy-kSJ" appends="YES" id="9Gb-qO-iz3"/>
+                                </connections>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="28" translatesAutoresizingMaskIntoConstraints="NO" id="QFs-mS-iAQ">
                                 <rect key="frame" x="0.0" y="726.66666666666663" width="390" height="34.333333333333371"/>
@@ -241,16 +246,20 @@
                         <outlet property="moveBackButton" destination="DjO-0e-Glz" id="ckm-91-Rcv"/>
                         <outlet property="moveForwardButton" destination="xsn-Xn-auf" id="Zk0-cX-V63"/>
                         <outlet property="nextVideoButton" destination="2hz-Do-tnN" id="68b-iO-ecc"/>
+                        <outlet property="pinchGesture" destination="imM-nK-ZiZ" id="a1w-UR-c0o"/>
                         <outlet property="playPauseButton" destination="hgg-jI-8rA" id="Jad-B8-AaB"/>
                         <outlet property="playerView" destination="RfZ-8J-afy" id="vHF-CH-QFc"/>
                         <outlet property="previousVideoButton" destination="jii-DV-Sar" id="VIe-72-0zW"/>
                         <outlet property="repeatButton" destination="ggA-KB-uzn" id="0OY-pR-TZS"/>
                         <outlet property="startTimeLabel" destination="4qa-CW-XGr" id="Dg8-pS-gvv"/>
+                        <outlet property="tapGesture" destination="Hft-Uy-kSJ" id="bfJ-LD-n7z"/>
                         <outlet property="timeSlider" destination="Q88-yQ-keM" id="e7r-EF-caw"/>
                         <outlet property="videoModeLabel" destination="dFk-yo-xwd" id="TWs-vt-KLh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="g66-S5-ozY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="imM-nK-ZiZ"/>
+                <tapGestureRecognizer id="Hft-Uy-kSJ"/>
             </objects>
             <point key="canvasLocation" x="-632.30769230769226" y="473.45971563981038"/>
         </scene>
