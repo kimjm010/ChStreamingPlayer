@@ -53,21 +53,13 @@ extension UIViewController {
             }
             alert.addAction(cancelAction)
             
+            self?.present(alert, animated: true)
+            
             return Disposables.create {
                 alert.dismiss(animated: true, completion: nil)
             }
         }
     }
-    
-    
-    func alertPressPlayButton(title: String, message: String) {
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            
-            let okAction = UIAlertAction(title: "Ok", style: .default)
-            alert.addAction(okAction)
-            
-            present(alert, animated: true, completion: nil)
-        }
         
         
     func alertAddItemsToPlayer(title: String, message: String, completion: ((UIAlertAction) -> Void)? = nil) {

@@ -90,25 +90,16 @@ class MPPlayerViewController: UIViewController {
     
     /// 이전 재생항목으로 이동
     @IBAction func previousVideo() {
-        
-//        avPlayer.currentItem?.step(byCount: -1)
-//        let itemTrack = AVPlayerItemTrack()
-//        print(#fileID, #function, #line, "- \(avPlayer.items().count) \(itemTrack.description)")
-
-
-
         if avPlayer.currentItem?.currentTime() != .zero {
             avPlayer.seek(to: .zero)
         }
-        
-//        moveToPreviousItem(avPlayer)
     }
     
     
     /// 반복재생
     @IBAction func repeatVideoPlay(_ sender: Any) {
         isRepeat.toggle()
-
+        
         if isRepeat {
             
             repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
@@ -123,18 +114,13 @@ class MPPlayerViewController: UIViewController {
     }
     
     
-    @IBAction func controlZoom(_ sender: Any) {
-        isZoom.toggle()
-        let buttonImage = isZoom ? UIImage(systemName: "minus.magnifyingglass") : UIImage(systemName: "plus.magnifyingglass")
-        controlZoomButton.setImage(buttonImage, for: .normal)
-        controlVideoZoom(isZoom: isZoom)
-    }
-    
-    
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        addAllViedeosToPlayer()
+        
         
         // 현재 미디어 아이템을 방출
         avPlayer.rx.currentItem
@@ -153,7 +139,6 @@ class MPPlayerViewController: UIViewController {
         loadPropertyValues(forAsset: asset)
         addPinchGesturer()
         
-        addAllViedeosToPlayer()
         
         // 앞으로 10초 이동
         moveForwardButton.rx.tap
@@ -182,6 +167,7 @@ class MPPlayerViewController: UIViewController {
             })
             .disposed(by: rx.disposeBag)
         
+        
         // 10초 뒤로 이동
         moveBackButton.rx.tap
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
@@ -198,6 +184,7 @@ class MPPlayerViewController: UIViewController {
                 self.avPlayer.seek(to: setTime)
             })
             .disposed(by: rx.disposeBag)
+        
         
         // 앞으로 감기
         forwardButton.rx.tap
@@ -216,6 +203,7 @@ class MPPlayerViewController: UIViewController {
             })
             .disposed(by: rx.disposeBag)
         
+        
         // 뒤로 감기
         backwardButton.rx.tap
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
@@ -231,6 +219,7 @@ class MPPlayerViewController: UIViewController {
                 self.avPlayer.rate = max(self.avPlayer.rate - 2.0, -2.0)
             })
             .disposed(by: rx.disposeBag)
+        
         
         // 다음 영상 재생
         nextVideoButton.rx.tap
@@ -249,6 +238,31 @@ class MPPlayerViewController: UIViewController {
                 }
             })
             .disposed(by: rx.disposeBag)
+        
+        
+        // timeSlider의 value 변경
+        timeSlider.rx.value
+            .map { Variable(Float($0)) }
+            .subscribe(onNext: { [weak self] in
+                let newTime = CMTime(seconds: Double($0.value), preferredTimescale: 600)
+                self?.avPlayer.seek(to: newTime)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        
+        #warning("Todo: - 코듣 개선 하기")
+        // 확대, 축소기능
+        controlZoomButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.isZoom.toggle()
+                
+                self.controlVideoZoom(isZoom: self.isZoom)
+                let buttonImage = self.isZoom ? UIImage(systemName: "minus.magnifyingglass") : UIImage(systemName: "plus.magnifyingglass")
+                self.controlZoomButton.setImage(buttonImage, for: .normal)
+            })
+            .disposed(by: rx.disposeBag)
+        
         
         // 반복재생
         /*
@@ -300,14 +314,7 @@ class MPPlayerViewController: UIViewController {
              .disposed(by: rx.disposeBag)
          */
         
-        /// timeSlider의 value 변경
-        timeSlider.rx.value
-            .map { Variable(Float($0)) }
-            .subscribe(onNext: { [weak self] in
-                let newTime = CMTime(seconds: Double($0.value), preferredTimescale: 600)
-                self?.avPlayer.seek(to: newTime)
-            })
-            .disposed(by: rx.disposeBag)
+        
     }
     
     
@@ -396,6 +403,7 @@ class MPPlayerViewController: UIViewController {
     
     
     /// Pinch제스처를 처리합니다.
+    ///
     /// - Parameter gestureRecognizer: PinchGesture객체
     @objc
     private func handlePinch(_ gestureRecognizer: UIPinchGestureRecognizer) {
@@ -411,6 +419,7 @@ class MPPlayerViewController: UIViewController {
     
     
     /// isZoom속성에 따라 화면을 확대/축소합니다.
+    ///
     /// - Parameter isZoom: 확대 여부 속성
     private func controlVideoZoom(isZoom: Bool) {
         if isZoom {
@@ -428,6 +437,7 @@ class MPPlayerViewController: UIViewController {
     
     
     /// 이전 아이템 항목으로 이동합니다.
+    ///
     /// - Parameter player: 비디오 재생중인 AVQueuePlayer
     private func moveToPreviousItem(_ player: AVQueuePlayer) {
         

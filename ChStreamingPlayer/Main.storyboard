@@ -213,9 +213,6 @@
                                 <color key="tintColor" systemColor="secondarySystemBackgroundColor"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="plus.magnifyingglass" catalog="system"/>
-                                <connections>
-                                    <action selector="controlZoom:" destination="3qe-GV-xjU" eventType="touchUpInside" id="Ba4-gD-nt2"/>
-                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="7Us-Vo-ZVS"/>
