@@ -137,7 +137,6 @@ class MPPlayerViewController: UIViewController {
             .ignoreNil()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                
                 self.subscribeCurrentItem($0)
             })
             .disposed(by: rx.disposeBag)
@@ -188,6 +187,7 @@ class MPPlayerViewController: UIViewController {
                 
                 let currentTime = CMTimeGetSeconds(self.avPlayer.currentTime())
                 let newTime = currentTime + 10
+                #warning("Todo: - 빨리감기, 되감기 여기서 문제 있는 것 같네")
                 let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
                 self.avPlayer.seek(to: setTime)
             })
