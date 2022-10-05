@@ -21,7 +21,7 @@ extension MPPlayerViewController {
     ///
     /// - Parameter currentItem: AVQueuePlayer의 현재 아이템
     func subscribeCurrentItem(_ currentItem: AVPlayerItem) {
-        
+        // #3 #5 #6 #7 
         presentationDisposable = nil
         
         // 미디어 아이템에 따라 portrait / landscape모드 레이블 표시
@@ -30,13 +30,12 @@ extension MPPlayerViewController {
                 guard let self = self else { return }
                 self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
                 
-                #warning("Todo: - 몇 영상은 landscape mode로 돌아갔다 되돌아오는 문제 해결 필요")
+                #warning("Todo: - #1, #3 영상은 landscape mode로 돌아갔다 되돌아오는 문제 해결 필요")
                 /// **가로세로모드 자동 변경 코드**
                 /*
                  let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
                  windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: $0.width > $0.height ? .landscape : .portrait))
                  */
-                
             })
         
         canPlayFastForwardDisposable = nil
