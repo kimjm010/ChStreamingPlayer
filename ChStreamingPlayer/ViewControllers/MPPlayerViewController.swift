@@ -138,12 +138,14 @@ class MPPlayerViewController: UIViewController {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.subscribeCurrentItem($0)
+                print(#fileID, #function, #line, "- \($0)")
             })
             .disposed(by: rx.disposeBag)
         
         
         // 재생/일시정지
 //        timeControlStatusDisposable = nil
+        
 //        timeControlStatusDisposable = playPauseButton.rx.tap
 //             .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
 //             .debug()
@@ -167,29 +169,19 @@ class MPPlayerViewController: UIViewController {
         
         // 앞으로 10초 이동
         moveForwardButton.rx.tap
+            .debug()
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
+            .debug()
             .map { $0.value }
+            .debug()
             .ignoreNil()
-            .subscribe(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                
-                if $0.currentTime() == self.avPlayer.currentItem?.duration {
-                    self.avPlayer.advanceToNextItem()
-                }
-                
-                if $0 == self.avPlayer.items().last {
-                    self.alertAddItemsToPlayer(title: "Alert",
-                                          message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.") { [weak self] _ in
-                        guard let self = self else { return }
-                        self.addAllViedeosToPlayer()
-                    }
-                }
                 
                 let currentTime = CMTimeGetSeconds(self.avPlayer.currentTime())
                 let newTime = currentTime + 10
-                #warning("Todo: - 빨리감기, 되감기 여기서 문제 있는 것 같네")
                 let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-                self.avPlayer.seek(to: setTime)
+                self.avPlayer.currentItem?.seek(to: setTime, completionHandler: nil)
             })
             .disposed(by: rx.disposeBag)
         
@@ -207,7 +199,7 @@ class MPPlayerViewController: UIViewController {
                 let currentTime = CMTimeGetSeconds(self.avPlayer.currentTime())
                 let newTime = currentTime - 10
                 let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-                self.avPlayer.seek(to: setTime)
+                self.avPlayer.currentItem?.seek(to: setTime, completionHandler: nil)
             })
             .disposed(by: rx.disposeBag)
         
@@ -266,7 +258,7 @@ class MPPlayerViewController: UIViewController {
             .disposed(by: rx.disposeBag)
         
         
-        // timeSlider의 value 변경
+        // timeSlider 재생 위치 조정
         timeSlider.rx.value
             .map { Variable(Float($0)) }
             .subscribe(onNext: { [weak self] in

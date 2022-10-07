@@ -26,11 +26,12 @@ extension MPPlayerViewController {
         // play/pause button 이미지 변경
         timeControlStatusDisposable = nil
         
-        
         timeControlStatusDisposable = player.rx.timeControlStatus.asDriver(onErrorJustReturn: .playing)
             .map { $0 == .playing ? UIImage(systemName: MPPlayerViewController.pauseImage) : UIImage(systemName: MPPlayerViewController.playImage) }
             .drive(playPauseButton.rx.image())
         
+        
+        // player 아이템이 없는 경우 사용자에게 알림 표시
         player.rx.timeControlStatus
             .map { $0 == .waitingToPlayAtSpecifiedRate }
             .subscribe(onNext: { [unowned self] _ in
@@ -41,9 +42,9 @@ extension MPPlayerViewController {
                     .subscribe(onNext: { (actionType) in
                         switch actionType {
                         case .ok:
-                            break
+                            self.addAllViedeosToPlayer()
                         case .cancel:
-                            break
+                            self.updateUIForPlayerItemDefaultState()
                         }
                     })
                     .disposed(by: self.rx.disposeBag)

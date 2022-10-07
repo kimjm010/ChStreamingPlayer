@@ -213,21 +213,37 @@
 		F5EF3D3228D43A0A00A66655 /* ChStreamingPlayer */ = {
 			isa = PBXGroup;
 			children = (
-				F5E221DB28DD89CB00AF7752 /* Extension */,
-				F502C66F28E4264C00807A9B /* SetupObserver */,
 				F5EF3D3328D43A0A00A66655 /* AppDelegate.swift */,
 				F5EF3D3528D43A0A00A66655 /* SceneDelegate.swift */,
-				F536F66528DBE0B900751D9F /* StreamingViewController.swift */,
-				F536F68428DC661A00751D9F /* MPPlayerViewController.swift */,
-				F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */,
 				F536F66B28DBE4EF00751D9F /* Main.storyboard */,
 				F5EF3D3E28D43A0B00A66655 /* LaunchScreen.storyboard */,
+				F502C66F28E4264C00807A9B /* SetupObserver */,
+				F5F0AC0128EEAC7B00A4AD84 /* ViewControllers */,
+				F5F0AC0228EEAC8F00A4AD84 /* PlayerView */,
+				F5E221DB28DD89CB00AF7752 /* Extension */,
 				F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */,
 				F54A7C9D28E174750001FE9B /* Videos */,
 				F5EF3D4128D43A0B00A66655 /* Info.plist */,
 				F555655A28E5642300C81339 /* CustomControlAVQueuePlayer.swift */,
 			);
 			path = ChStreamingPlayer;
+			sourceTree = "<group>";
+		};
+		F5F0AC0128EEAC7B00A4AD84 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				F536F66528DBE0B900751D9F /* StreamingViewController.swift */,
+				F536F68428DC661A00751D9F /* MPPlayerViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		F5F0AC0228EEAC8F00A4AD84 /* PlayerView */ = {
+			isa = PBXGroup;
+			children = (
+				F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */,
+			);
+			path = PlayerView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
