@@ -24,7 +24,7 @@ class MPPlayerViewController: UIViewController {
     @IBOutlet weak var backwardButton: UIButton!
     @IBOutlet weak var forwardButton: UIButton!
     @IBOutlet weak var playPauseButton: UIButton!
-    @IBOutlet weak var moveBackButton: UIButton!
+    @IBOutlet weak var moveBackwardButton: UIButton!
     @IBOutlet weak var moveForwardButton: UIButton!
     @IBOutlet weak var nextVideoButton: UIButton!
     @IBOutlet weak var previousVideoButton: UIButton!
@@ -37,23 +37,24 @@ class MPPlayerViewController: UIViewController {
     
     // MARK: - Vars
     
+    private static let repeatImage = "repeat.1"
+
+    private static let finishRepeatImage = "repeat"
+    
+    var currentItemsForPlayer = [AVPlayerItem]()
+    
+    var selectedPreviousItem: AVPlayerItem?
+    
     private var playerLooper: NSObject?
     
     private var timeObserverToken: Any?
     
-    var avPlayer = AVQueuePlayer()
-    
-    var selectedPreviousItem: AVPlayerItem?
-    
-    private static let repeatImage = "repeat.1"
-
-    private static let finishRepeatImage = "repeat"
+    var avPlayer = AVPlayer()
     
     var isRepeat = false
     
     var isZoom = false
     
-    var currentItemsForPlayer = [AVPlayerItem]()
     
     
     //MARK: - Disposables
@@ -69,6 +70,7 @@ class MPPlayerViewController: UIViewController {
     var timeControlStatusDisposable: Disposable? = nil
     var playbackPositionDisposable: Disposable? = nil
     var playerItemsDisposable: Disposable? = nil
+    var playerTimeControlStatusDisposable: Disposable? = nil
     
     
     // MARK: - IBActions
@@ -101,18 +103,18 @@ class MPPlayerViewController: UIViewController {
     
     /// 반복재생
     @IBAction func repeatVideoPlay(_ sender: Any) {
-        isRepeat.toggle()
-        
-        if isRepeat {
-            repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
-            guard let currentItem = avPlayer.currentItem else { return }
-            playerLooper = AVPlayerLooper(player: avPlayer, templateItem: currentItem)
-            avPlayer.play()
-        } else {
-            playerLooper = nil
-            repeatButton.setImage(UIImage(systemName: MPPlayerViewController.finishRepeatImage), for: .normal)
-            avPlayer.play()
-        }
+//        isRepeat.toggle()
+//
+//        if isRepeat {
+//            repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
+//            guard let currentItem = avPlayer.currentItem else { return }
+//            playerLooper = AVPlayerLooper(player: avPlayer, templateItem: currentItem)
+//            avPlayer.play()
+//        } else {
+//            playerLooper = nil
+//            repeatButton.setImage(UIImage(systemName: MPPlayerViewController.finishRepeatImage), for: .normal)
+//            avPlayer.play()
+//        }
     }
     
     
@@ -130,6 +132,10 @@ class MPPlayerViewController: UIViewController {
         addPinchGesturer()
         addDoubleTapGesture()
         
+        #if DEBUG
+        avPlayer.replaceCurrentItem(with: currentItemsForPlayer[0])
+        #endif
+        
         
         // 현재 미디어 아이템을 방출
         avPlayer.rx.currentItem
@@ -137,6 +143,7 @@ class MPPlayerViewController: UIViewController {
             .ignoreNil()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
+                self.subscribePlayer(self.avPlayer)
                 self.subscribeCurrentItem($0)
                 print(#fileID, #function, #line, "- \($0)")
             })
@@ -169,25 +176,24 @@ class MPPlayerViewController: UIViewController {
         
         // 앞으로 10초 이동
         moveForwardButton.rx.tap
-            .debug()
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
-            .debug()
             .map { $0.value }
-            .debug()
             .ignoreNil()
-            .subscribe(onNext: { [weak self] _ in
-                guard let self = self else { return }
+            .subscribe(onNext: {
                 
-                let currentTime = CMTimeGetSeconds(self.avPlayer.currentTime())
+                print(#fileID, #function, #line, "- \($0)")
+                
+                let currentTime = CMTimeGetSeconds($0.currentTime())
                 let newTime = currentTime + 10
                 let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
-                self.avPlayer.currentItem?.seek(to: setTime, completionHandler: nil)
+                $0.seek(to: setTime, completionHandler: nil)
             })
             .disposed(by: rx.disposeBag)
         
         
         // 10초 뒤로 이동
-        moveBackButton.rx.tap
+        moveBackwardButton.rx.tap
+            .debug()
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
             .map { $0.value }
             .ignoreNil()
@@ -243,11 +249,12 @@ class MPPlayerViewController: UIViewController {
         nextVideoButton.rx.tap
             .flatMap { [unowned self] in self.avPlayer.rx.items() }
             .map { $0.count }
+            .debug()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 
                 if $0 > 1 {
-                    self.avPlayer.advanceToNextItem()
+                    print(#fileID, #function, #line, "- 다음영상으로 넘어갈 것")
                 } else {
                     self.alertAddItemsToPlayer(title: "Alert",
                                                message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") { _ in
@@ -314,11 +321,6 @@ class MPPlayerViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         avPlayer.pause()
-        
-        if let timeObservetToken = timeObserverToken {
-            avPlayer.removeTimeObserver(timeObservetToken)
-            self.timeObserverToken = nil
-        }
     }
     
     
@@ -336,7 +338,7 @@ class MPPlayerViewController: UIViewController {
                 guard let self = self else { return }
                 
                 if self.validateValues(forKeys: assetKeysRequiredToPlay, forAsset: newAsset) {
-                    self.subscribePlayer(self.avPlayer)
+//                    self.subscribePlayer(self.avPlayer)
                     self.playerView.player = self.avPlayer
                 }
             }
@@ -372,16 +374,13 @@ class MPPlayerViewController: UIViewController {
     // MARK: - Add Videos To Player
     
     func addAllViedeosToPlayer() {
-        var items = [AVPlayerItem]()
         for i in 1...8 {
             guard let url = Bundle.main.url(forResource: "v\(i)", withExtension: "mp4") else { return }
             
             let asset = AVURLAsset(url: url)
             
             let item = AVPlayerItem(asset: asset)
-            items.append(item)
-            
-            avPlayer.insert(item, after: nil)
+            currentItemsForPlayer.append(item)
         }
     }
     
@@ -438,38 +437,6 @@ class MPPlayerViewController: UIViewController {
                 guard let self = self else { return }
                 self.playerView.transform = .identity
             }
-        }
-    }
-    
-    
-    // MARK: - Move to Previous Player Item
-    
-    /// 이전 아이템 항목으로 이동합니다.
-    ///
-    /// - Parameter player: 비디오 재생중인 AVQueuePlayer
-    private func moveToPreviousItem(_ player: AVQueuePlayer) {
-        
-        #warning("Todo: - firstIndex에서 바인딩이 안되거 nil을 리턴함")
-        guard let currentItem = avPlayer.currentItem,
-              var currentItemIndex = avPlayer.items().firstIndex(of: currentItem) else { return }
-        
-        if currentItemIndex > 0 {
-            
-            avPlayer.pause()
-            avPlayer.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
-            let tempNowPlayingIndex = currentItemIndex
-            let tempItemsForPlayer = currentItemsForPlayer
-            
-            var playerItems = avPlayer.items()
-            playerItems.removeAll()
-            
-            for i in (currentItemIndex - 1)..<(currentItemsForPlayer.count - 1) {
-                avPlayer.insert(tempItemsForPlayer[i], after: nil)
-            }
-            
-            currentItemIndex = tempNowPlayingIndex - 1
-            avPlayer.seek(to: .zero, toleranceBefore: .zero, toleranceAfter: .zero)
-            avPlayer.play()
         }
     }
 }

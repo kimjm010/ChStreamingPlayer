@@ -243,7 +243,7 @@
                         <outlet property="controlZoomButton" destination="Ohi-bS-tce" id="12Z-NE-uqV"/>
                         <outlet property="durationLabel" destination="43r-N0-jJr" id="rJi-rU-l0L"/>
                         <outlet property="forwardButton" destination="3Z0-uF-Rm7" id="63H-h6-0Ou"/>
-                        <outlet property="moveBackButton" destination="DjO-0e-Glz" id="ckm-91-Rcv"/>
+                        <outlet property="moveBackwardButton" destination="DjO-0e-Glz" id="ANx-t3-VvF"/>
                         <outlet property="moveForwardButton" destination="xsn-Xn-auf" id="Zk0-cX-V63"/>
                         <outlet property="nextVideoButton" destination="2hz-Do-tnN" id="68b-iO-ecc"/>
                         <outlet property="pinchGesture" destination="imM-nK-ZiZ" id="a1w-UR-c0o"/>

@@ -24,6 +24,7 @@ extension MPPlayerViewController {
     func subscribePlayer(_ player: AVPlayer) {
         
         // play/pause button 이미지 변경
+        timeControlStatusDisposable?.dispose()
         timeControlStatusDisposable = nil
         
         timeControlStatusDisposable = player.rx.timeControlStatus.asDriver(onErrorJustReturn: .playing)
@@ -32,7 +33,10 @@ extension MPPlayerViewController {
         
         
         // player 아이템이 없는 경우 사용자에게 알림 표시
-        player.rx.timeControlStatus
+        playerTimeControlStatusDisposable?.dispose()
+        playerTimeControlStatusDisposable = nil
+        
+        playerTimeControlStatusDisposable = player.rx.timeControlStatus
             .map { $0 == .waitingToPlayAtSpecifiedRate }
             .subscribe(onNext: { [unowned self] _ in
                 player.rx.items()
@@ -49,10 +53,10 @@ extension MPPlayerViewController {
                     })
                     .disposed(by: self.rx.disposeBag)
             })
-            .disposed(by: rx.disposeBag)
         
         
         // 현재 재생시간 레이블 / slider 변경
+        playbackPositionDisposable?.dispose()
         playbackPositionDisposable = nil
         
         playbackPositionDisposable = player.rx.playbackPosition(updateQueue: .main)

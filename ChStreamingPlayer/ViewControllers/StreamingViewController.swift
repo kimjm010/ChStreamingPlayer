@@ -25,10 +25,9 @@ class StreamingViewController: UIViewController {
     // MARK: - Vars
     
     private let videoPlayer = StreamingVideoPlayer()
-    
     private let avPlayer = AVPlayer()
-    
     private var playerVolume = 0.0
+    
     
     // MARK: - IBActions
     
@@ -52,7 +51,6 @@ class StreamingViewController: UIViewController {
     
     @IBAction func muteButtonTapped() {
         videoPlayer.muteVolume()
-        
     }
     
     
