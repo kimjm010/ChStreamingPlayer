@@ -20,7 +20,8 @@ extension MPPlayerViewController {
     ///
     /// - Parameter currentItem: AVQueuePlayer의 현재 아이템
     func subscribeCurrentItem(_ currentItem: AVPlayerItem) {
-        // #3 #5 #6 #7 
+        
+        presentationDisposable?.dispose()
         presentationDisposable = nil
         
         // 미디어 아이템에 따라 portrait / landscape모드 레이블 표시
@@ -37,9 +38,11 @@ extension MPPlayerViewController {
                  */
             })
         
-        canPlayFastForwardDisposable = nil
         
         // 빨리감기 가능 여부 확인
+        canPlayFastForwardDisposable?.dispose()
+        canPlayFastForwardDisposable = nil
+        
         canPlayFastForwardDisposable = currentItem.rx.canPlayFastForward()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -48,9 +51,11 @@ extension MPPlayerViewController {
                 self.nextVideoButton.isEnabled = $0
             })
         
-        canPlayReverseDisposable = nil
         
         // 되감기 가능 여부 확인
+        canPlayReverseDisposable?.dispose()
+        canPlayReverseDisposable = nil
+        
         canPlayReverseDisposable = currentItem.rx.canPlayReverse()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -59,9 +64,11 @@ extension MPPlayerViewController {
                 self.previousVideoButton.isEnabled = $0
             })
         
-        canStepForwardDisposable = nil
         
         // 앞으로 이동 가능 여부 확인
+        canPlayReverseDisposable?.dispose()
+        canStepForwardDisposable = nil
+        
         canStepForwardDisposable = currentItem.rx.canStepForward()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -69,19 +76,23 @@ extension MPPlayerViewController {
                 self.moveForwardButton.isEnabled = $0
             })
         
-        canStepBackwardDisposable = nil
         
         // 뒤로 이동 가능 여부 확인
+        canStepBackwardDisposable?.dispose()
+        canStepBackwardDisposable = nil
+        
         canStepBackwardDisposable = currentItem.rx.canStepBackward()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 
-                self.moveBackButton.isEnabled = $0
+                self.moveBackwardButton.isEnabled = $0
             })
         
-        canPlayFastReverseDisposable = nil
         
         // 뒤로 이동 가능 여부 확인
+        canPlayFastReverseDisposable?.dispose()
+        canPlayFastReverseDisposable = nil
+        
         canPlayFastReverseDisposable = currentItem.rx.canPlayFastReverse()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -90,9 +101,11 @@ extension MPPlayerViewController {
                 self.repeatButton.isEnabled = $0
             })
         
-        statusDisposable = nil
         
         // playerItem Status에 따라 버튼 UI 변경
+        statusDisposable?.dispose()
+        statusDisposable = nil
+        
         statusDisposable = currentItem.rx.status()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -106,9 +119,11 @@ extension MPPlayerViewController {
                 }
             })
         
-        durationDisposable = nil
         
         // 현재 미디어 아이템의 남은시간을 업데이트
+        durationDisposable?.dispose()
+        durationDisposable = nil
+        
         durationDisposable = currentItem.rx.duration
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
@@ -122,11 +137,11 @@ extension MPPlayerViewController {
     
     /// playerItem이 fail인 경우 표시할 UI
     private func updateUIForPlayerItemFailedState() {
-        playPauseButton.isEnabled = false
+        playPauseButton.isEnabled = true
         timeSlider.isEnabled = false
         startTimeLabel.isEnabled = false
         durationLabel.isEnabled = false
-        moveBackButton.isEnabled = false
+        moveBackwardButton.isEnabled = false
         moveForwardButton.isEnabled = false
         nextVideoButton.isEnabled = false
         previousVideoButton.isEnabled = false
@@ -141,7 +156,7 @@ extension MPPlayerViewController {
         guard let currentItem = avPlayer.currentItem else { return }
         
         playPauseButton.isEnabled = true
-        moveBackButton.isEnabled = true
+        moveBackwardButton.isEnabled = true
         moveForwardButton.isEnabled = true
         nextVideoButton.isEnabled = true
         previousVideoButton.isEnabled = true
@@ -161,11 +176,11 @@ extension MPPlayerViewController {
     
     /// playerItem의 기본 UI
     func updateUIForPlayerItemDefaultState() {
-        playPauseButton.isEnabled = false
+        playPauseButton.isEnabled = true
         timeSlider.isEnabled = false
         startTimeLabel.isEnabled = false
         durationLabel.isEnabled = false
-        moveBackButton.isEnabled = false
+        moveBackwardButton.isEnabled = false
         moveForwardButton.isEnabled = false
         nextVideoButton.isEnabled = false
         previousVideoButton.isEnabled = false
