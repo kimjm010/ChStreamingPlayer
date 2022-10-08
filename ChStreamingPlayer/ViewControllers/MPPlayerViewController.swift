@@ -37,24 +37,17 @@ class MPPlayerViewController: UIViewController {
     
     // MARK: - Vars
     
+    lazy var isZoomObservable = Observable.just(self.isZoom)
     private static let repeatImage = "repeat.1"
-
     private static let finishRepeatImage = "repeat"
-    
     var currentItemsForPlayer = [AVPlayerItem]()
-    
+    var currentItemIndex: Int?
     var selectedPreviousItem: AVPlayerItem?
-    
     private var playerLooper: NSObject?
-    
     private var timeObserverToken: Any?
-    
     var avPlayer = AVPlayer()
-    
     var isRepeat = false
-    
     var isZoom = false
-    
     
     
     //MARK: - Disposables
@@ -145,7 +138,9 @@ class MPPlayerViewController: UIViewController {
                 guard let self = self else { return }
                 self.subscribePlayer(self.avPlayer)
                 self.subscribeCurrentItem($0)
-                print(#fileID, #function, #line, "- \($0)")
+                
+                /// Save Current Item Index
+                self.currentItemIndex = self.currentItemsForPlayer.firstIndex(of: $0)
             })
             .disposed(by: rx.disposeBag)
         
@@ -247,20 +242,20 @@ class MPPlayerViewController: UIViewController {
         
         // 다음 영상 재생
         nextVideoButton.rx.tap
-            .flatMap { [unowned self] in self.avPlayer.rx.items() }
-            .map { $0.count }
             .debug()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
-                
-                if $0 > 1 {
-                    print(#fileID, #function, #line, "- 다음영상으로 넘어갈 것")
-                } else {
-                    self.alertAddItemsToPlayer(title: "Alert",
-                                               message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") { _ in
-                        self.addAllViedeosToPlayer()
-                    }
-                }
+                self.playNextVideo(self.avPlayer)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        
+        // 이전 영상 재생
+        previousVideoButton.rx.tap
+            .debug()
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.playPreviousVideo(self.avPlayer)
             })
             .disposed(by: rx.disposeBag)
         
@@ -275,7 +270,6 @@ class MPPlayerViewController: UIViewController {
             .disposed(by: rx.disposeBag)
         
         
-        #warning("Todo: - 코듣 개선 하기 -> bind(to:) or driver로 이미지 바인딩")
         // 확대, 축소기능
         controlZoomButton.rx.tap
             .subscribe(onNext: { [weak self] in
@@ -382,6 +376,8 @@ class MPPlayerViewController: UIViewController {
             let item = AVPlayerItem(asset: asset)
             currentItemsForPlayer.append(item)
         }
+        
+        playItems(with: currentItemsForPlayer)
     }
     
 
@@ -438,6 +434,53 @@ class MPPlayerViewController: UIViewController {
                 self.playerView.transform = .identity
             }
         }
+    }
+    
+    
+    // MARK: - Play Items
+    
+    private func playItems(with items: [AVPlayerItem]) {
+        guard var currentItemIndex = currentItemIndex else { return }
+        
+        for i in 0..<items.count {
+            
+            if i != currentItemIndex {
+                avPlayer.replaceCurrentItem(with: currentItemsForPlayer[currentItemIndex])
+                avPlayer.play()
+            }
+        }
+    }
+    
+    
+    // MARK: - Play Next Video Item
+    
+    func playNextVideo(_ player: AVPlayer) {
+        guard var currentItemIndex = currentItemIndex else { return }
+        
+        if currentItemIndex + 1 < currentItemsForPlayer.count {
+            currentItemIndex += 1
+            avPlayer.replaceCurrentItem(with: currentItemsForPlayer[currentItemIndex])
+            avPlayer.play()
+        } else {
+            print(#fileID, #function, #line, "- ")
+            #warning("Todo: - 재생 목록 비어있는 알림 띄워서 추가할 것인지 물어보기")
+        }
+    }
+    
+    
+    // MARK: - Play Previos Video Item
+    
+    private func playPreviousVideo(_ player: AVPlayer) {
+        guard var currentItemIndex = currentItemIndex else { return }
+        
+        if currentItemIndex - 1 < 0 {
+            currentItemIndex = (currentItemsForPlayer.count - 1) < 0 ? 0 : (currentItemsForPlayer.count - 1)
+        } else {
+            currentItemIndex -= 1
+        }
+        
+        avPlayer.replaceCurrentItem(with: currentItemsForPlayer[currentItemIndex])
+        avPlayer.play()
     }
 }
 

@@ -120,16 +120,26 @@ extension MPPlayerViewController {
             })
         
         
-        // 현재 미디어 아이템의 남은시간을 업데이트
+        // 현재 미디어 아이템의 남은시간 표시
         durationDisposable?.dispose()
         durationDisposable = nil
         
         durationDisposable = currentItem.rx.duration
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
+            .map { [unowned self] in self.createTimeString(time: Float($0.seconds)) }
+            .bind(to: durationLabel.rx.text)
+        
+        
+        // 현재 아이템 재생 완료 시 다음 아이템 자동 재생
+        currentItem.rx.didPlayToEnd
+            .subscribe(onNext: { [weak self] _ in
+                guard let self = self,
+                      let currentItemIndex = self.currentItemIndex else { return }
                 
-                self.durationLabel.text = self.createTimeString(time: Float($0.seconds))
+                if currentItemIndex < self.currentItemsForPlayer.count {
+                    self.playNextVideo(self.avPlayer)
+                }
             })
+            .disposed(by: rx.disposeBag)
     }
     
     
