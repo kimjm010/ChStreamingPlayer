@@ -49,6 +49,7 @@ class MPPlayerViewController: UIViewController {
     var isRepeat = false
     var isZoom = false
     
+    let isRepeatObservable = BehaviorSubject<Bool>(value: false)
     
     //MARK: - Disposables
     
@@ -64,6 +65,7 @@ class MPPlayerViewController: UIViewController {
     var playbackPositionDisposable: Disposable? = nil
     var playerItemsDisposable: Disposable? = nil
     var playerTimeControlStatusDisposable: Disposable? = nil
+    var didPlayToEndDisposable: Disposable? = nil
     
     
     // MARK: - IBActions
@@ -85,48 +87,23 @@ class MPPlayerViewController: UIViewController {
     }
     
     
-    /// 이전 재생항목으로 이동
-    @IBAction func previousVideo() {
-        if avPlayer.currentItem?.currentTime() != .zero {
-            avPlayer.seek(to: .zero)
-        }
-    }
-    
-    
-    /// 반복재생
-    @IBAction func repeatVideoPlay(_ sender: Any) {
-//        isRepeat.toggle()
-//
-//        if isRepeat {
-//            repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
-//            guard let currentItem = avPlayer.currentItem else { return }
-//            playerLooper = AVPlayerLooper(player: avPlayer, templateItem: currentItem)
-//            avPlayer.play()
-//        } else {
-//            playerLooper = nil
-//            repeatButton.setImage(UIImage(systemName: MPPlayerViewController.finishRepeatImage), for: .normal)
-//            avPlayer.play()
-//        }
-    }
-    
-    
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // 비디오 구성
-        guard let url = Bundle.main.url(forResource: "v2", withExtension: "mp4") else { return }
+        guard let url = Bundle.main.url(forResource: "v1", withExtension: "mp4") else { return }
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
-        addAllViedeosToPlayer()
-        
-        addPinchGesturer()
-        addDoubleTapGesture()
         
         #if DEBUG
         avPlayer.replaceCurrentItem(with: currentItemsForPlayer[0])
         #endif
+        
+        addAllViedeosToPlayer()
+        addPinchGesturer()
+        addDoubleTapGesture()
         
         
         // 현재 미디어 아이템을 방출
@@ -142,32 +119,6 @@ class MPPlayerViewController: UIViewController {
                 self.currentItemIndex = self.currentItemsForPlayer.firstIndex(of: $0)
             })
             .disposed(by: rx.disposeBag)
-        
-        
-        // 재생/일시정지
-        /*
-         timeControlStatusDisposable = nil
-         
-         timeControlStatusDisposable = playPauseButton.rx.tap
-              .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
-              .debug()
-              .map { $0.rawValue }
-              .debug()
-              .subscribe(onNext: { [weak self] in
-                  guard let self = self else { return }
-                  print(#fileID, #function, #line, "- \($0)")
-                  switch $0 {
-                  case 0:
-                      let currentItem = self.avPlayer.currentItem
-                      if currentItem?.currentTime() == currentItem?.duration {
-                          currentItem?.seek(to: .zero, completionHandler: nil)
-                      }
-                      self.avPlayer.play()
-                  default:
-                      self.avPlayer.pause()
-                  }
-              })
-         */
         
         
         // 앞으로 10초 이동
@@ -189,7 +140,6 @@ class MPPlayerViewController: UIViewController {
         
         // 10초 뒤로 이동
         moveBackwardButton.rx.tap
-            .debug()
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
             .map { $0.value }
             .ignoreNil()
@@ -243,7 +193,6 @@ class MPPlayerViewController: UIViewController {
         
         // 다음 영상 재생
         nextVideoButton.rx.tap
-            .debug()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.playNextVideo(self.avPlayer)
@@ -253,7 +202,6 @@ class MPPlayerViewController: UIViewController {
         
         // 이전 영상 재생
         previousVideoButton.rx.tap
-            .debug()
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.playPreviousVideo(self.avPlayer)
@@ -263,7 +211,7 @@ class MPPlayerViewController: UIViewController {
         
         // timeSlider 재생 위치 조정
         timeSlider.rx.value
-            .map { Variable(Float($0)) }
+            .map { BehaviorRelay<Float>(value: $0) }
             .subscribe(onNext: { [weak self] in
                 let newTime = CMTime(seconds: Double($0.value), preferredTimescale: 600)
                 self?.avPlayer.seek(to: newTime)
@@ -284,31 +232,35 @@ class MPPlayerViewController: UIViewController {
             .disposed(by: rx.disposeBag)
         
         
-        // 반복재생
-        /*
+        // 1번 반복재생
          repeatButton.rx.tap
              .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
-             .debug()
              .map { $0.value }
-             .debug()
              .ignoreNil()
-             .debug()
-             .subscribe(onNext: { [weak self] in
+             .subscribe(onNext: { [weak self] (currentItem) in
                  guard let self = self else { return }
 
                  self.isRepeat.toggle()
-                 print(#fileID, #function, #line, "- \(self.isRepeat)")
+                 self.isRepeatObservable.onNext(self.isRepeat)
                  
                  if self.isRepeat {
-                     self.repeatButton.setImage(UIImage(systemName: MPPlayerViewController.repeatImage), for: .normal)
-                     self.playerLooper = AVPlayerLooper(player: self.avPlayer, templateItem: $0)
-                 } else {
-                     self.avPlayer.pause()
-                     self.repeatButton.setImage(UIImage(systemName: MPPlayerViewController.finishRepeatImage), for: .normal)
+                     self.avPlayer.currentItem?.rx.didPlayToEnd
+                         .subscribe(onNext: { _ in
+                             self.avPlayer.replaceCurrentItem(with: currentItem)
+                             self.avPlayer.currentItem?.seek(to: .zero, completionHandler: nil)
+                             self.avPlayer.play()
+                         })
+                         .disposed(by: self.rx.disposeBag)
                  }
              })
              .disposed(by: rx.disposeBag)
-         */
+        
+        
+        // 반복재생 버튼 클릭 시 이미지 변경
+        isRepeatObservable
+            .map { $0 ? UIImage(systemName: MPPlayerViewController.repeatImage) : UIImage(systemName: MPPlayerViewController.finishRepeatImage) }
+            .bind(to: repeatButton.rx.image(for: .normal))
+            .disposed(by: rx.disposeBag)
     }
     
     

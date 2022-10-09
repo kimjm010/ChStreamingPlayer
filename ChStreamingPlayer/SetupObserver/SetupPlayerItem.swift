@@ -130,7 +130,10 @@ extension MPPlayerViewController {
         
         
         // 현재 아이템 재생 완료 시 다음 아이템 자동 재생
-        currentItem.rx.didPlayToEnd
+        didPlayToEndDisposable?.dispose()
+        didPlayToEndDisposable = nil
+        
+        didPlayToEndDisposable = currentItem.rx.didPlayToEnd
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self,
                       let currentItemIndex = self.currentItemIndex else { return }
@@ -139,7 +142,6 @@ extension MPPlayerViewController {
                     self.playNextVideo(self.avPlayer)
                 }
             })
-            .disposed(by: rx.disposeBag)
     }
     
     
