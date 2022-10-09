@@ -17,9 +17,9 @@ import RxCocoa
 
 extension MPPlayerViewController {
     
-    private static let pauseImage = "pause.fill"
+    static let pauseImage = "pause.fill"
     
-    private static let playImage = "play.fill"
+    static let playImage = "play.fill"
     
     func subscribePlayer(_ player: AVPlayer) {
         
@@ -41,8 +41,8 @@ extension MPPlayerViewController {
             .subscribe(onNext: { [unowned self] _ in
                 player.rx.items()
                     .filter { $0.count == 0 }
-                    .flatMap { [unowned self] _ in self.alertAddItemsToPlayer(title: "Alert",
-                                                                              message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") }
+                    .flatMap { [unowned self] _ in self.alertToPlayer(title: "Alert",
+                                                                      message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well") }
                     .subscribe(onNext: { (actionType) in
                         switch actionType {
                         case .ok:

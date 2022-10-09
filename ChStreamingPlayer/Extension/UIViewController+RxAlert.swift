@@ -36,7 +36,7 @@ extension UIViewController {
     }
     
     
-    func alertAddItemsToPlayer(title: String, message: String? = nil) -> Observable<ActionType> {
+    func alertToPlayer(title: String, message: String? = nil) -> Observable<ActionType> {
         return Observable.create { [weak self] (observer) in
             
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
