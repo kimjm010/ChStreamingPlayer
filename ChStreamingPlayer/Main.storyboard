@@ -16,13 +16,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4TX-Mh-UhN">
-                                <rect key="frame" x="20" y="272" width="350" height="300"/>
-                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="XGM-uy-EjF"/>
-                                </constraints>
-                            </view>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Wu2-jE-2Oo">
                                 <rect key="frame" x="20" y="234" width="350" height="30"/>
                                 <subviews>
@@ -67,6 +60,13 @@
                                     <constraint firstAttribute="height" constant="30" id="xVA-ad-cYT"/>
                                 </constraints>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4TX-Mh-UhN">
+                                <rect key="frame" x="20" y="272" width="350" height="300"/>
+                                <color key="backgroundColor" systemColor="secondaryLabelColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="XGM-uy-EjF"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>

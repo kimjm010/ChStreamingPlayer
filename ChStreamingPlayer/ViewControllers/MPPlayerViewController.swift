@@ -93,9 +93,7 @@ class MPPlayerViewController: UIViewController {
         super.viewDidLoad()
         
         // 비디오 구성
-        guard let url = Bundle.main.url(forResource: "v1", withExtension: "mp4") else { return }
-        let asset = AVURLAsset(url: url)
-        loadPropertyValues(forAsset: asset)
+        self.playerView.player = self.avPlayer
         addAllViedeosToPlayer()
         
         #if DEBUG
@@ -257,53 +255,6 @@ class MPPlayerViewController: UIViewController {
         super.viewWillDisappear(animated)
         
         avPlayer.pause()
-    }
-    
-    
-    // MARK: - Asset Property Handling
-    
-    func loadPropertyValues(forAsset newAsset: AVURLAsset) {
-        /// Load and test the following asset keys before playback begins.
-        let assetKeysRequiredToPlay = [
-            "playable",
-            "hasProtectedContent"
-        ]
-        
-        newAsset.loadValuesAsynchronously(forKeys: assetKeysRequiredToPlay) {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                
-                if self.validateValues(forKeys: assetKeysRequiredToPlay, forAsset: newAsset) {
-//                    self.subscribePlayer(self.avPlayer)
-                    self.playerView.player = self.avPlayer
-                }
-            }
-        }
-    }
-    
-    
-    func validateValues(forKeys keys: [String], forAsset newAsset: AVAsset) -> Bool {
-        for key in keys {
-            var error: NSError?
-            if newAsset.statusOfValue(forKey: key, error: &error) == .failed {
-                let stringFormat = NSLocalizedString("The media failed to load the key \"%@\"",
-                                                     comment: "You can't use this AVAsset because one of it's keys failed to load.")
-                
-                let message = String.localizedStringWithFormat(stringFormat, key)
-                handleErrorWithMessage(message, error: error)
-                
-                return false
-            }
-        }
-        
-        if !newAsset.isPlayable || newAsset.hasProtectedContent {
-            let message = NSLocalizedString("The media isn't playable or it contains protected content.",
-                                            comment: "You can't use this AVAsset because it isn't playable or it contains protected content.")
-            handleErrorWithMessage(message)
-            return false
-        }
-        
-        return true
     }
 
     
