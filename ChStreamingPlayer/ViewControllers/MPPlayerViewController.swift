@@ -68,7 +68,6 @@ class MPPlayerViewController: UIViewController {
     
     // MARK: - IBActions
     @IBAction func togglePlay(_ sender: Any) {
-
         switch avPlayer.timeControlStatus {
             case .playing:
                 // player 가 playing중인 경우 멈춤
@@ -146,27 +145,29 @@ class MPPlayerViewController: UIViewController {
         
         
         // 재생/일시정지
-//        timeControlStatusDisposable = nil
-        
-//        timeControlStatusDisposable = playPauseButton.rx.tap
-//             .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
-//             .debug()
-//             .map { $0.rawValue }
-//             .debug()
-//             .subscribe(onNext: { [weak self] in
-//                 guard let self = self else { return }
-//                 print(#fileID, #function, #line, "- \($0)")
-//                 switch $0 {
-//                 case 0:
-//                     let currentItem = self.avPlayer.currentItem
-//                     if currentItem?.currentTime() == currentItem?.duration {
-//                         currentItem?.seek(to: .zero, completionHandler: nil)
-//                     }
-//                     self.avPlayer.play()
-//                 default:
-//                     self.avPlayer.pause()
-//                 }
-//             })
+        /*
+         timeControlStatusDisposable = nil
+         
+         timeControlStatusDisposable = playPauseButton.rx.tap
+              .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
+              .debug()
+              .map { $0.rawValue }
+              .debug()
+              .subscribe(onNext: { [weak self] in
+                  guard let self = self else { return }
+                  print(#fileID, #function, #line, "- \($0)")
+                  switch $0 {
+                  case 0:
+                      let currentItem = self.avPlayer.currentItem
+                      if currentItem?.currentTime() == currentItem?.duration {
+                          currentItem?.seek(to: .zero, completionHandler: nil)
+                      }
+                      self.avPlayer.play()
+                  default:
+                      self.avPlayer.pause()
+                  }
+              })
+         */
         
         
         // 앞으로 10초 이동
@@ -440,7 +441,7 @@ class MPPlayerViewController: UIViewController {
     // MARK: - Play Items
     
     private func playItems(with items: [AVPlayerItem]) {
-        guard var currentItemIndex = currentItemIndex else { return }
+        guard let currentItemIndex = currentItemIndex else { return }
         
         for i in 0..<items.count {
             
@@ -460,10 +461,22 @@ class MPPlayerViewController: UIViewController {
         if currentItemIndex + 1 < currentItemsForPlayer.count {
             currentItemIndex += 1
             avPlayer.replaceCurrentItem(with: currentItemsForPlayer[currentItemIndex])
+            avPlayer.currentItem?.seek(to: .zero, completionHandler: nil)
             avPlayer.play()
         } else {
-            print(#fileID, #function, #line, "- ")
-            #warning("Todo: - 재생 목록 비어있는 알림 띄워서 추가할 것인지 물어보기")
+            alertToPlayer(title: "Alert",
+                          message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well")
+            .subscribe(onNext: { [weak self] (actionType) in
+                guard let self = self else { return }
+                
+                switch actionType {
+                case .ok:
+                    self.addAllViedeosToPlayer()
+                case .cancel:
+                    self.updateUIForPlayerItemDefaultState()
+                }
+            })
+            .disposed(by: rx.disposeBag)
         }
     }
     
@@ -473,14 +486,22 @@ class MPPlayerViewController: UIViewController {
     private func playPreviousVideo(_ player: AVPlayer) {
         guard var currentItemIndex = currentItemIndex else { return }
         
-        if currentItemIndex - 1 < 0 {
-            currentItemIndex = (currentItemsForPlayer.count - 1) < 0 ? 0 : (currentItemsForPlayer.count - 1)
-        } else {
+        if currentItemIndex - 1 >= 0 {
             currentItemIndex -= 1
+            avPlayer.replaceCurrentItem(with: currentItemsForPlayer[currentItemIndex])
+            avPlayer.currentItem?.seek(to: .zero, completionHandler: nil)
+            avPlayer.play()
+        } else {
+            alertToPlayer(title: "Alert",
+                          message: "There is no item to play previous item. Current item is the first item.")
+            .subscribe(onNext: { (actionType) in
+                switch actionType {
+                default:
+                    break
+                }
+            })
+            .disposed(by: rx.disposeBag)
         }
-        
-        avPlayer.replaceCurrentItem(with: currentItemsForPlayer[currentItemIndex])
-        avPlayer.play()
     }
 }
 
