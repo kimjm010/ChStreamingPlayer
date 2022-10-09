@@ -26,7 +26,6 @@
 		F536F67B28DC360C00751D9F /* StreamingKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F536F67228DC360C00751D9F /* StreamingKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F536F68328DC365700751D9F /* StreamingVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */; };
 		F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68428DC661A00751D9F /* MPPlayerViewController.swift */; };
-		F555655B28E5642300C81339 /* CustomControlAVQueuePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F555655A28E5642300C81339 /* CustomControlAVQueuePlayer.swift */; };
 		F5C04DC028DEA32A005332D4 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */; };
 		F5E221D528DD537200AF7752 /* v2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D028DD537100AF7752 /* v2.mp4 */; };
 		F5E221D628DD537200AF7752 /* v4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D128DD537200AF7752 /* v4.mp4 */; };
@@ -87,7 +86,6 @@
 		F536F67528DC360C00751D9F /* StreamingKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = StreamingKit.docc; sourceTree = "<group>"; };
 		F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingVideoPlayer.swift; sourceTree = "<group>"; };
 		F536F68428DC661A00751D9F /* MPPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPlayerViewController.swift; sourceTree = "<group>"; };
-		F555655A28E5642300C81339 /* CustomControlAVQueuePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomControlAVQueuePlayer.swift; sourceTree = "<group>"; };
 		F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F5E221D028DD537100AF7752 /* v2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v2.mp4; sourceTree = "<group>"; };
 		F5E221D128DD537200AF7752 /* v4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v4.mp4; sourceTree = "<group>"; };
@@ -224,7 +222,6 @@
 				F5EF3D3C28D43A0B00A66655 /* Assets.xcassets */,
 				F54A7C9D28E174750001FE9B /* Videos */,
 				F5EF3D4128D43A0B00A66655 /* Info.plist */,
-				F555655A28E5642300C81339 /* CustomControlAVQueuePlayer.swift */,
 			);
 			path = ChStreamingPlayer;
 			sourceTree = "<group>";
@@ -446,7 +443,6 @@
 				F5E221DD28DD89E600AF7752 /* UIViewController+RxAlert.swift in Sources */,
 				F502C66A28E2F33000807A9B /* AVPlayer+Rx.swift in Sources */,
 				F502C67528E42A4000807A9B /* UIViewControllerExtension.swift in Sources */,
-				F555655B28E5642300C81339 /* CustomControlAVQueuePlayer.swift in Sources */,
 				F502C66C28E2F35C00807A9B /* Observer+IgnoreNill.swift in Sources */,
 				F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */,
 				F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */,

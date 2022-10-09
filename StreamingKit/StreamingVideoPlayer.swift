@@ -60,7 +60,7 @@ public class StreamingVideoPlayer {
     }
     
     
-    // MARK: - Move to Forward and Backward
+    // MARK: - Move to Forward
     
     public func moveToBackward() {
         let currentTime = CMTimeGetSeconds(avPlayer.currentTime())
