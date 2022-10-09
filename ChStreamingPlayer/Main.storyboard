@@ -130,9 +130,6 @@
                                         <rect key="frame" x="0.0" y="0.0" width="55.666666666666664" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="backward.end.fill" catalog="system"/>
-                                        <connections>
-                                            <action selector="previousVideo" destination="3qe-GV-xjU" eventType="touchUpInside" id="hfZ-qK-PqZ"/>
-                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hke-Q7-qLe">
                                         <rect key="frame" x="83.666666666666671" y="0.0" width="55.666666666666671" height="34.333333333333336"/>
@@ -153,9 +150,6 @@
                                         <rect key="frame" x="334.33333333333331" y="0.0" width="55.666666666666686" height="34.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="repeat" catalog="system"/>
-                                        <connections>
-                                            <action selector="repeatVideoPlay:" destination="3qe-GV-xjU" eventType="touchUpInside" id="IPV-Mm-zs7"/>
-                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
