@@ -49,6 +49,7 @@ extension MPPlayerViewController {
                             self.addAllViedeosToPlayer()
                         case .cancel:
                             self.updateUIForPlayerItemDefaultState()
+                            self.avPlayer.pause()
                         }
                     })
                     .disposed(by: self.rx.disposeBag)

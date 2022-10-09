@@ -136,9 +136,25 @@ extension MPPlayerViewController {
         didPlayToEndDisposable = currentItem.rx.didPlayToEnd
             .subscribe(onNext: { [weak self] _ in
                 guard let self = self,
-                      let currentItemIndex = self.currentItemIndex else { return }
+                      var currentItemIndex = self.currentItemIndex else { return }
                 
-                if currentItemIndex < self.currentItemsForPlayer.count {
+                currentItemIndex += 1
+                
+                if currentItemIndex == (self.currentItemsForPlayer.count - 1) {
+                    currentItemIndex = 0
+                    self.avPlayer.pause()
+                    self.alertToPlayer(title: "Alert",
+                                  message: "There are no items. Do you wnat to add new videos? If you want, please press 'Ok'.\n You can add video list by presing 'play' button as well")
+                    .subscribe(onNext: { (actionType) in
+                        switch actionType {
+                        case .ok:
+                            self.addAllViedeosToPlayer()
+                        case .cancel:
+                            self.updateUIForPlayerItemDefaultState()
+                        }
+                    })
+                    .disposed(by: self.rx.disposeBag)
+                } else if currentItemIndex < self.currentItemsForPlayer.count {
                     self.playNextVideo(self.avPlayer)
                 }
             })

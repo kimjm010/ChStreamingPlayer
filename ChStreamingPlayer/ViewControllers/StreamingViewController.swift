@@ -66,6 +66,8 @@ class StreamingViewController: UIViewController {
         
         setupVideoPlayer()
         playVideo()
+        
+        avPlayer.currentItem?.preferredPeakBitRate = 0.1
     }
     
     

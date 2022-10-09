@@ -126,8 +126,6 @@ class MPPlayerViewController: UIViewController {
             .ignoreNil()
             .subscribe(onNext: {
                 
-                print(#fileID, #function, #line, "- \($0)")
-                
                 let currentTime = CMTimeGetSeconds($0.currentTime())
                 let newTime = currentTime + 10
                 let setTime: CMTime = CMTimeMake(value: Int64(newTime * 1000 as Float64), timescale: 1000)
