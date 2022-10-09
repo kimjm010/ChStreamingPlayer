@@ -96,12 +96,12 @@ class MPPlayerViewController: UIViewController {
         guard let url = Bundle.main.url(forResource: "v1", withExtension: "mp4") else { return }
         let asset = AVURLAsset(url: url)
         loadPropertyValues(forAsset: asset)
+        addAllViedeosToPlayer()
         
         #if DEBUG
         avPlayer.replaceCurrentItem(with: currentItemsForPlayer[0])
         #endif
         
-        addAllViedeosToPlayer()
         addPinchGesturer()
         addDoubleTapGesture()
         
@@ -156,36 +156,25 @@ class MPPlayerViewController: UIViewController {
             .disposed(by: rx.disposeBag)
         
         
-        // 앞으로 감기
+        // 빨리 감기
         forwardButton.rx.tap
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
             .map { $0.value }
             .ignoreNil()
-            .subscribe(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                
-                if $0.currentTime() == .zero {
-                    let itemDuration = $0.duration
-                    $0.seek(to: itemDuration, completionHandler: nil)
-                }
-                
                 self.avPlayer.rate = min(self.avPlayer.rate + 2.0, 2.0)
             })
             .disposed(by: rx.disposeBag)
         
         
-        // 뒤로 감기
+        // 빨리 되감기
         backwardButton.rx.tap
             .flatMap { [unowned self] in self.avPlayer.rx.currentItem }
             .map { $0.value }
             .ignoreNil()
-            .subscribe(onNext: { [weak self] in
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                
-                if $0.currentTime() == $0.duration {
-                    $0.seek(to: .zero, completionHandler: nil)
-                }
-                
                 self.avPlayer.rate = max(self.avPlayer.rate - 2.0, -2.0)
             })
             .disposed(by: rx.disposeBag)
