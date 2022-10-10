@@ -30,8 +30,7 @@ extension MPPlayerViewController {
                 guard let self = self else { return }
                 self.videoModeLabel.text = $0.width > $0.height ? "Landscape Mode" : "Portrait Mode"
                 
-                #warning("Todo: - #1, #3 영상은 landscape mode로 돌아갔다 되돌아오는 문제 해결 필요")
-                /// **가로세로모드 자동 변경 코드**
+                // 가로세로모드 자동 변경
                 /*
                  let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
                  windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: $0.width > $0.height ? .landscape : .portrait))
