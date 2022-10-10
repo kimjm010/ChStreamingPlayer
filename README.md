@@ -1,6 +1,5 @@
 ## ChStreamingPlayer
 * 동영상 스트리밍 플레이어 앱
-* 프로젝트 링크: https://github.com/kimjm010/ChStreamingPlayer
 
 ## Description
 * HLS 기반 m3u8파일 스티리밍 플레이어
@@ -21,4 +20,6 @@
 * MP4 비디오 플레이어 컨트롤 기능 (반복재생, 다음 & 이전 영상 재생, 확대 & 축소 기능)
 
 ## App Screenshot
-#### 현재 서버를 지원받고 있지 않아 앱 구동 영상을 확인할 수 없습니다.
+#### 앱 구동 영상입니다.
+### 1. 구동영상
+![Filtering_](https://user-images.githubusercontent.com/79038724/164055173-c7e4cd61-ea5f-4109-b1b9-9676106dd01b.gif)
