@@ -38,16 +38,16 @@ class MPPlayerViewController: UIViewController {
     // MARK: - Vars
     
     lazy var isZoomObservable = Observable.just(self.isZoom)
-    private static let repeatImage = "repeat.1"
     private static let finishRepeatImage = "repeat"
+    private static let repeatImage = "repeat.1"
     var currentItemsForPlayer = [AVPlayerItem]()
     var currentItemIndex: Int?
-    var selectedPreviousItem: AVPlayerItem?
-    private var playerLooper: NSObject?
-    private var timeObserverToken: Any?
     var avPlayer = AVPlayer()
     var isRepeat = false
     var isZoom = false
+    
+    
+    // MARK: - Observable
     
     let isRepeatObservable = BehaviorSubject<Bool>(value: false)
     
@@ -296,7 +296,6 @@ class MPPlayerViewController: UIViewController {
         tapGesture.rx.event
             .subscribe(onNext: { (gesture) in
                 gesture.numberOfTapsRequired = 2
-                guard gesture.view != nil else { return }
                 
                 if let view = gesture.view {
                     UIView.animate(withDuration: 0.3) {

@@ -15,7 +15,6 @@ import UIKit
 
 extension MPPlayerViewController {
     
-    
     /// AVQueuePlayer의 currentItem으로 AVPlayer의 기능을 수행
     ///
     /// - Parameter currentItem: AVQueuePlayer의 현재 아이템
