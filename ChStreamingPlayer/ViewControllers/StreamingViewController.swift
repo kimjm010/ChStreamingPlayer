@@ -22,11 +22,8 @@ class StreamingViewController: UIViewController {
     @IBOutlet weak var pipModeButton: UIButton!
     @IBOutlet weak var rotateButton: UIButton!
     @IBOutlet weak var playerView: PlayerView!
-    @IBOutlet weak var noticeButton: UIButton!
-    @IBOutlet weak var timerButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var menuButton: UIButton!
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var adButton: UIButton!
     
     
@@ -37,6 +34,9 @@ class StreamingViewController: UIViewController {
     static let pauseImage = "pause.fill"
     let avPlayer = AVPlayer()
     var isTapped = true
+    var isRotated = false
+    
+    lazy var orientationObservable = Observable.just(UIDevice.orientationDidChangeNotification)
 
     static let urlStr = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
     
@@ -54,10 +54,6 @@ class StreamingViewController: UIViewController {
         
         subscribePlayer(avPlayer)
         addTapGesture()
-        
-        // controll bit rate
-        #warning("Todo: - 메뉴에서 설정할 수 있도록 할 것")
-        avPlayer.currentItem?.preferredPeakBitRate = 0.1
     }
     
     
@@ -87,10 +83,8 @@ class StreamingViewController: UIViewController {
         // Set Button Title
         playPauseButton.setTitle("", for: .normal)
         pipModeButton.setTitle("", for: .normal)
-        noticeButton.setTitle("", for: .normal)
         rotateButton.setTitle("", for: .normal)
         shareButton.setTitle("", for: .normal)
-        timerButton.setTitle("", for: .normal)
         menuButton.setTitle("", for: .normal)
         adButton.setTitle("", for: .normal)
         
