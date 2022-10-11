@@ -100,6 +100,7 @@ class MPPlayerViewController: UIViewController {
         avPlayer.replaceCurrentItem(with: currentItemsForPlayer[0])
         #endif
         
+        initializeData()
         addPinchGesturer()
         addDoubleTapGesture()
         
@@ -269,6 +270,21 @@ class MPPlayerViewController: UIViewController {
         }
         
         playItems(with: currentItemsForPlayer)
+    }
+    
+    
+    // MARK: - Initialize Data
+    
+    private func initializeData() {
+        backwardButton.setTitle("", for: .normal)
+        forwardButton.setTitle("", for: .normal)
+        playPauseButton.setTitle("", for: .normal)
+        moveBackwardButton.setTitle("", for: .normal)
+        moveForwardButton.setTitle("", for: .normal)
+        nextVideoButton.setTitle("", for: .normal)
+        previousVideoButton.setTitle("", for: .normal)
+        repeatButton.setTitle("", for: .normal)
+        controlZoomButton.setTitle("", for: .normal)
     }
     
 

@@ -103,7 +103,7 @@ class SettingViewController: UIViewController {
                 switch $0.section {
                 case 0:
                     if self.settings[0].isSelectedList.contains(false) {
-                        print(#fileID, #function, #line, "- ")
+                        print(#fileID, #function, #line, "- \(self.settings)")
                     }
                 case 1:
                     if self.settings[1].isSelectedList.contains(false) {

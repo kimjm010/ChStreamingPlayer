@@ -23,6 +23,7 @@ extension StreamingViewController {
                 .disposed(by: rx.disposeBag)
 
     
+        #warning("Todo: - 일시정지가 안되네")
         // 재생, 일시정지
         playPauseButton.rx.tap
             .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
@@ -35,7 +36,6 @@ extension StreamingViewController {
                 case .waitingToPlayAtSpecifiedRate:
                     print(#fileID, #function, #line, "- ")
                 case .playing:
-                    #warning("Todo: - 일시정지가 안되네")
                     self.avPlayer.pause()
                 default:
                     print(#fileID, #function, #line, "- ")
@@ -71,6 +71,36 @@ extension StreamingViewController {
                 self.present(settingVC, animated: true, completion: nil)
             })
             .disposed(by: rx.disposeBag)
+        
+        
+        rotateButton.rx.tap
+            .flatMap { [unowned self] in self.orientationObservable }
+            .subscribe(onNext: {
+                self.isRotated.toggle()
+                
+                self.rotateDevice(self.isRotated)
+                print(#fileID, #function, #line, "- \($0)")
+            })
+            .disposed(by: rx.disposeBag)
+        
     }
     
+    
+    private func rotateDevice(_ isPortrait: Bool = true) {
+        if isPortrait {
+            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+            if #available(iOS 16.0, *) {
+                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
+            } else {
+                UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
+            }
+        } else {
+            let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
+            if #available(iOS 16.0, *) {
+                windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+            } else {
+                UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+            }
+        }
+    }
 }
