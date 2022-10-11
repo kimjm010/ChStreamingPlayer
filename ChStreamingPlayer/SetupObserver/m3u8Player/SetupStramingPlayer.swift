@@ -67,6 +67,7 @@ extension StreamingViewController {
                 
                 let settingVC = self.storyboard?.instantiateViewController(withIdentifier: "SettingViewController") as! SettingViewController
                 
+                settingVC.avPlayer = self.avPlayer
                 self.present(settingVC, animated: true, completion: nil)
             })
             .disposed(by: rx.disposeBag)

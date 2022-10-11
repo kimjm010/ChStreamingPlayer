@@ -163,42 +163,28 @@
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="3GD-M1-ZRt" rowHeight="94" style="IBUITableViewCellStyleDefault" id="c4I-7y-OXF">
-                                        <rect key="frame" x="0.0" y="50" width="390" height="94"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="c4I-7y-OXF" id="mHg-ID-zJk">
-                                            <rect key="frame" x="0.0" y="0.0" width="390" height="94"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" id="3GD-M1-ZRt">
-                                                    <rect key="frame" x="20" y="0.0" width="350" height="94"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingTableViewCell" rowHeight="112" id="1mu-AI-dbZ" customClass="settingTableViewCell" customModule="ChStreamingPlayer" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="144" width="390" height="112"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingTableViewCell" rowHeight="83" id="1mu-AI-dbZ" customClass="settingTableViewCell" customModule="ChStreamingPlayer" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="390" height="83"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1mu-AI-dbZ" id="cF2-7w-CWo">
-                                            <rect key="frame" x="0.0" y="0.0" width="390" height="112"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="390" height="83"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="150" translatesAutoresizingMaskIntoConstraints="NO" id="s8x-PC-JeG">
-                                                    <rect key="frame" x="20" y="31.000000000000004" width="350" height="50.333333333333343"/>
+                                                    <rect key="frame" x="20" y="-22.666666666666671" width="350" height="128.33333333333334"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1pt-jP-gqN">
-                                                            <rect key="frame" x="0.0" y="0.0" width="151" height="50.333333333333336"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="170" height="128.33333333333334"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l48-vw-Q6K">
-                                                            <rect key="frame" x="301" y="0.0" width="51" height="50.333333333333336"/>
-                                                        </switch>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" highlightedImage="checkmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="wfU-b6-50x">
+                                                            <rect key="frame" x="320" y="0.0" width="30" height="128.33333333333334"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" constant="30" id="alb-uc-TvB"/>
+                                                            </constraints>
+                                                        </imageView>
                                                     </subviews>
                                                 </stackView>
                                             </subviews>
@@ -209,7 +195,8 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="settingSwitch" destination="l48-vw-Q6K" id="WJb-ry-0hz"/>
+                                            <outlet property="checkedImageView" destination="wfU-b6-50x" id="f77-Dg-woN"/>
+                                            <outlet property="settingLabel" destination="1pt-jP-gqN" id="fYs-za-ISO"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -224,13 +211,14 @@
                             <constraint firstItem="kd3-gl-N7r" firstAttribute="top" secondItem="EaC-ic-nGZ" secondAttribute="top" id="uta-nf-wpy"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="w2r-3j-CiP"/>
                     <connections>
                         <outlet property="tableView" destination="kd3-gl-N7r" id="rG7-LK-nlx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7ng-kc-vVJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="229.23076923076923" y="-198.34123222748815"/>
+            <point key="canvasLocation" x="1158.4615384615383" y="-198.34123222748815"/>
         </scene>
         <!--mp4-->
         <scene sceneID="Kfm-ro-0Ve">
@@ -415,11 +403,30 @@
             </objects>
             <point key="canvasLocation" x="-1537" y="170"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ZBC-vK-oQB">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bPF-c0-vht" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="ibb-z5-uyh">
+                        <rect key="frame" x="0.0" y="47" width="390" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="3eA-Xp-bNn" kind="relationship" relationship="rootViewController" id="syw-hb-jud"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LgL-Rt-uXQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="229.23076923076923" y="-198.34123222748815"/>
+        </scene>
     </scenes>
     <resources>
         <image name="backward.end.fill" catalog="system" width="128" height="101"/>
         <image name="backward.fill" catalog="system" width="128" height="77"/>
         <image name="balloon" catalog="system" width="77" height="128"/>
+        <image name="checkmark" catalog="system" width="128" height="114"/>
         <image name="clock.badge.checkmark" catalog="system" width="128" height="114"/>
         <image name="dots" width="16" height="16"/>
         <image name="down-arrow" width="16" height="16"/>
