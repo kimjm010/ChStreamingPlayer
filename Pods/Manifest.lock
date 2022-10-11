@@ -1,4 +1,5 @@
 PODS:
+  - Differentiator (3.1.0)
   - "NSObject+Rx (4.4.1)":
     - RxSwift (~> 4.3)
   - ProgressHUD (13.6)
@@ -7,29 +8,38 @@ PODS:
     - RxSwift (~> 4.0)
   - RxCocoa (4.5.0):
     - RxSwift (>= 4.4.2, ~> 4.4)
+  - RxDataSources (3.1.0):
+    - Differentiator (~> 3.0)
+    - RxCocoa (~> 4.0)
+    - RxSwift (~> 4.0)
   - RxSwift (4.5.0)
 
 DEPENDENCIES:
   - "NSObject+Rx"
   - ProgressHUD
   - RxAudioVisual
+  - RxDataSources
   - RxSwift
 
 SPEC REPOS:
   trunk:
+    - Differentiator
     - "NSObject+Rx"
     - ProgressHUD
     - RxAudioVisual
     - RxCocoa
+    - RxDataSources
     - RxSwift
 
 SPEC CHECKSUMS:
+  Differentiator: be49ca3408f0ecfc761e4c7763d20c62be01b9ad
   "NSObject+Rx": 9884a92f19b610795c431e10b4e601913b59c9e9
   ProgressHUD: 4bdaa0d2ddf676b23324b199f9facffb5c3a1620
   RxAudioVisual: d5aa2c703acadaaf5fc37d0d3424366b267be036
   RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
+  RxDataSources: a843bad90c29817f5923ec8163f4af2de084ceb3
   RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
 
-PODFILE CHECKSUM: c9d71cd4c8aad39a74d129dc6b5d064a5df73942
+PODFILE CHECKSUM: ca21471a3870857e0fbcde8c9320acf8540f5962
 
 COCOAPODS: 1.11.2

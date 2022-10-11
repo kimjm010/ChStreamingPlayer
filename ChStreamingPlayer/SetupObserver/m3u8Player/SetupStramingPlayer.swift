@@ -43,8 +43,33 @@ extension StreamingViewController {
             })
             .disposed(by: rx.disposeBag)
         
-            
         
+        // 공유 기능
+        shareButton.rx.tap
+            .throttle(0.5, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                guard let url = URL(string: StreamingViewController.urlStr) else { return }
+                
+                let activityVC = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                
+                self.present(activityVC, animated: true, completion: nil)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        
+        // 메뉴 화면 표시
+        menuButton.rx.tap
+            .throttle(0.5, scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                let settingVC = self.storyboard?.instantiateViewController(withIdentifier: "SettingViewController") as! SettingViewController
+                
+                self.present(settingVC, animated: true, completion: nil)
+            })
+            .disposed(by: rx.disposeBag)
     }
     
 }
