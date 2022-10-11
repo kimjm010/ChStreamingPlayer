@@ -10,12 +10,13 @@ import UIKit
 class settingTableViewCell: UITableViewCell {
     
     // MARK: - IBOutlets
-    @IBOutlet weak var settingSwitch: UISwitch!
+    
+    @IBOutlet weak var settingLabel: UILabel!
+    @IBOutlet weak var checkedImageView: UIImageView!
     
 
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        settingSwitch.isOn = false
     }
 }

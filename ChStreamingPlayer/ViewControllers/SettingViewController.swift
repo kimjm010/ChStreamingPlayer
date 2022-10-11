@@ -11,12 +11,15 @@ import NSObject_Rx
 import Foundation
 import RxCocoa
 import RxSwift
+import AVFoundation
 
 
 struct MySetting {
     var header: String
     var items: [Item]
+    var isSelectedList: [Bool]
 }
+
 
 
 extension MySetting: AnimatableSectionModelType {
@@ -33,8 +36,6 @@ extension MySetting: AnimatableSectionModelType {
 }
 
 
-
-
 class SettingViewController: UIViewController {
     
     
@@ -44,8 +45,16 @@ class SettingViewController: UIViewController {
     
     
     // MARK: - Vars
+    var settings = [
+        MySetting(header: "방송 영상 및 소리 옵션", items: ["자동(720p)", "720p60", "480p", "360p", "160p"], isSelectedList: [false, false, false, false, false]),
+        MySetting(header: " ", items: ["라디오 모드", "채팅 모드"], isSelectedList: [false, false]),
+        MySetting(header: " ", items: ["백그라운드에서 재생"], isSelectedList: [false]),
+        MySetting(header: " ", items: ["낮은 지연 시간 플레이어"], isSelectedList: [false, false])
+    ]
     
     var dataSource: RxTableViewSectionedAnimatedDataSource<MySetting>?
+    static let checkedImage = UIImage(systemName: "checkmark")
+    var avPlayer: AVPlayer?
     
     
     // MARK: - View Life Cycle
@@ -53,19 +62,11 @@ class SettingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         let dataSource = RxTableViewSectionedAnimatedDataSource<MySetting>(configureCell: {
             (dataSource, tableView, indexPath, item) in
-            if indexPath.section == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "cell")!
-                cell.textLabel?.text = "\(item)"
-                return cell
-            } else {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "settingTableViewCell") as! settingTableViewCell
                 cell.textLabel?.text = "\(item)"
                 return cell
-            }
-            
         },
         titleForHeaderInSection: { (dataSource, index) in
             return dataSource.sectionModels[index].header
@@ -74,25 +75,50 @@ class SettingViewController: UIViewController {
         self.dataSource = dataSource
         
         
-        let sections = [
-            MySetting(header: "방송 영상 및 소리 옵션", items: ["자동(720p)", "720p60", "480p", "360p", "160p"]),
-            MySetting(header: " ", items: ["라디오 모드", "채팅 모드"]),
-            MySetting(header: " ", items: ["백그라운드에서 재생"]),
-            MySetting(header: " ", items: ["낮은 지연 시간 플레이어"])
-        ]
-        
-        Observable.just(sections)
+        // settings 배열을 tableView에 바인딩
+        Observable.just(settings)
             .bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: rx.disposeBag)
         
         
-        Observable.zip(tableView.rx.modelSelected(String.self), tableView.rx.itemSelected)
-            .bind { [weak self] (setting, indexPath) in
+//        Observable.zip(tableView.rx.modelSelected(MySetting.Item.self), tableView.rx.itemSelected)
+        
+        tableView.rx.itemSelected
+            .bind { [weak self]  (indexPath) in
                 guard let self = self else { return }
                 
                 self.tableView.deselectRow(at: indexPath, animated: true)
-                print(#fileID, #function, #line, "- \(setting) \(indexPath) \(sections[indexPath.section].items[indexPath.row])")
+                let cell = self.tableView.cellForRow(at: indexPath) as! settingTableViewCell
+                cell.checkedImageView.image = SettingViewController.checkedImage
+                self.settings[indexPath.section].isSelectedList[indexPath.row] = true
             }
+            .disposed(by: rx.disposeBag)
+
+        
+        // 설정 변경
+        tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                switch $0.section {
+                case 0:
+                    if self.settings[0].isSelectedList.contains(false) {
+                        print(#fileID, #function, #line, "- ")
+                    }
+                case 1:
+                    if self.settings[1].isSelectedList.contains(false) {
+                        #warning("Todo: - 선택하면 기존 선택 삭제하기")
+                    }
+                case 2:
+                    #warning("Todo: - 백그라운드 재생 설정")
+                case 3:
+                    // 비트레이트 낮춰서 진행
+                    self.avPlayer?.currentItem?.preferredPeakBitRate = 0.1
+                    UserDefaults.standard.setValue(true, forKey: "preferredPeakBitRate")
+                default:
+                    break
+                }
+            })
             .disposed(by: rx.disposeBag)
     }
 }
