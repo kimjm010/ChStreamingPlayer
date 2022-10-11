@@ -38,6 +38,7 @@ class StreamingViewController: UIViewController {
     let avPlayer = AVPlayer()
     var isTapped = true
 
+    static let urlStr = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
     
     // MARK: - View Life Cycle
     
@@ -70,8 +71,7 @@ class StreamingViewController: UIViewController {
     // MARK: - Setup Player
     
     private func setupPlayer() {
-        let urlStr = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
-        guard let url = URL(string: urlStr) else { return }
+        guard let url = URL(string: StreamingViewController.urlStr) else { return }
         
         let item = AVPlayerItem(url: url)
         avPlayer.replaceCurrentItem(with: item)

@@ -9,6 +9,7 @@ pod 'ProgressHUD'
 pod "RxAudioVisual"
 pod 'NSObject+Rx'
 pod 'RxSwift'
+pod 'RxDataSources'
 
   # Pods for ChStreamingPlayer
 
