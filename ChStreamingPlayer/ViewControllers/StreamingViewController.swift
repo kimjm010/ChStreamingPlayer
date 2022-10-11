@@ -16,57 +16,46 @@ import AVKit
 class StreamingViewController: UIViewController {
     
     // MARK: - IBOutlets
-    
-    @IBOutlet weak var videoView: UIView!
-    @IBOutlet weak var muteButton: UIButton!
-    @IBOutlet weak var turnOnVolumeButton: UIButton!
+    @IBOutlet var tapGesture: UITapGestureRecognizer!
+    @IBOutlet weak var topMenuStackView: UIStackView!
+    @IBOutlet weak var playPauseButton: UIButton!
+    @IBOutlet weak var pipModeButton: UIButton!
+    @IBOutlet weak var rotateButton: UIButton!
+    @IBOutlet weak var playerView: PlayerView!
+    @IBOutlet weak var noticeButton: UIButton!
+    @IBOutlet weak var timerButton: UIButton!
+    @IBOutlet weak var shareButton: UIButton!
+    @IBOutlet weak var menuButton: UIButton!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var adButton: UIButton!
     
     
     // MARK: - Vars
     
-    private let videoPlayer = StreamingVideoPlayer()
-    private let avPlayer = AVPlayer()
-    private var playerVolume = 0.0
-    
-    
-    // MARK: - IBActions
-    
-    @IBAction func playButtonTapped() {
-        let urlStr = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
-        
-        guard let url = URL(string: urlStr) else {
-            return
-        }
-        let item = AVPlayerItem(url: url)
-        avPlayer.replaceCurrentItem(with: item)
-        
-        videoPlayer.play(url: url)
-    }
-    
-    
-    @IBAction func pauseButtonTapped() {
-        videoPlayer.pause()
-    }
-    
-    
-    @IBAction func muteButtonTapped() {
-        videoPlayer.muteVolume()
-    }
-    
-    
-    @IBAction func volUpButtonTapped() {
-        videoPlayer.turnOnVolume()
-    }
+    let videoPlayer = StreamingVideoPlayer()
+    static let playImage = "play.fill"
+    static let pauseImage = "pause.fill"
+    let avPlayer = AVPlayer()
+    var isTapped = true
 
     
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        #if DEBUG
+        avPlayer.volume = 0.0
+        #endif
         
-        setupVideoPlayer()
-        playVideo()
+        setupPlayer()
+        initializeData()
+        addToView()
         
+        subscribePlayer(avPlayer)
+        addTapGesture()
+        
+        // controll bit rate
+        #warning("Todo: - 메뉴에서 설정할 수 있도록 할 것")
         avPlayer.currentItem?.preferredPeakBitRate = 0.1
     }
     
@@ -74,28 +63,82 @@ class StreamingViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        videoPlayer.pause()
+        avPlayer.pause()
     }
     
     
-    // MARK: - Add Streaming Video Player View to Video View
+    // MARK: - Setup Player
     
-    private func setupVideoPlayer() {
-        videoPlayer.add(to: videoView)
-    }
-    
-    
-    // MARK: - Play Video
-    
-    private func playVideo() {
+    private func setupPlayer() {
         let urlStr = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
+        guard let url = URL(string: urlStr) else { return }
         
-        guard let url = URL(string: urlStr) else {
-            print(#function, #file, #line, "Error Occurred when Parsing Url")
-            return
-        }
+        let item = AVPlayerItem(url: url)
+        avPlayer.replaceCurrentItem(with: item)
+        playerView.player = avPlayer
+        avPlayer.play()
+    }
+    
+    
+    // MARK: -  Initialize Data
+    
+    private func initializeData() {
         
-        videoPlayer.play(url: url)
+        // Set Button Title
+        playPauseButton.setTitle("", for: .normal)
+        pipModeButton.setTitle("", for: .normal)
+        noticeButton.setTitle("", for: .normal)
+        rotateButton.setTitle("", for: .normal)
+        shareButton.setTitle("", for: .normal)
+        timerButton.setTitle("", for: .normal)
+        menuButton.setTitle("", for: .normal)
+        adButton.setTitle("", for: .normal)
+        
+        // Set Button Hidden Property
+        updateUI()
+    }
+    
+    
+    // MARK: - Add Player View To View
+    
+    private func addToView() {
+        view.addSubview(playerView)
+        
+        #warning("Todo: - 제약 확인할 것")
+        NSLayoutConstraint.activate([
+            playerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+    }
+    
+    
+    // MARK: - Add Tap Gesture
+    
+    private func addTapGesture() {
+        tapGesture.rx.event
+            .subscribe(onNext: { [weak self] (gesture) in
+                guard let self = self else { return }
+                
+                self.isTapped.toggle()
+                
+                #warning("Todo: - 일정 시간 지나면 다시 안보이도록 설정할 것")
+                UIView.animate(withDuration: 0.3) {
+                    self.updateUI(self.isTapped)
+                }
+            })
+            .disposed(by: rx.disposeBag)
+    }
+    
+    
+    // MARK: - Update UI
+    
+    private func updateUI(_ isTapped: Bool = true) {
+        topMenuStackView.isHidden = isTapped
+        pipModeButton.isHidden = topMenuStackView.isHidden
+        adButton.isHidden = topMenuStackView.isHidden
+        rotateButton.isHidden = topMenuStackView.isHidden
+        playPauseButton.isHidden = topMenuStackView.isHidden
     }
 }
 

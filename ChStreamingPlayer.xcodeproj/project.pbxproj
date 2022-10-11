@@ -26,6 +26,9 @@
 		F536F67B28DC360C00751D9F /* StreamingKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F536F67228DC360C00751D9F /* StreamingKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F536F68328DC365700751D9F /* StreamingVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */; };
 		F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F536F68428DC661A00751D9F /* MPPlayerViewController.swift */; };
+		F53713D328F41792008D9F38 /* SetupStramingPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53713D228F41792008D9F38 /* SetupStramingPlayer.swift */; };
+		F53713D628F4F799008D9F38 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53713D528F4F799008D9F38 /* SettingViewController.swift */; };
+		F53713D828F50C46008D9F38 /* SetupStramingPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53713D728F50C46008D9F38 /* SetupStramingPlayerItem.swift */; };
 		F5C04DC028DEA32A005332D4 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */; };
 		F5E221D528DD537200AF7752 /* v2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D028DD537100AF7752 /* v2.mp4 */; };
 		F5E221D628DD537200AF7752 /* v4.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D128DD537200AF7752 /* v4.mp4 */; };
@@ -86,6 +89,9 @@
 		F536F67528DC360C00751D9F /* StreamingKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = StreamingKit.docc; sourceTree = "<group>"; };
 		F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamingVideoPlayer.swift; sourceTree = "<group>"; };
 		F536F68428DC661A00751D9F /* MPPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPPlayerViewController.swift; sourceTree = "<group>"; };
+		F53713D228F41792008D9F38 /* SetupStramingPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupStramingPlayer.swift; sourceTree = "<group>"; };
+		F53713D528F4F799008D9F38 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		F53713D728F50C46008D9F38 /* SetupStramingPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupStramingPlayerItem.swift; sourceTree = "<group>"; };
 		F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F5E221D028DD537100AF7752 /* v2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v2.mp4; sourceTree = "<group>"; };
 		F5E221D128DD537200AF7752 /* v4.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v4.mp4; sourceTree = "<group>"; };
@@ -145,8 +151,8 @@
 		F502C66F28E4264C00807A9B /* SetupObserver */ = {
 			isa = PBXGroup;
 			children = (
-				F502C67028E4266800807A9B /* SetupPlayer.swift */,
-				F502C67228E4277B00807A9B /* SetupPlayerItem.swift */,
+				F53713D128F4177D008D9F38 /* m3u8Player */,
+				F53713D028F41771008D9F38 /* MP4Player */,
 			);
 			path = SetupObserver;
 			sourceTree = "<group>";
@@ -159,6 +165,24 @@
 				F536F68228DC365700751D9F /* StreamingVideoPlayer.swift */,
 			);
 			path = StreamingKit;
+			sourceTree = "<group>";
+		};
+		F53713D028F41771008D9F38 /* MP4Player */ = {
+			isa = PBXGroup;
+			children = (
+				F502C67028E4266800807A9B /* SetupPlayer.swift */,
+				F502C67228E4277B00807A9B /* SetupPlayerItem.swift */,
+			);
+			path = MP4Player;
+			sourceTree = "<group>";
+		};
+		F53713D128F4177D008D9F38 /* m3u8Player */ = {
+			isa = PBXGroup;
+			children = (
+				F53713D228F41792008D9F38 /* SetupStramingPlayer.swift */,
+				F53713D728F50C46008D9F38 /* SetupStramingPlayerItem.swift */,
+			);
+			path = m3u8Player;
 			sourceTree = "<group>";
 		};
 		F54A7C9D28E174750001FE9B /* Videos */ = {
@@ -231,6 +255,7 @@
 			children = (
 				F536F66528DBE0B900751D9F /* StreamingViewController.swift */,
 				F536F68428DC661A00751D9F /* MPPlayerViewController.swift */,
+				F53713D528F4F799008D9F38 /* SettingViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -445,8 +470,11 @@
 				F502C67528E42A4000807A9B /* UIViewControllerExtension.swift in Sources */,
 				F502C66C28E2F35C00807A9B /* Observer+IgnoreNill.swift in Sources */,
 				F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */,
+				F53713D628F4F799008D9F38 /* SettingViewController.swift in Sources */,
+				F53713D828F50C46008D9F38 /* SetupStramingPlayerItem.swift in Sources */,
 				F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */,
 				F5C04DC028DEA32A005332D4 /* PlayerView.swift in Sources */,
+				F53713D328F41792008D9F38 /* SetupStramingPlayer.swift in Sources */,
 				F5EF3D3628D43A0A00A66655 /* SceneDelegate.swift in Sources */,
 				F502C67328E4277B00807A9B /* SetupPlayerItem.swift in Sources */,
 				F536F66628DBE0B900751D9F /* StreamingViewController.swift in Sources */,
