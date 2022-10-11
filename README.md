@@ -22,5 +22,8 @@
 ## App Screenshot
 #### 앱 구동 영상입니다.
 ### 1. 구동영상
-![StreamingPlayer](https://user-images.githubusercontent.com/87006369/194992289-f0bbf438-cd39-44d8-8c15-dcdf5a9ebc53.gif)
+
+https://user-images.githubusercontent.com/87006369/194992949-36352e37-7266-40bc-b8eb-52ab7a739553.mp4
+
+
 
