@@ -29,6 +29,7 @@ extension StreamingViewController {
             .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
+                print(#fileID, #function, #line, "- \($0)")
                 
                 switch $0 {
                 case .paused:
@@ -36,7 +37,7 @@ extension StreamingViewController {
                 case .waitingToPlayAtSpecifiedRate:
                     print(#fileID, #function, #line, "- ")
                 case .playing:
-                    self.avPlayer.pause()
+                    self.avPlayer.rate = 0.0
                 default:
                     print(#fileID, #function, #line, "- ")
                 }
@@ -95,10 +96,11 @@ extension StreamingViewController {
         if isPortrait {
             let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
             if #available(iOS 16.0, *) {
-                #warning("Todo: - 와전히 화면을 다 채우도록 하자")
+                self.updateConstraints()
                 tabBarController?.tabBar.isHidden = true
                 windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
             } else {
+                self.updateConstraints()
                 tabBarController?.tabBar.isHidden = true
                 UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
             }
@@ -111,6 +113,22 @@ extension StreamingViewController {
                 tabBarController?.tabBar.isHidden = false
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
             }
+        }
+    }
+    
+    
+    // MARK: - Update Constraints
+    
+    private func updateConstraints(_ isPortrait: Bool = true) {
+        if isPortrait {
+            playerView.translatesAutoresizingMaskIntoConstraints = false
+            playerViewHeightAnchorConstant.constant = 0.0
+            NSLayoutConstraint.activate([
+                playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+        } else {
+            #warning("Todo: - 다시 돌렸을 때 기존 화면으로 되돌리기")
+            playerViewHeightAnchorConstant.constant = 350.0
         }
     }
 }

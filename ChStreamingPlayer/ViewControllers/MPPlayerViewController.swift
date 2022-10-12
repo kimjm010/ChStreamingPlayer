@@ -256,11 +256,7 @@ class MPPlayerViewController: UIViewController {
         
         avPlayer.pause()
     }
-
-    // 메모리 누수 확인하기
-    deinit {
-        print(#fileID, #function, #line, "- ")
-    }
+    
     
     // MARK: - Add Videos To Player
     
