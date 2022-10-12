@@ -14,7 +14,7 @@ import RxSwift
 
 extension StreamingViewController {
     
-    func subscribePlayerItem(_ item: AVPlayerItem) {
+    func subscribePlayerItem(_ currentItem: AVPlayerItem) {
         
     }
 }

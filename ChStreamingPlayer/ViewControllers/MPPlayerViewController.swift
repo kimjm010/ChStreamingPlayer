@@ -103,6 +103,7 @@ class MPPlayerViewController: UIViewController {
         initializeData()
         addPinchGesturer()
         addDoubleTapGesture()
+        setTapBarAppearanceAsDefault()
         
         
         // 현재 미디어 아이템을 방출
@@ -256,6 +257,10 @@ class MPPlayerViewController: UIViewController {
         avPlayer.pause()
     }
 
+    // 메모리 누수 확인하기
+    deinit {
+        print(#fileID, #function, #line, "- ")
+    }
     
     // MARK: - Add Videos To Player
     
