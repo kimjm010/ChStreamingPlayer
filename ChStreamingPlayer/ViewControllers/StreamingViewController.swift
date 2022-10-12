@@ -70,7 +70,7 @@ class StreamingViewController: UIViewController {
     
     // MARK: - Setup Player
     
-    private func setupPlayer() {
+    func setupPlayer() {
         guard let url = URL(string: StreamingViewController.urlStr) else { return }
         
         let item = AVPlayerItem(url: url)
