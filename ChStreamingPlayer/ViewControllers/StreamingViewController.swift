@@ -16,14 +16,17 @@ import AVKit
 class StreamingViewController: UIViewController {
     
     // MARK: - IBOutlets
+    @IBOutlet weak var playerViewHeightAnchorConstant: NSLayoutConstraint!
     @IBOutlet var tapGesture: UITapGestureRecognizer!
     @IBOutlet weak var topMenuStackView: UIStackView!
+    @IBOutlet weak var fullScreenButton: UIButton!
     @IBOutlet weak var playPauseButton: UIButton!
     @IBOutlet weak var pipModeButton: UIButton!
     @IBOutlet weak var rotateButton: UIButton!
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var menuButton: UIButton!
+    @IBOutlet weak var displayStackView: UIStackView!
     
     
     // MARK: - Vars
@@ -51,7 +54,6 @@ class StreamingViewController: UIViewController {
         
         setupPlayer()
         initializeData()
-        addToView()
         addTapGesture()
         setTapBarAppearanceAsDefault()
         subscribePlayer(avPlayer)
@@ -83,6 +85,7 @@ class StreamingViewController: UIViewController {
     private func initializeData() {
         
         // Set Button Title
+        fullScreenButton.setTitle("", for: .normal)
         playPauseButton.setTitle("", for: .normal)
         pipModeButton.setTitle("", for: .normal)
         rotateButton.setTitle("", for: .normal)
@@ -91,20 +94,6 @@ class StreamingViewController: UIViewController {
         
         // Set Button Hidden Property
         updateUI()
-    }
-    
-    
-    // MARK: - Add Player View To View
-    
-    private func addToView() {
-        view.addSubview(playerView)
-        
-        #warning("Todo: - 제약 확인할 것")
-        NSLayoutConstraint.activate([
-            playerView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
-            playerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            playerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
     }
     
     
@@ -130,7 +119,7 @@ class StreamingViewController: UIViewController {
     private func updateUI(_ isTapped: Bool = true) {
         topMenuStackView.isHidden = isTapped
         pipModeButton.isHidden = topMenuStackView.isHidden
-        rotateButton.isHidden = topMenuStackView.isHidden
+        displayStackView.isHidden = topMenuStackView.isHidden
         playPauseButton.isHidden = topMenuStackView.isHidden
     }
     
