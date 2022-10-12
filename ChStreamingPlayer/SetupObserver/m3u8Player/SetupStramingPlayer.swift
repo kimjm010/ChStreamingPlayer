@@ -16,36 +16,30 @@ extension StreamingViewController {
     
     func subscribePlayer(_ player: AVPlayer) {
         
-        // 재생, 일시정지 이미지 변경
+        // Adjust Play, Pause Image based on timeControlStatus
         player.rx.timeControlStatus.asDriver(onErrorJustReturn: .playing)
                 .map { $0 == .playing ? UIImage(systemName: StreamingViewController.pauseImage) : UIImage(systemName: StreamingViewController.playImage) }
                 .drive(playPauseButton.rx.image(for: .normal))
                 .disposed(by: rx.disposeBag)
-
-    
-        #warning("Todo: - 일시정지가 안되네")
-        // 재생, 일시정지
+        
+        
+        // Play, Pause the Video
+        
         playPauseButton.rx.tap
-            .flatMap { [unowned self] in self.avPlayer.rx.timeControlStatus }
-            .subscribe(onNext: { [weak self] in
+            .flatMap { [unowned self] in self.avPlayer.rx.status }
+            .subscribe(onNext: { [weak self] _ in
                 guard let self = self else { return }
-                print(#fileID, #function, #line, "- \($0)")
                 
-                switch $0 {
-                case .paused:
-                    self.avPlayer.play()
-                case .waitingToPlayAtSpecifiedRate:
-                    print(#fileID, #function, #line, "- ")
-                case .playing:
-                    self.avPlayer.rate = 0.0
-                default:
-                    print(#fileID, #function, #line, "- ")
+                if self.avPlayer.rate == 1.0 {
+                    self.avPlayer.pause()
+                } else {
+                    self.setupPlayer()
                 }
             })
             .disposed(by: rx.disposeBag)
         
         
-        // 공유 기능
+        // Share current Video Url
         shareButton.rx.tap
             .throttle(0.5, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
@@ -81,6 +75,17 @@ extension StreamingViewController {
             .subscribe(onNext: { _ in
                 self.isRotated.toggle()
                 self.rotateDevice(self.isRotated)
+            })
+            .disposed(by: rx.disposeBag)
+        
+        
+        // Adjust to Full Screen Mode
+        
+        fullScreenButton.rx.tap
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                
+                self.changeToFullScreenMode()
             })
             .disposed(by: rx.disposeBag)
         
@@ -130,5 +135,13 @@ extension StreamingViewController {
             #warning("Todo: - 다시 돌렸을 때 기존 화면으로 되돌리기")
             playerViewHeightAnchorConstant.constant = 350.0
         }
+    }
+    
+    
+    // MARK: - Change to Full Screen Mode
+    
+    private func changeToFullScreenMode() {
+            view.translatesAutoresizingMaskIntoConstraints = false
+        
     }
 }
