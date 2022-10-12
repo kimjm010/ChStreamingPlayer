@@ -143,7 +143,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="settingTableViewCell" rowHeight="83" id="1mu-AI-dbZ" customClass="settingTableViewCell" customModule="ChStreamingPlayer" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="imageSettingTableViewCell" rowHeight="83" id="1mu-AI-dbZ" customClass="imageSettingTableViewCell" customModule="ChStreamingPlayer" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="390" height="83"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1mu-AI-dbZ" id="cF2-7w-CWo">
@@ -151,17 +151,18 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="150" translatesAutoresizingMaskIntoConstraints="NO" id="s8x-PC-JeG">
-                                                    <rect key="frame" x="20" y="-22.666666666666671" width="350" height="128.33333333333334"/>
+                                                    <rect key="frame" x="20" y="26.666666666666671" width="350" height="30"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1pt-jP-gqN">
-                                                            <rect key="frame" x="0.0" y="0.0" width="170" height="128.33333333333334"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="비디오 화질 설정" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1pt-jP-gqN">
+                                                            <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" highlightedImage="checkmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="wfU-b6-50x">
-                                                            <rect key="frame" x="320" y="0.0" width="30" height="128.33333333333334"/>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="square" catalog="system" highlightedImage="checkmark.rectangle" translatesAutoresizingMaskIntoConstraints="NO" id="wfU-b6-50x">
+                                                            <rect key="frame" x="320" y="1.6666666666666643" width="30" height="27.000000000000004"/>
                                                             <constraints>
+                                                                <constraint firstAttribute="height" constant="30" id="7Th-o5-h2m"/>
                                                                 <constraint firstAttribute="width" constant="30" id="alb-uc-TvB"/>
                                                             </constraints>
                                                         </imageView>
@@ -175,8 +176,41 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="checkedImageView" destination="wfU-b6-50x" id="f77-Dg-woN"/>
+                                            <outlet property="imageSettingImageView" destination="wfU-b6-50x" id="GZ3-kn-0WQ"/>
                                             <outlet property="settingLabel" destination="1pt-jP-gqN" id="fYs-za-ISO"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="switchSettingTableViewCell" rowHeight="81" id="4iZ-o3-Jzl" customClass="switchSettingTableViewCell" customModule="ChStreamingPlayer" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="133" width="390" height="81"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4iZ-o3-Jzl" id="iOt-nB-oTU">
+                                            <rect key="frame" x="0.0" y="0.0" width="390" height="81"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="vZV-Qn-2PV">
+                                                    <rect key="frame" x="20" y="25" width="350" height="31"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="비트 레이트 설정" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysj-eB-DVx">
+                                                            <rect key="frame" x="0.0" y="0.0" width="291" height="31"/>
+                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K13-la-MeH">
+                                                            <rect key="frame" x="301" y="0.0" width="51" height="31"/>
+                                                        </switch>
+                                                    </subviews>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="vZV-Qn-2PV" firstAttribute="leading" secondItem="iOt-nB-oTU" secondAttribute="leadingMargin" id="4fe-bg-Hbj"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="vZV-Qn-2PV" secondAttribute="trailing" id="kfC-v5-a3k"/>
+                                                <constraint firstItem="vZV-Qn-2PV" firstAttribute="centerY" secondItem="iOt-nB-oTU" secondAttribute="centerY" id="yLa-OB-TBw"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="settingSwitch" destination="K13-la-MeH" id="eL0-Nc-wGR"/>
+                                            <outlet property="switchLabel" destination="ysj-eB-DVx" id="dqF-VQ-pZS"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -198,7 +232,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7ng-kc-vVJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="320" y="-198"/>
+            <point key="canvasLocation" x="320" y="-198.34123222748815"/>
         </scene>
         <!--mp4-->
         <scene sceneID="Kfm-ro-0Ve">
@@ -387,7 +421,7 @@
     <resources>
         <image name="backward.end.fill" catalog="system" width="128" height="101"/>
         <image name="backward.fill" catalog="system" width="128" height="77"/>
-        <image name="checkmark" catalog="system" width="128" height="114"/>
+        <image name="checkmark.rectangle" catalog="system" width="128" height="93"/>
         <image name="dots" width="16" height="16"/>
         <image name="down-arrow" width="16" height="16"/>
         <image name="forward.end.fill" catalog="system" width="128" height="101"/>
@@ -400,6 +434,7 @@
         <image name="plus.magnifyingglass" catalog="system" width="128" height="117"/>
         <image name="repeat" catalog="system" width="128" height="98"/>
         <image name="rotate.left" catalog="system" width="115" height="128"/>
+        <image name="square" catalog="system" width="128" height="114"/>
         <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
         <image name="square.dashed" catalog="system" width="128" height="114"/>
         <systemColor name="labelColor">
