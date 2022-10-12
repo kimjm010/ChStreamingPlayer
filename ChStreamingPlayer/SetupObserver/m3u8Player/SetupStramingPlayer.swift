@@ -59,46 +59,56 @@ extension StreamingViewController {
             .disposed(by: rx.disposeBag)
         
         
-        // 메뉴 화면 표시
+        // display Setting View Controller
         menuButton.rx.tap
             .throttle(0.5, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 
                 let settingVC = self.storyboard?.instantiateViewController(withIdentifier: "SettingViewController") as! SettingViewController
-                
                 settingVC.avPlayer = self.avPlayer
-                self.present(settingVC, animated: true, completion: nil)
+                
+                self.tabBarController?.modalPresentationStyle = .fullScreen
+                self.tabBarController?.present(settingVC, animated: true, completion: nil)
             })
             .disposed(by: rx.disposeBag)
         
         
+        // rotate the device's orientation mode
         rotateButton.rx.tap
             .flatMap { [unowned self] in self.orientationObservable }
-            .subscribe(onNext: {
+            .subscribe(onNext: { _ in
                 self.isRotated.toggle()
-                
                 self.rotateDevice(self.isRotated)
-                print(#fileID, #function, #line, "- \($0)")
             })
             .disposed(by: rx.disposeBag)
         
     }
     
     
+    // MARK: - Rotate Device
+    
+    /// Rotating Device
+    ///
+    /// - Parameter isPortrait: check the device's orientation mode
     private func rotateDevice(_ isPortrait: Bool = true) {
         if isPortrait {
             let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
             if #available(iOS 16.0, *) {
+                #warning("Todo: - 와전히 화면을 다 채우도록 하자")
+                tabBarController?.tabBar.isHidden = true
                 windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .landscapeRight))
             } else {
+                tabBarController?.tabBar.isHidden = true
                 UIDevice.current.setValue(UIInterfaceOrientation.landscapeRight.rawValue, forKey: "orientation")
             }
         } else {
             let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene
             if #available(iOS 16.0, *) {
+                tabBarController?.tabBar.isHidden = false
                 windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
             } else {
+                tabBarController?.tabBar.isHidden = false
                 UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
             }
         }

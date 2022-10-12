@@ -46,10 +46,18 @@ class SettingViewController: UIViewController {
     
     // MARK: - Vars
     var settings = [
-        MySetting(header: "방송 영상 및 소리 옵션", items: ["자동(720p)", "720p60", "480p", "360p", "160p"], isSelectedList: [false, false, false, false, false]),
-        MySetting(header: " ", items: ["라디오 모드", "채팅 모드"], isSelectedList: [false, false]),
-        MySetting(header: " ", items: ["백그라운드에서 재생"], isSelectedList: [false]),
-        MySetting(header: " ", items: ["낮은 지연 시간 플레이어"], isSelectedList: [false, false])
+        MySetting(header: "방송 영상 및 소리 옵션",
+                  items: ["자동(720p)", "720p60", "480p", "360p", "160p"],
+                  isSelectedList: [false, false, false, false, false]),
+        MySetting(header: " ",
+                  items: ["라디오 모드", "채팅 모드"],
+                  isSelectedList: [false, false]),
+        MySetting(header: " ",
+                  items: ["백그라운드에서 재생"],
+                  isSelectedList: [false]),
+        MySetting(header: " ",
+                  items: ["낮은 지연 시간 플레이어"],
+                  isSelectedList: [false, false])
     ]
     
     var dataSource: RxTableViewSectionedAnimatedDataSource<MySetting>?
@@ -61,6 +69,8 @@ class SettingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setTapBarAppearanceAsDefault()
         
         let dataSource = RxTableViewSectionedAnimatedDataSource<MySetting>(configureCell: {
             (dataSource, tableView, indexPath, item) in
@@ -81,8 +91,7 @@ class SettingViewController: UIViewController {
             .disposed(by: rx.disposeBag)
         
         
-//        Observable.zip(tableView.rx.modelSelected(MySetting.Item.self), tableView.rx.itemSelected)
-        
+        // 설정 선택 시 이미지 표시
         tableView.rx.itemSelected
             .bind { [weak self]  (indexPath) in
                 guard let self = self else { return }

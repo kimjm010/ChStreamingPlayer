@@ -24,11 +24,9 @@ class StreamingViewController: UIViewController {
     @IBOutlet weak var playerView: PlayerView!
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var menuButton: UIButton!
-    @IBOutlet weak var adButton: UIButton!
     
     
     // MARK: - Vars
-    
     let videoPlayer = StreamingVideoPlayer()
     static let playImage = "play.fill"
     static let pauseImage = "pause.fill"
@@ -37,13 +35,16 @@ class StreamingViewController: UIViewController {
     var isRotated = false
     
     lazy var orientationObservable = Observable.just(UIDevice.orientationDidChangeNotification)
+    
+    lazy var pictureController = AVPictureInPictureController(playerLayer: playerView.playerLayer)
 
-    static let urlStr = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
+    static let urlStr = "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8"
     
     // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         #if DEBUG
         avPlayer.volume = 0.0
         #endif
@@ -51,9 +52,10 @@ class StreamingViewController: UIViewController {
         setupPlayer()
         initializeData()
         addToView()
-        
-        subscribePlayer(avPlayer)
         addTapGesture()
+        setTapBarAppearanceAsDefault()
+        subscribePlayer(avPlayer)
+        setupPictureController()
     }
     
     
@@ -86,7 +88,6 @@ class StreamingViewController: UIViewController {
         rotateButton.setTitle("", for: .normal)
         shareButton.setTitle("", for: .normal)
         menuButton.setTitle("", for: .normal)
-        adButton.setTitle("", for: .normal)
         
         // Set Button Hidden Property
         updateUI()
@@ -114,9 +115,8 @@ class StreamingViewController: UIViewController {
             .subscribe(onNext: { [weak self] (gesture) in
                 guard let self = self else { return }
                 
-                self.isTapped.toggle()
-                
                 #warning("Todo: - 일정 시간 지나면 다시 안보이도록 설정할 것")
+                self.isTapped.toggle()
                 UIView.animate(withDuration: 0.3) {
                     self.updateUI(self.isTapped)
                 }
@@ -130,9 +130,17 @@ class StreamingViewController: UIViewController {
     private func updateUI(_ isTapped: Bool = true) {
         topMenuStackView.isHidden = isTapped
         pipModeButton.isHidden = topMenuStackView.isHidden
-        adButton.isHidden = topMenuStackView.isHidden
         rotateButton.isHidden = topMenuStackView.isHidden
         playPauseButton.isHidden = topMenuStackView.isHidden
+    }
+    
+    
+    // MARK: - Set up AVPictureInPicutre Controller
+    
+    private func setupPictureController() {
+        let isSuported = AVPictureInPictureController.isPictureInPictureSupported()
+        
+        print(#fileID, #function, #line, "- \(isSuported)")
     }
 }
 
