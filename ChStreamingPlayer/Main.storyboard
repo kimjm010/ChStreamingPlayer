@@ -143,7 +143,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="imageSettingTableViewCell" rowHeight="83" id="1mu-AI-dbZ" customClass="imageSettingTableViewCell" customModule="ChStreamingPlayer" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ImageSettingTableViewCell" rowHeight="83" id="1mu-AI-dbZ" customClass="ImageSettingTableViewCell" customModule="ChStreamingPlayer" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="390" height="83"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1mu-AI-dbZ" id="cF2-7w-CWo">
@@ -155,12 +155,13 @@
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="비디오 화질 설정" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1pt-jP-gqN">
                                                             <rect key="frame" x="0.0" y="0.0" width="170" height="30"/>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                            <nil key="textColor"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                            <color key="textColor" systemColor="secondaryLabelColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="square" catalog="system" highlightedImage="checkmark.rectangle" translatesAutoresizingMaskIntoConstraints="NO" id="wfU-b6-50x">
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="square" catalog="system" highlightedImage="checkmark.square.fill" translatesAutoresizingMaskIntoConstraints="NO" id="wfU-b6-50x">
                                                             <rect key="frame" x="320" y="1.6666666666666643" width="30" height="27.000000000000004"/>
+                                                            <color key="tintColor" systemColor="secondaryLabelColor"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="30" id="7Th-o5-h2m"/>
                                                                 <constraint firstAttribute="width" constant="30" id="alb-uc-TvB"/>
@@ -180,7 +181,7 @@
                                             <outlet property="settingLabel" destination="1pt-jP-gqN" id="fYs-za-ISO"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="switchSettingTableViewCell" rowHeight="81" id="4iZ-o3-Jzl" customClass="switchSettingTableViewCell" customModule="ChStreamingPlayer" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="SwitchSettingTableViewCell" rowHeight="81" id="4iZ-o3-Jzl" customClass="SwitchSettingTableViewCell" customModule="ChStreamingPlayer" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="133" width="390" height="81"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="4iZ-o3-Jzl" id="iOt-nB-oTU">
@@ -192,12 +193,13 @@
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="비트 레이트 설정" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ysj-eB-DVx">
                                                             <rect key="frame" x="0.0" y="0.0" width="291" height="31"/>
-                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                            <nil key="textColor"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                            <color key="textColor" systemColor="secondaryLabelColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="K13-la-MeH">
                                                             <rect key="frame" x="301" y="0.0" width="51" height="31"/>
+                                                            <color key="onTintColor" systemColor="secondaryLabelColor"/>
                                                         </switch>
                                                     </subviews>
                                                 </stackView>
@@ -312,7 +314,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xsn-Xn-auf">
-                                        <rect key="frame" x="113.00000000000001" y="0.0" width="49.666666666666671" height="54.333333333333336"/>
+                                        <rect key="frame" x="113" y="0.0" width="49.666666666666671" height="54.333333333333336"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" image="goforward.10" catalog="system"/>
                                     </button>
@@ -421,7 +423,7 @@
     <resources>
         <image name="backward.end.fill" catalog="system" width="128" height="101"/>
         <image name="backward.fill" catalog="system" width="128" height="77"/>
-        <image name="checkmark.rectangle" catalog="system" width="128" height="93"/>
+        <image name="checkmark.square.fill" catalog="system" width="128" height="114"/>
         <image name="dots" width="16" height="16"/>
         <image name="down-arrow" width="16" height="16"/>
         <image name="forward.end.fill" catalog="system" width="128" height="101"/>
@@ -439,6 +441,9 @@
         <image name="square.dashed" catalog="system" width="128" height="114"/>
         <systemColor name="labelColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

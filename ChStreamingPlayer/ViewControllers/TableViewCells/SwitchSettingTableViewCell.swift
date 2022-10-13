@@ -7,7 +7,7 @@
 
 import UIKit
 
-class switchSettingTableViewCell: UITableViewCell {
+class SwitchSettingTableViewCell: UITableViewCell {
     
     // MARK: - IBOutlets
     
