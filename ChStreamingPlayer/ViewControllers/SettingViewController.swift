@@ -25,8 +25,8 @@ class SettingViewController: UIViewController, UITableViewDelegate {
     
     private let checkedImage = UIImage(systemName: "checkmark.rectangle")!
     private let unCkeckedImage = UIImage(systemName: "square")
-    static let resolutionObservable = BehaviorSubject<CGSize>(value: CGSize(width: 0.0, height: 0.0))
-    
+    let resolutionObservable = BehaviorSubject<CGSize>(value: CGSize(width: 0.0, height: 0.0))
+    let bitRateObservable = BehaviorSubject<Bool>(value: false)
     var avPlayer: AVPlayer?
     
     
@@ -62,6 +62,7 @@ class SettingViewController: UIViewController, UITableViewDelegate {
         
         
         // 설정 선택 시 이미지 표시
+        /*
          Observable.zip(tableView.rx.modelSelected(SectionItem.self), tableView.rx.itemSelected)
              .subscribe(onNext: { [weak self] (setting, indexPath) in
                  guard let self = self else { return }
@@ -76,6 +77,8 @@ class SettingViewController: UIViewController, UITableViewDelegate {
                 print(#fileID, #function, #line, "- \($0)")
             })
             .disposed(by: rx.disposeBag)
+         */
+         
         
         
         // Deselect Cell
@@ -86,13 +89,6 @@ class SettingViewController: UIViewController, UITableViewDelegate {
                 self.tableView.deselectRow(at: indexPath, animated: true)
                 
                 switch indexPath.section {
-                    #warning("Todo: - case 2, 1은 셀에 연결된 스위치로 작업해야 합니다.")
-                case 2:
-                    print(#fileID, #function, #line, "- 낮은 지연 시간 플레이어 선택 -> bit rate 낮출 것")
-                    self.avPlayer?.currentItem?.preferredPeakBitRate = 0.1
-                case 1:
-                    print(#fileID, #function, #line, "- 백그라운드에서 재생")
-                    break
                 case 0:
                     self.selectResolution(indexPath.row)
                 default:
@@ -100,6 +96,17 @@ class SettingViewController: UIViewController, UITableViewDelegate {
                 }
             })
             .disposed(by: rx.disposeBag)
+        
+        
+        // Subscribe switchObservable isOn value
+        
+        SwitchSettingTableViewCell.switchObservable
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                print(#fileID, #function, #line, "- \($0)")
+                self.changeBitRate($0)
+            })
+            .disposed(by: self.rx.disposeBag)
     }
     
     
@@ -107,11 +114,22 @@ class SettingViewController: UIViewController, UITableViewDelegate {
         super.viewWillDisappear(animated)
         
         // Setting Player Item's Maximum Resolution
-        SettingViewController.resolutionObservable
+        
+        resolutionObservable
             .map { CGSize(width: $0.width, height: $0.height) }
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.avPlayer?.currentItem?.preferredMaximumResolution = $0
+            })
+            .disposed(by: rx.disposeBag)
+        
+        
+        // Change player item's Bit Rate
+        
+        bitRateObservable
+            .subscribe(onNext: { [weak self] in
+                guard let self = self else { return }
+                self.avPlayer?.currentItem?.preferredPeakBitRate = $0 ? 0.1 : 1.0
             })
             .disposed(by: rx.disposeBag)
     }
@@ -146,7 +164,17 @@ class SettingViewController: UIViewController, UITableViewDelegate {
             break
         }
         
-        SettingViewController.resolutionObservable.onNext(resolution)
+        resolutionObservable.onNext(resolution)
+    }
+    
+    
+    // MARK: - Emit Changed Video BitRate
+    
+    /// Change the Video Bit Rate if the cell is selected
+    ///
+    /// - Parameter cell: selected Cell(SwitchTableViewCell)
+    private func changeBitRate(_ changed: Bool = false) {
+        bitRateObservable.onNext(changed)
     }
 }
 
@@ -158,6 +186,7 @@ class SettingViewController: UIViewController, UITableViewDelegate {
 extension SettingViewController {
     
     /// Create RxTableViewSectionedReloadDataSource
+    ///
     /// - Returns: DataSource to bind to tableView
     static func dataSource() -> RxTableViewSectionedReloadDataSource<MultipleSectionModel> {
         return RxTableViewSectionedReloadDataSource<MultipleSectionModel>(configureCell: { (dataSource, tableView, indexPath, _) in
