@@ -38,14 +38,12 @@ class SettingViewController: UIViewController, UITableViewDelegate {
         initializeData()
         
         // create setting models
-        let sections: [MultipleSectionModel] = [
+        var sections: [MultipleSectionModel] = [
             .VideoQualitySection(title: "방송 영상 및 소리 옵션", items: [
                 .VideoSectionItem(image: UIImage(systemName: "square")!, title: "자동(720p)"),
                 .VideoSectionItem(image: UIImage(systemName: "square")!, title: "720p60"),
                 .VideoSectionItem(image: UIImage(systemName: "square")!, title: "480p"),
                 .VideoSectionItem(image: UIImage(systemName: "square")!, title: "360p")]),
-            .BackgroundSection(title: " ", items: [
-                .BackgroundSectionItem(title: "백그라운드에서 재생", enabled: false)]),
             .LowBitrateSection(title: " ", items: [
                 .LowBitrateSectionItem(title: "낮은 지연 시간 플레이어", enabled: false)])
         ]
@@ -63,11 +61,11 @@ class SettingViewController: UIViewController, UITableViewDelegate {
         
         // 설정 선택 시 이미지 표시
         /*
-         Observable.zip(tableView.rx.modelSelected(SectionItem.self), tableView.rx.itemSelected)
-             .subscribe(onNext: { [weak self] (setting, indexPath) in
+         Observable.zip(tableView.rx.modelSelected(MultipleSectionModel.self), tableView.rx.itemSelected)
+             .subscribe(onNext: { [weak self] (sectionModel, indexPath) in
                  guard let self = self else { return }
                  
-                 print(#fileID, #function, #line, "- \(setting.self) \(indexPath)")
+                 sections[indexPath.section].items[indexPath.row]
                  
              })
              .disposed(by: rx.disposeBag)
@@ -78,7 +76,6 @@ class SettingViewController: UIViewController, UITableViewDelegate {
             })
             .disposed(by: rx.disposeBag)
          */
-         
         
         
         // Deselect Cell
@@ -195,10 +192,6 @@ extension SettingViewController {
                 let cell: ImageSettingTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.configure(title: title, image: image)
                 return cell
-            case let .BackgroundSectionItem(title, enabled):
-                let cell: SwitchSettingTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
-                cell.configure(title: title, isEnabled: enabled)
-                return cell
             case let .LowBitrateSectionItem(title, enabled):
                 let cell: SwitchSettingTableViewCell = tableView.dequeueReusableCell(forIndexPath: indexPath)
                 cell.configure(title: title, isEnabled: enabled)
@@ -219,7 +212,6 @@ extension SettingViewController {
 
 enum MultipleSectionModel {
     case VideoQualitySection(title: String, items: [SectionItem])
-    case BackgroundSection(title: String, items: [SectionItem])
     case LowBitrateSection(title: String, items: [SectionItem])
 }
 
@@ -230,7 +222,6 @@ enum MultipleSectionModel {
 
 enum SectionItem {
     case VideoSectionItem(image: UIImage, title: String)
-    case BackgroundSectionItem(title: String, enabled: Bool)
     case LowBitrateSectionItem(title: String, enabled: Bool)
 }
 
@@ -244,8 +235,6 @@ extension MultipleSectionModel: SectionModelType {
         switch self {
         case .VideoQualitySection(title: _, items: let items):
             return items.map { $0 }
-        case .BackgroundSection(title: _, items: let items):
-            return items.map { $0 }
         case .LowBitrateSection(title: _, items: let items):
             return items.map { $0 }
         }
@@ -255,9 +244,6 @@ extension MultipleSectionModel: SectionModelType {
         switch original {
         case let .VideoQualitySection(title, _):
             self = .VideoQualitySection(title: title, items: items)
-            
-        case let .BackgroundSection(title, _):
-            self = .BackgroundSection(title: title, items: items)
             
         case let .LowBitrateSection(title, _):
             self = .LowBitrateSection(title: title, items: items)
@@ -272,8 +258,6 @@ extension MultipleSectionModel {
     var title: String {
         switch self {
         case .VideoQualitySection(title: let title, items: _):
-            return title
-        case .BackgroundSection(title: let title, items: _):
             return title
         case .LowBitrateSection(title: let title, items: _):
             return title

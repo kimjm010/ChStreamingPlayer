@@ -77,18 +77,6 @@ extension StreamingViewController {
                 self.rotateDevice(self.isRotated)
             })
             .disposed(by: rx.disposeBag)
-        
-        
-        // Adjust to Full Screen Mode
-        
-        fullScreenButton.rx.tap
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                
-                self.changeToFullScreenMode()
-            })
-            .disposed(by: rx.disposeBag)
-        
     }
     
     
