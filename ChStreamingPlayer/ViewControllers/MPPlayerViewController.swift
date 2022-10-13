@@ -119,7 +119,7 @@ class MPPlayerViewController: UIViewController {
                 self.currentItemIndex = self.currentItemsForPlayer.firstIndex(of: $0)
             })
             .disposed(by: rx.disposeBag)
-        
+    
         
         // 앞으로 10초 이동
         moveForwardButton.rx.tap

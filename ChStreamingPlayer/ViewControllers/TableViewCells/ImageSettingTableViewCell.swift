@@ -7,7 +7,7 @@
 
 import UIKit
 
-class imageSettingTableViewCell: UITableViewCell {
+class ImageSettingTableViewCell: UITableViewCell {
     
     // MARK: - IBOutlets
     

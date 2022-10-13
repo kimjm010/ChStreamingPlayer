@@ -29,8 +29,8 @@
 		F53713D328F41792008D9F38 /* SetupStramingPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53713D228F41792008D9F38 /* SetupStramingPlayer.swift */; };
 		F53713D628F4F799008D9F38 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53713D528F4F799008D9F38 /* SettingViewController.swift */; };
 		F53713D828F50C46008D9F38 /* SetupStramingPlayerItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53713D728F50C46008D9F38 /* SetupStramingPlayerItem.swift */; };
-		F53713F828F54880008D9F38 /* imageSettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53713F728F54880008D9F38 /* imageSettingTableViewCell.swift */; };
-		F5BF389928F6C9D100A6AB2F /* switchSettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BF389828F6C9D100A6AB2F /* switchSettingTableViewCell.swift */; };
+		F53713F828F54880008D9F38 /* ImageSettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F53713F728F54880008D9F38 /* ImageSettingTableViewCell.swift */; };
+		F5BF389928F6C9D100A6AB2F /* SwitchSettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BF389828F6C9D100A6AB2F /* SwitchSettingTableViewCell.swift */; };
 		F5BF389B28F6D90000A6AB2F /* UIKit+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5BF389A28F6D90000A6AB2F /* UIKit+Extension.swift */; };
 		F5C04DC028DEA32A005332D4 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */; };
 		F5E221D528DD537200AF7752 /* v2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = F5E221D028DD537100AF7752 /* v2.mp4 */; };
@@ -96,8 +96,8 @@
 		F53713D228F41792008D9F38 /* SetupStramingPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupStramingPlayer.swift; sourceTree = "<group>"; };
 		F53713D528F4F799008D9F38 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		F53713D728F50C46008D9F38 /* SetupStramingPlayerItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupStramingPlayerItem.swift; sourceTree = "<group>"; };
-		F53713F728F54880008D9F38 /* imageSettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = imageSettingTableViewCell.swift; sourceTree = "<group>"; };
-		F5BF389828F6C9D100A6AB2F /* switchSettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = switchSettingTableViewCell.swift; sourceTree = "<group>"; };
+		F53713F728F54880008D9F38 /* ImageSettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSettingTableViewCell.swift; sourceTree = "<group>"; };
+		F5BF389828F6C9D100A6AB2F /* SwitchSettingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchSettingTableViewCell.swift; sourceTree = "<group>"; };
 		F5BF389A28F6D90000A6AB2F /* UIKit+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIKit+Extension.swift"; sourceTree = "<group>"; };
 		F5C04DBE28DE8A7E005332D4 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		F5E221D028DD537100AF7752 /* v2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = v2.mp4; sourceTree = "<group>"; };
@@ -196,8 +196,8 @@
 		F53713F628F5486A008D9F38 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
-				F53713F728F54880008D9F38 /* imageSettingTableViewCell.swift */,
-				F5BF389828F6C9D100A6AB2F /* switchSettingTableViewCell.swift */,
+				F53713F728F54880008D9F38 /* ImageSettingTableViewCell.swift */,
+				F5BF389828F6C9D100A6AB2F /* SwitchSettingTableViewCell.swift */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -492,14 +492,14 @@
 				F502C66C28E2F35C00807A9B /* Observer+IgnoreNill.swift in Sources */,
 				F536F68528DC661A00751D9F /* MPPlayerViewController.swift in Sources */,
 				F53713D628F4F799008D9F38 /* SettingViewController.swift in Sources */,
-				F53713F828F54880008D9F38 /* imageSettingTableViewCell.swift in Sources */,
+				F53713F828F54880008D9F38 /* ImageSettingTableViewCell.swift in Sources */,
 				F53713D828F50C46008D9F38 /* SetupStramingPlayerItem.swift in Sources */,
 				F5EF3D3428D43A0A00A66655 /* AppDelegate.swift in Sources */,
 				F5C04DC028DEA32A005332D4 /* PlayerView.swift in Sources */,
 				F53713D328F41792008D9F38 /* SetupStramingPlayer.swift in Sources */,
 				F5EF3D3628D43A0A00A66655 /* SceneDelegate.swift in Sources */,
 				F502C67328E4277B00807A9B /* SetupPlayerItem.swift in Sources */,
-				F5BF389928F6C9D100A6AB2F /* switchSettingTableViewCell.swift in Sources */,
+				F5BF389928F6C9D100A6AB2F /* SwitchSettingTableViewCell.swift in Sources */,
 				F536F66628DBE0B900751D9F /* StreamingViewController.swift in Sources */,
 				F502C67128E4266800807A9B /* SetupPlayer.swift in Sources */,
 				F502C66E28E2FD5800807A9B /* AVPlayerItem+Rx.swift in Sources */,
